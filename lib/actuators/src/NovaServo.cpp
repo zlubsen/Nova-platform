@@ -36,9 +36,6 @@ void NovaServo::goToMiddle() {
 }
 
 void NovaServo::setDegree(int degree) {
-  Serial.print(degree);
-  Serial.println();
-
   if(degree < _min)
     _servo.write(_min);
   else if(degree > _max)

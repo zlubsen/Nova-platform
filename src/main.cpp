@@ -29,29 +29,7 @@ void setup() {
 }
 
 void loop() {
-    Serial.println("loop!");
-
     joyControlLoop->run();
-
-    Serial.println(joyControlLoop->_joy_left_output.x, DEC);
-    Serial.println(joyControlLoop->_joy_left_output.y, DEC);
-    //Serial.println(joyControlLoop->_joy_left_input.sw, DEC);
-    Serial.println(joyControlLoop->_joy_right_output.x, DEC);
-    Serial.println(joyControlLoop->_joy_right_output.y, DEC);
-    //Serial.println(joyControlLoop->_joy_right_output.sw, DEC);
-
-    /*NovaServo* servo = hardwareConfig->servo1;
-
-    for(int i = servo->getDegree(); i > servo->getMinimum(); i--) {
-      servo->setDegree(i);
-      delay(20);
-    }
-
-    for(int i = servo->getMinimum(); i < servo->getMaximum(); i++) {
-      servo->setDegree(i);
-      delay(20);
-    }
-    servo->goToMiddle();*/
 
     delay(30);
 }
