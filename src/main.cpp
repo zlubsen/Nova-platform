@@ -16,11 +16,6 @@ void setup() {
   novaConfig = new NovaConfig();
   joyControlLoop = new JoystickControlLoop(hardwareConfig, novaConfig);
 
-  Serial.println(joyControlLoop->_filterconst_left.x);
-  Serial.println(joyControlLoop->_filterconst_left.y);
-  Serial.println(joyControlLoop->_filterconst_right.x);
-  Serial.println(joyControlLoop->_filterconst_right.y);
-
   hardwareConfig->servo1->goToMiddle();
   hardwareConfig->servo2->goToMiddle();
   hardwareConfig->servo3->goToMiddle();

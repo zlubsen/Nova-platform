@@ -3,6 +3,7 @@
 
 #include <NovaServo.h>
 #include <Joystick.h>
+#include <UltraSoundSensor.h>
 
 typedef struct {
   int pin;
@@ -29,6 +30,7 @@ class HardwareConfig {
     NovaServo* servo5;
     Joystick* joystick_left;
     Joystick* joystick_right;
+    UltraSoundSensor* ultraSoundSensor;
 };
 
 #endif

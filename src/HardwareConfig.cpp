@@ -21,5 +21,5 @@ void HardwareConfig::configureJoysticks() {
 }
 
 void HardwareConfig::configureUltrasound() {
-  // TODO
+  ultraSoundSensor = new UltraSoundSensor(46, 44);
 }

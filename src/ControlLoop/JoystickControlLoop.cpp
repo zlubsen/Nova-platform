@@ -1,6 +1,4 @@
 #include <Arduino.h>
-//#include <NovaServo.h>
-//#include <Joystick.h>
 #include "JoystickControlLoop.h"
 
 JoystickControlLoop::JoystickControlLoop(HardwareConfig *hardwareConfig, NovaConfig *novaConfig) {
