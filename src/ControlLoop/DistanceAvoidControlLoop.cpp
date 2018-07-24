@@ -6,7 +6,7 @@ DistanceAvoidControlLoop::DistanceAvoidControlLoop(HardwareConfig *hardwareConfi
   _servo = hardwareConfig->servo1;
   _pid_config = novaConfig->_ultrasound_pid_config;
 
-  _setpoint_distance = novaConfig->_ultrasound_config.setpoint;
+  _pid_values.setpoint = novaConfig->_ultrasound_config.setpoint;
   _min_distance = novaConfig->_ultrasound_config.minDistance;
   _max_distance = novaConfig->_ultrasound_config.maxDistance;
   _servo_angle = novaConfig->_ultrasound_config.servoAngle;
@@ -15,9 +15,9 @@ DistanceAvoidControlLoop::DistanceAvoidControlLoop(HardwareConfig *hardwareConfi
 }
 
 void DistanceAvoidControlLoop::setupPIDcontroller() {
-  _pid = new PID(&_input_distance,
-    &_output_distance,
-    &_setpoint_distance,
+  _pid = new PID(&_pid_values.input,
+    &_pid_values.output,
+    &_pid_values.setpoint,
     _pid_config.Kp,
     _pid_config.Ki,
     _pid_config.Kd,
@@ -29,12 +29,12 @@ void DistanceAvoidControlLoop::setupPIDcontroller() {
 }
 
 void DistanceAvoidControlLoop::observe() {
-  _input_distance = _ultraSoundSensor->measureDistance();
+  _pid_values.input = _ultraSoundSensor->measureDistance();
 }
 
 void DistanceAvoidControlLoop::actuate() {
-  if(_input_distance < _max_distance && _input_distance > _min_distance) {
-       _servo_angle = _servo_angle - _output_distance;
+  if(_pid_values.input < _max_distance && _pid_values.input > _min_distance) {
+       _servo_angle = _servo_angle - _pid_values.output;
 
        if(_servo_angle > _servo->getMaximum())
           _servo_angle = _servo->getMaximum();

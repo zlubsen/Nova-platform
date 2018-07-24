@@ -1,4 +1,5 @@
 #include "NovaConfig.h"
+#include <PID_v1.h>
 
 NovaConfig::NovaConfig() {
   _joy_left_config.x = 0.05;
@@ -17,4 +18,22 @@ NovaConfig::NovaConfig() {
   _ultrasound_config.minDistance = 9;
   _ultrasound_config.maxDistance = 30;
   _ultrasound_config.servoAngle = 110;
+
+  _face_detection_pid_config_x.Kp = 0.016;
+  _face_detection_pid_config_x.Ki = 0.012;
+  _face_detection_pid_config_x.Kd = 0.0;
+  _face_detection_pid_config_x.sampleTime = 1;
+  _face_detection_pid_config_x.outputLimitMin = -35;
+  _face_detection_pid_config_x.outputLimitMax = 35;
+  _face_detection_pid_config_x.direction = DIRECT;
+  _face_detection_pid_config_x.mode = AUTOMATIC;
+
+  _face_detection_pid_config_y.Kp = 0.51;
+  _face_detection_pid_config_y.Ki = 1.1;
+  _face_detection_pid_config_y.Kd = 0.0;
+  _face_detection_pid_config_y.sampleTime = 1;
+  _face_detection_pid_config_y.outputLimitMin = -35;
+  _face_detection_pid_config_y.outputLimitMax = 35;
+  _face_detection_pid_config_y.direction = DIRECT;
+  _face_detection_pid_config_y.mode = AUTOMATIC;
 }

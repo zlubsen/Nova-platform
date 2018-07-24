@@ -16,6 +16,7 @@ class DistanceAvoidControlLoop {
     NovaServo *_servo;
     PID *_pid;
     pid_config _pid_config;
+    pid_dynamic_values _pid_values;
     double _setpoint_distance;
     double _input_distance;
     double _output_distance;

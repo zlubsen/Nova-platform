@@ -13,7 +13,15 @@ typedef struct {
   int sampleTime;
   int outputLimitMin;
   int outputLimitMax;
+  int direction;
+  int mode;
 } pid_config;
+
+typedef struct {
+  double input;
+  double output;
+  double setpoint;
+} pid_dynamic_values;
 
 typedef struct {
   double setpoint;
@@ -29,6 +37,8 @@ class NovaConfig {
     joystick_filter_constants _joy_right_config;
     pid_config _ultrasound_pid_config;
     ultrasoundsensor_config _ultrasound_config;
+    pid_config _face_detection_pid_config_x;
+    pid_config _face_detection_pid_config_y;
 };
 
 #endif

@@ -21,6 +21,6 @@ int UltraSoundSensor::measureDistance() {
 
   duration = pulseIn(_echo_pin, HIGH);
   distance = duration * _dur_dist_conversion;
-  
+
   return distance;
 }
