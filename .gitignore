@@ -34,3 +34,9 @@
 .piolibdeps
 .clang_complete
 .gcc-flags.json
+.clang_complete
+.gcc-flags.json
+.pioenvs/.sconsign.dblite
+.pioenvs/megaatmega2560/firmware.elf
+.pioenvs/megaatmega2560/firmware.hex
+.pioenvs/structure.hash
