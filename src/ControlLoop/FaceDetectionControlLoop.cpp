@@ -42,11 +42,18 @@ void FaceDetectionControlLoop::actuate() {
 }
 
 void FaceDetectionControlLoop::run() {
+  Serial.println("run");
+
   while(Serial.available() == 0); // TODO change to 'if(Serial.available())', so that this loop is non-blocking when no data is being send?
   _serialInArray[_serialCount] = Serial.read();
   _serialCount++;
 
   if(_serialCount > 1) { // two values received (x, y)
+    Serial.print(_serialInArray[0]);
+    Serial.print(", ");
+    Serial.print(_serialInArray[1]);
+    Serial.println();
+
     observe();
     computeControl();
     actuate();

@@ -32,8 +32,8 @@ void setup() {
 
 void loop() {
     //joyControlLoop->run();
-    distanceAvoidControlLoop->run();
-    //faceDetectionControlLoop->run();
+    //distanceAvoidControlLoop->run();
+    faceDetectionControlLoop->run();
 
     delay(30);
 }
