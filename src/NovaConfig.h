@@ -35,10 +35,11 @@ class NovaConfig {
     NovaConfig();
     joystick_filter_constants _joy_left_config;
     joystick_filter_constants _joy_right_config;
-    pid_config _ultrasound_pid_config;
+    pid_config _distance_avoid_pid_config;
     ultrasoundsensor_config _ultrasound_config;
     pid_config _face_detection_pid_config_x;
     pid_config _face_detection_pid_config_y;
+    int _serial_baud_rate;
 };
 
 #endif

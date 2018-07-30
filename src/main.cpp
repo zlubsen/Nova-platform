@@ -14,8 +14,6 @@ joystick_status left;
 joystick_status right;
 
 void setup() {
-  Serial.begin(9600);
-
   hardwareConfig = new HardwareConfig();
   novaConfig = new NovaConfig();
 
@@ -28,6 +26,12 @@ void setup() {
   hardwareConfig->servo3->goToMiddle();
   hardwareConfig->servo4->goToMiddle();
   hardwareConfig->servo5->goToMiddle();
+
+  Serial.begin(novaConfig->_serial_baud_rate);
+
+  while (!Serial) {
+    ; // wait for serial port to connect. Needed for native USB
+  }
 }
 
 void loop() {
@@ -35,5 +39,5 @@ void loop() {
     //distanceAvoidControlLoop->run();
     faceDetectionControlLoop->run();
 
-    delay(30);
+    //delay(30);
 }
