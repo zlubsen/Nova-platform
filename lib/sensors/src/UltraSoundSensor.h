@@ -13,7 +13,7 @@ class UltraSoundSensor {
     int _echo_pin;
     const int _reset_delay = 2; // TODO move these three to NovaConfig ?
     const int _measure_delay = 10;
-    const int _dur_dist_conversion = 0.034/2;
+    const double _dur_dist_conversion = 0.034/2;
 };
 
 #endif
