@@ -15,8 +15,8 @@ FaceDetectionControlLoop::FaceDetectionControlLoop(HardwareConfig *hardwareConfi
   _pid_values_y.setpoint = _servo_y->getDegree();
   setupPIDcontroller(_pid_y, &_pid_config_y, &_pid_values_y);
 
-  _angle_x = _servo_x->getDegree(); //_pid_values_x.setpoint;
-  _angle_y = _servo_y->getDegree(); //_pid_values_y.setpoint;
+  _angle_x = _servo_x->getDegree();
+  _angle_y = _servo_y->getDegree();
 
   Serial.print("pid x: ");
   Serial.print(_pid_x->GetKp());
@@ -44,7 +44,7 @@ FaceDetectionControlLoop::FaceDetectionControlLoop(HardwareConfig *hardwareConfi
   Serial.print(" ");
   Serial.println(_pid_values_y.output);
 
-  //dry run to init pid?
+  //dry run to init pid proves empirically needed
   _pid_values_x.input = _servo_x->getDegree();
   _pid_values_x.output = 0.0;
   _pid_x->Compute();
@@ -85,14 +85,12 @@ void FaceDetectionControlLoop::setupPIDcontroller(PID* pid, pid_config* config, 
 }
 
 void FaceDetectionControlLoop::observe() {
-  nova_command *cmd = _comm->readCommand();
+  NovaCommand *cmd = _comm->readCommand();
 
   _pid_values_x.input = cmd->arg1;
   _pid_values_x.input = cmd->arg2;
-  delete cmd;
 
-  //_pid_values_x.input = _serialInArray[0];
-  //_pid_values_y.input = _serialInArray[1];
+  delete cmd;
 }
 
 void FaceDetectionControlLoop::actuate() {
@@ -124,17 +122,14 @@ void FaceDetectionControlLoop::actuate() {
 }
 
 void FaceDetectionControlLoop::run() {
-/*  while(Serial.available() == 0);
-    _serialInArray[_serialCount] = Serial.read();
-    _serialCount++;*/
-
   if(_comm->commandAvailable()) { // two values received (x, y)
+    _comm->parseInput();
+
     observe();
     computeControl();
     actuate();
-    //_serialCount = 0;
 
-    _comm->writeCommand();
+    _comm->writeCommand(); // send ack
   }
 }
 
