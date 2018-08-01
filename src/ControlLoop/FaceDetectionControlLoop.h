@@ -3,6 +3,7 @@
 
 #include <HardwareConfig.h>
 #include <NovaConfig.h>
+#include <Communication.h>
 #include <PID_v1.h>
 
 class FaceDetectionControlLoop {
@@ -23,6 +24,7 @@ class FaceDetectionControlLoop {
     int _angle_y;
     int _serialCount = 0;
     int _serialInArray[2];
+    Communication *_comm;
     void setupPIDcontroller(PID* pid, pid_config* config, pid_dynamic_values* values);
     void observe();
     void actuate();

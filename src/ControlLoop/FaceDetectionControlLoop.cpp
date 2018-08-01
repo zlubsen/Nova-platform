@@ -2,6 +2,8 @@
 #include "FaceDetectionControlLoop.h"
 
 FaceDetectionControlLoop::FaceDetectionControlLoop(HardwareConfig *hardwareConfig, NovaConfig *novaConfig) {
+  _comm = new Communication();
+
   _servo_x = hardwareConfig->servo4;
   _servo_y = hardwareConfig->servo3;
 
@@ -83,8 +85,14 @@ void FaceDetectionControlLoop::setupPIDcontroller(PID* pid, pid_config* config, 
 }
 
 void FaceDetectionControlLoop::observe() {
-  _pid_values_x.input = _serialInArray[0];
-  _pid_values_y.input = _serialInArray[1];
+  nova_command *cmd = _comm->readCommand();
+
+  _pid_values_x.input = cmd->arg1;
+  _pid_values_x.input = cmd->arg2;
+  delete cmd;
+
+  //_pid_values_x.input = _serialInArray[0];
+  //_pid_values_y.input = _serialInArray[1];
 }
 
 void FaceDetectionControlLoop::actuate() {
@@ -116,17 +124,17 @@ void FaceDetectionControlLoop::actuate() {
 }
 
 void FaceDetectionControlLoop::run() {
-  while(Serial.available() == 0);
-  //if(Serial.available() > 0) {
+/*  while(Serial.available() == 0);
     _serialInArray[_serialCount] = Serial.read();
-    _serialCount++;
-  //}
+    _serialCount++;*/
 
-  if(_serialCount > 1) { // two values received (x, y)
+  if(_comm->commandAvailable()) { // two values received (x, y)
     observe();
     computeControl();
     actuate();
-    _serialCount = 0;
+    //_serialCount = 0;
+
+    _comm->writeCommand();
   }
 }
 
