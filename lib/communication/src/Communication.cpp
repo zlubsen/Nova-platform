@@ -8,9 +8,6 @@
 
 Communication::Communication() {
   // initialize command array
-  for(int i = 0; i < MAX_COMMAND_SIZE; i++) {
-    _commands[i] = NULL;
-  }
 }
 
 bool Communication::commandAvailable() {
@@ -18,13 +15,13 @@ bool Communication::commandAvailable() {
 }
 
 void Communication::parseInput() {
-  while(this->commandAvailable() || _command_count <= MAX_COMMAND_SIZE ) {
+  while(this->commandAvailable() || _commands.count() < MAX_COMMAND_SIZE ) {
     String received = Serial.readStringUntil(MSG_END);
     char received_buf[(received.length()+1)];
     received.toCharArray(received_buf, received.length()+1, 0);
     received_buf[received.length()] = '\0';
 
-    nova_command *cmd = new nova_command;
+    NovaCommand *cmd = new NovaCommand;
 
     char *modcode = strtok(received_buf, ":<");
     char *opcode = strtok(NULL, ":<");
@@ -38,29 +35,12 @@ void Communication::parseInput() {
     cmd->arg2 = String(arg2).toInt();
     cmd->arg3 = String(arg3).toInt();
 
-    _commands[_command_count] = cmd;
-    _command_count++;
+    _commands.push(*cmd);
   }
 }
 
-nova_command* Communication::readCommand() {
-  if(_command_count > 0) {
-    nova_command *cmd = _commands[0];
-    shiftCommandArray();
-    return cmd;
-  } else
-    return NULL;
-}
-
-void Communication::shiftCommandArray() {
-  // shift all available commands upwards in the array; basically it is a queue
-  for(int i = 1; i < MAX_COMMAND_SIZE && i <= _command_count; i++) {
-    nova_command *cmdSwap = _commands[i];
-    if(cmdSwap != NULL);
-    _commands[i-1] = cmdSwap;
-  }
-  _commands[_command_count] = NULL; // clear last item, it is now located one index above
-  _command_count--;
+NovaCommand* Communication::readCommand() {
+  return &(_commands.pop());
 }
 
 void Communication::writeCommand() {
