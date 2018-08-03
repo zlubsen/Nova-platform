@@ -12,46 +12,53 @@ Communication::Communication(int baud_rate) {
   Serial.setTimeout(500);
 }
 
-bool Communication::serialInputAvailable() {
-  /*Serial.print("bytes available: ");
-  Serial.println(Serial.available());*/
-  return (Serial.available() > COMMAND_LENGTH_BYTES);
-}
-
 bool Communication::commandAvailable() {
   return _commands.count() > 0;
 }
 
+void Communication::recvBytesWithStartEndMarkers() {
+  static boolean recvInProgress = false;
+  static byte ndx = 0;
+  byte rb;
+
+  while (Serial.available() > 0 && _newData == false) {
+    rb = Serial.read();
+
+    if (recvInProgress == true) {
+        if (rb != _endMarker) {
+            _receivedBytes[ndx] = rb;
+            ndx++;
+            if (ndx >= numBytes) {
+                ndx = numBytes - 1;
+            }
+        }
+        else {
+            _receivedBytes[ndx] = '\0'; // terminate the string
+            recvInProgress = false;
+            _numReceived = ndx;  // save the number for use when printing
+            ndx = 0;
+            _newData = true;
+        }
+    }
+    else if (rb == _startMarker) {
+        recvInProgress = true;
+    }
+  }
+}
+
 void Communication::parseInput() {
-  /*Serial.print("Parse input: ");
-  Serial.print(this->serialInputAvailable());
-  Serial.print(" & ");
-  Serial.println(_commands.count() < MAX_COMMAND_SIZE);*/
-
-  while(this->serialInputAvailable() && _commands.count() < MAX_COMMAND_SIZE) {
-    Serial.print("pre read until: ");
-    Serial.println(String(Serial.peek()));
-    String received = Serial.readStringUntil(MSG_END);
-    Serial.println("post read until");
-
-    char received_buf[(received.length()+1)];
-    received.toCharArray(received_buf, received.length()+1, 0);
-    received_buf[received.length()] = '\0';
-
-    char *modcode = strtok(received_buf, ":");
-    char *opcode = strtok(NULL, ":");
-    char *arg1 = strtok(NULL, ":");
-    char *arg2 = strtok(NULL, ":");
-    char *arg3 = strtok(NULL, ":");
+  if(_newData) {
+    strcpy(_tempBytes, _receivedBytes);
 
     NovaCommand cmd;
-    cmd.modulecode = String(modcode).toInt();
-    cmd.operandcode = String(opcode).toInt();
-    cmd.arg1 = String(arg1).toInt();
-    cmd.arg2 = String(arg2).toInt();
-    cmd.arg3 = String(arg3).toInt();
+    cmd.modulecode = atoi(strtok(_tempBytes, ":"));
+    cmd.operandcode = atoi(strtok(NULL, ":"));
+    cmd.arg1 = atoi(strtok(NULL, ":"));
+    cmd.arg2 = atoi(strtok(NULL, ":"));
+    cmd.arg3 = atoi(strtok(NULL, ":"));
 
     _commands.push(cmd);
+    _newData = false;
 
     /*Serial.print("Command received: ");
     Serial.print(cmd.modulecode);
@@ -90,7 +97,8 @@ void Communication::writeCommand() {
 }
 
 void Communication::writeCommand(int modcode, int opcode, int arg1, int arg2, int arg3) {
-  String message = String(modcode);
+  String message = String(">");
+  message.concat(modcode);
   message.concat(':');
   message.concat(opcode);
   message.concat(':');
@@ -105,5 +113,6 @@ void Communication::writeCommand(int modcode, int opcode, int arg1, int arg2, in
 }
 
 void Communication::run() {
+  recvBytesWithStartEndMarkers();
   parseInput();
 }

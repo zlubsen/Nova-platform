@@ -4,6 +4,8 @@
 #include <Arduino.h>
 #include <Queue.h>
 
+#define numBytes 32
+
 typedef struct {
   int modulecode;
   int operandcode;
@@ -22,13 +24,21 @@ class Communication {
     NovaCommand* readCommand();
 
   private:
-    bool serialInputAvailable();
     void parseInput();
+    void recvBytesWithStartEndMarkers();
     const int MAX_COMMAND_SIZE = 20;
     char MSG_SEPARATOR = ':';
+    char MSG_START = '>';
     char MSG_END = '<';
     char CMD_ACK = '&';
     Queue<NovaCommand> _commands = Queue<NovaCommand>(MAX_COMMAND_SIZE);
+    char _startMarker = 0x3E; // '>'
+    char _endMarker = 0x3C; // '<'
+    //const byte numBytes = 32;
+    char _receivedBytes[numBytes];
+    char _tempBytes[numBytes];
+    byte _numReceived = 0;
+    boolean _newData = false;
 };
 
 #endif
