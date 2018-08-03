@@ -15,9 +15,6 @@ FaceDetectionControlLoop::FaceDetectionControlLoop(HardwareConfig *hardwareConfi
   _pid_values_y.setpoint = _servo_y->getDegree();
   setupPIDcontroller(_pid_y, &_pid_config_y, &_pid_values_y);
 
-  //_angle_x = _servo_x->getDegree(); //_pid_values_x.setpoint;
-  //_angle_y = _servo_y->getDegree(); //_pid_values_y.setpoint;
-
   /*Serial.print("pid x: ");
   Serial.print(_pid_x->GetKp());
   Serial.print(" ");
@@ -86,27 +83,27 @@ void FaceDetectionControlLoop::setupPIDcontroller(PID* pid, pid_config* config, 
 
 void FaceDetectionControlLoop::observe(NovaCommand *cmd) {
   _pid_values_x.input = cmd->arg1;
-  _pid_values_x.input = cmd->arg2;
+  _pid_values_y.input = cmd->arg2;
   delete cmd;
+}
 
-  //_pid_values_x.input = _serialInArray[0];
-  //_pid_values_y.input = _serialInArray[1];
+void FaceDetectionControlLoop::computeControl() {
+  _pid_x->Compute();
+  _pid_y->Compute();
 }
 
 void FaceDetectionControlLoop::actuate() {
   int angle_x = _servo_x->getDegree() + _pid_values_x.output;
   int angle_y = _servo_y->getDegree() + _pid_values_y.output;
-  //_angle_x = _angle_x + _pid_values_x.output;
-  //_angle_y = _angle_y + _pid_values_y.output;
 
-  /*Serial.print("x: ");
+  Serial.print("x: ");
   Serial.print(_pid_values_x.input);
   Serial.print(" +/- ");
   Serial.print(_pid_values_x.output);
   Serial.print(" : ");
   Serial.print(_servo_x->getDegree());
   Serial.print(" -> ");
-  Serial.println(_angle_x);
+  Serial.println(angle_x);
 
   Serial.print("y: ");
   Serial.print(_pid_values_y.input);
@@ -115,10 +112,8 @@ void FaceDetectionControlLoop::actuate() {
   Serial.print(" : ");
   Serial.print(_servo_y->getDegree());
   Serial.print(" -> ");
-  Serial.println(_angle_y);*/
+  Serial.println(angle_y);
 
-  //_servo_x->setDegree(_angle_x);
-  //_servo_y->setDegree(_angle_y);
   _servo_x->setDegree(angle_x);
   _servo_y->setDegree(angle_y);
 }
@@ -131,9 +126,4 @@ void FaceDetectionControlLoop::run(NovaCommand* cmd) {
 
     _comm->writeCommand(); // TODO placeholder ACK for now
   }
-}
-
-void FaceDetectionControlLoop::computeControl() {
-  _pid_x->Compute();
-  _pid_y->Compute();
 }

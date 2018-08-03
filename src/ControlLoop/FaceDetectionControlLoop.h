@@ -19,10 +19,10 @@ class FaceDetectionControlLoop {
     pid_config _pid_config_y;
     pid_dynamic_values _pid_values_x;
     pid_dynamic_values _pid_values_y;
-    int _angle_x;
+    /*int _angle_x;
     int _angle_y;
     int _serialCount = 0;
-    int _serialInArray[2];
+    int _serialInArray[2];*/
     Communication *_comm;
     void setupPIDcontroller(PID* pid, pid_config* config, pid_dynamic_values* values);
     void observe(NovaCommand* cmd);

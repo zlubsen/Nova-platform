@@ -30,8 +30,8 @@ NovaConfig::NovaConfig() {
   _face_detection_pid_config_x.direction = DIRECT;
   _face_detection_pid_config_x.mode = AUTOMATIC;
 
-  _face_detection_pid_config_y.Kp = 0.014;//0.028;
-  _face_detection_pid_config_y.Ki = 0.013;//0.026;
+  _face_detection_pid_config_y.Kp = 0.028;//0.028;
+  _face_detection_pid_config_y.Ki = 0.026;//0.026;
   _face_detection_pid_config_y.Kd = 0;
   _face_detection_pid_config_y.sampleTime = 1;
   _face_detection_pid_config_y.outputLimitMin = -35;
