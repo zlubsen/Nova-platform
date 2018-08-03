@@ -5,6 +5,7 @@ HardwareConfig::HardwareConfig() {
   configureServos();
   configureJoysticks();
   configureUltrasound();
+  configureCommunication();
 }
 
 void HardwareConfig::configureServos() {
@@ -13,6 +14,12 @@ void HardwareConfig::configureServos() {
   servo3 = new NovaServo(36, 35, 175); // mid: 105
   servo4 = new NovaServo(38, 10, 170); // mid: 90
   servo5 = new NovaServo(40, 75, 145); // mid: 110
+
+  servo1->goToMiddle();
+  servo2->goToMiddle();
+  servo3->goToMiddle();
+  servo4->goToMiddle();
+  servo5->goToMiddle();
 }
 
 void HardwareConfig::configureJoysticks() {
@@ -22,4 +29,11 @@ void HardwareConfig::configureJoysticks() {
 
 void HardwareConfig::configureUltrasound() {
   ultraSoundSensor = new UltraSoundSensor(46, 44);
+}
+
+void HardwareConfig::configureCommunication() {
+  comm = new Communication(28800);
+  while (!Serial) {
+    ; // wait for serial port to connect. Needed for native USB
+  }
 }

@@ -3,13 +3,12 @@
 
 #include <HardwareConfig.h>
 #include <NovaConfig.h>
-#include <Communication.h>
 #include <PID_v1.h>
 
 class FaceDetectionControlLoop {
   public:
     FaceDetectionControlLoop(HardwareConfig *hardwareConfig, NovaConfig *novaConfig);
-    void run();
+    void run(NovaCommand* cmd);
 
   private:
     NovaServo* _servo_x;
@@ -26,7 +25,7 @@ class FaceDetectionControlLoop {
     int _serialInArray[2];
     Communication *_comm;
     void setupPIDcontroller(PID* pid, pid_config* config, pid_dynamic_values* values);
-    void observe();
+    void observe(NovaCommand* cmd);
     void actuate();
     void computeControl();
 };

@@ -14,22 +14,21 @@ typedef struct {
 
 class Communication {
   public:
-    Communication();
+    Communication(int baud_rate);
+    void run();
     bool commandAvailable();
-    void parseInput();
     void writeCommand();
+    void writeCommand(int modcode, int opcode, int arg1, int arg2, int arg3);
     NovaCommand* readCommand();
 
   private:
+    bool serialInputAvailable();
+    void parseInput();
     const int MAX_COMMAND_SIZE = 20;
-    //nova_command *_commands[MAX_COMMAND_SIZE]; // basically used as a queue
-    //int _command_count = 0;
-    //char MSG_START = '>';
     char MSG_SEPARATOR = ':';
     char MSG_END = '<';
     char CMD_ACK = '&';
     Queue<NovaCommand> _commands = Queue<NovaCommand>(MAX_COMMAND_SIZE);
-    //String token_symbols = String(MSG_SEPARATOR) + String(MSG_END);
 };
 
 #endif

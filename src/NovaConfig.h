@@ -39,7 +39,6 @@ class NovaConfig {
     ultrasoundsensor_config _ultrasound_config;
     pid_config _face_detection_pid_config_x;
     pid_config _face_detection_pid_config_y;
-    int _serial_baud_rate;
 };
 
 #endif

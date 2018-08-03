@@ -2,8 +2,6 @@
 #include <PID_v1.h>
 
 NovaConfig::NovaConfig() {
-  _serial_baud_rate = 9600;
-
   _joy_left_config.x = 0.05;
   _joy_left_config.y = 0.05;
   _joy_right_config.x = 0.08;
