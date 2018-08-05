@@ -69,24 +69,6 @@ void FaceDetectionControlLoop::actuate() {
   int angle_x = _servo_x->getDegree() + _pid_values_x.output;
   int angle_y = _servo_y->getDegree() + _pid_values_y.output;
 
-  Serial.print("x: ");
-  Serial.print(_pid_values_x.input);
-  Serial.print(" +/- ");
-  Serial.print(_pid_values_x.output);
-  Serial.print(" : ");
-  Serial.print(_servo_x->getDegree());
-  Serial.print(" -> ");
-  Serial.println(angle_x);
-
-  Serial.print("y: ");
-  Serial.print(_pid_values_y.input);
-  Serial.print(" +/- ");
-  Serial.print(_pid_values_y.output);
-  Serial.print(" : ");
-  Serial.print(_servo_y->getDegree());
-  Serial.print(" -> ");
-  Serial.println(angle_y);
-
   _servo_x->setDegree(angle_x);
   _servo_y->setDegree(angle_y);
 }

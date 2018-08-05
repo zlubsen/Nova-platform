@@ -21,8 +21,8 @@ NovaConfig::NovaConfig() {
   _ultrasound_config.maxDistance = 30;
   _ultrasound_config.servoAngle = 110;
 
-  _face_detection_pid_config_x.Kp = 0.1;//0.016;
-  _face_detection_pid_config_x.Ki = 0.1;//0.012;
+  _face_detection_pid_config_x.Kp = 0.016;//0.016;
+  _face_detection_pid_config_x.Ki = 0.012;//0.012;
   _face_detection_pid_config_x.Kd = 0;
   _face_detection_pid_config_x.sampleTime = 1;
   _face_detection_pid_config_x.outputLimitMin = -35;
@@ -30,8 +30,8 @@ NovaConfig::NovaConfig() {
   _face_detection_pid_config_x.direction = DIRECT;
   _face_detection_pid_config_x.mode = AUTOMATIC;
 
-  _face_detection_pid_config_y.Kp = 0.3;//0.028;
-  _face_detection_pid_config_y.Ki = 0.3;//0.026;
+  _face_detection_pid_config_y.Kp = 0.028;//0.028;
+  _face_detection_pid_config_y.Ki = 0.026;//0.026;
   _face_detection_pid_config_y.Kd = 0;
   _face_detection_pid_config_y.sampleTime = 1;
   _face_detection_pid_config_y.outputLimitMin = -35;
