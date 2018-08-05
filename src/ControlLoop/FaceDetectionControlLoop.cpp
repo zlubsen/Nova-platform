@@ -9,62 +9,35 @@ FaceDetectionControlLoop::FaceDetectionControlLoop(HardwareConfig *hardwareConfi
 
   _pid_config_x = novaConfig->_face_detection_pid_config_x;
   _pid_values_x.setpoint = _servo_x->getDegree();
-  setupPIDcontroller(_pid_x, &_pid_config_x, &_pid_values_x);
+  //setupPIDcontroller(_pid_x, &_pid_config_x, &_pid_values_x);
+  _pid_x = new PID(&(_pid_values_x.input),
+    &(_pid_values_x.output),
+    &(_pid_values_x.setpoint),
+    _pid_config_x.Kp,
+    _pid_config_x.Ki,
+    _pid_config_x.Kd,
+    _pid_config_x.direction);
+
+    _pid_x->SetSampleTime(_pid_config_x.sampleTime);
+    _pid_x->SetOutputLimits(_pid_config_x.outputLimitMin, _pid_config_x.outputLimitMax);
+    _pid_x->SetMode(_pid_config_x.mode);
+  _pid_values_x.output = 0.0; // explicitly set output to zero, otherwise there is garbage in the memory...
 
   _pid_config_y = novaConfig->_face_detection_pid_config_y;
   _pid_values_y.setpoint = _servo_y->getDegree();
-  setupPIDcontroller(_pid_y, &_pid_config_y, &_pid_values_y);
+  //setupPIDcontroller(_pid_y, &_pid_config_y, &_pid_values_y);
+  _pid_y = new PID(&(_pid_values_y.input),
+    &(_pid_values_y.output),
+    &(_pid_values_y.setpoint),
+    _pid_config_y.Kp,
+    _pid_config_y.Ki,
+    _pid_config_y.Kd,
+    _pid_config_y.direction);
 
-  /*Serial.print("pid x: ");
-  Serial.print(_pid_x->GetKp());
-  Serial.print(" ");
-  Serial.print(_pid_x->GetKi());
-  Serial.print(" ");
-  Serial.println(_pid_x->GetKd());
-  Serial.print("pid y: ");
-  Serial.print(_pid_x->GetKp());
-  Serial.print(" ");
-  Serial.print(_pid_x->GetKi());
-  Serial.print(" ");
-  Serial.println(_pid_x->GetKd());
-
-  Serial.print("default x values: ");
-  Serial.print(_pid_values_x.input);
-  Serial.print(" ");
-  Serial.print(_pid_values_x.setpoint);
-  Serial.print(" ");
-  Serial.println(_pid_values_x.output);
-  Serial.print("default y values: ");
-  Serial.print(_pid_values_y.input);
-  Serial.print(" ");
-  Serial.print(_pid_values_y.setpoint);
-  Serial.print(" ");
-  Serial.println(_pid_values_y.output);*/
-
-  //dry run to init pid?
-  _pid_values_x.input = _servo_x->getDegree();
-  _pid_values_x.output = 0.0;
-  _pid_x->Compute();
-  _pid_values_y.input = _servo_y->getDegree();
-  _pid_values_y.output = 0.0;
-  _pid_y->Compute();
-
-  /*Serial.print("x on start: ");
-  Serial.print(_pid_values_x.input);
-  Serial.print(" +/- ");
-  Serial.print(_pid_values_x.output);
-  Serial.print(" : (default) ");
-  Serial.print(_servo_x->getDegree());
-  Serial.print(" -> (default) ");
-  Serial.println(_angle_x);
-  Serial.print("y on start: ");
-  Serial.print(_pid_values_y.input);
-  Serial.print(" +/- ");
-  Serial.print(_pid_values_y.output);
-  Serial.print(" : (default) ");
-  Serial.print(_servo_y->getDegree());
-  Serial.print(" -> (default) ");
-  Serial.println(_angle_y);*/
+    _pid_y->SetSampleTime(_pid_config_y.sampleTime);
+    _pid_y->SetOutputLimits(_pid_config_y.outputLimitMin, _pid_config_y.outputLimitMax);
+    _pid_y->SetMode(_pid_config_y.mode);
+  _pid_values_y.output = 0.0; // explicitly set output to zero, otherwise there is garbage in the memory...
 }
 
 void FaceDetectionControlLoop::setupPIDcontroller(PID* pid, pid_config* config, pid_dynamic_values* values) {
