@@ -34,7 +34,6 @@ class Communication {
     Queue<NovaCommand> _commands = Queue<NovaCommand>(MAX_COMMAND_SIZE);
     char _startMarker = 0x3E; // '>'
     char _endMarker = 0x3C; // '<'
-    //const byte numBytes = 32;
     char _receivedBytes[numBytes];
     char _tempBytes[numBytes];
     byte _numReceived = 0;

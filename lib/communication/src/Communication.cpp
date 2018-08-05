@@ -59,17 +59,6 @@ void Communication::parseInput() {
 
     _commands.push(cmd);
     _newData = false;
-
-    /*Serial.print("Command received: ");
-    Serial.print(cmd.modulecode);
-    Serial.print(" : ");
-    Serial.print(cmd.operandcode);
-    Serial.print(" : ");
-    Serial.print(cmd.arg1);
-    Serial.print(" : ");
-    Serial.print(cmd.arg2);
-    Serial.print(" : ");
-    Serial.println(cmd.arg3);*/
   }
 }
 
