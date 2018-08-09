@@ -1,15 +1,11 @@
 #include <Communication.h>
 
-#define COMMAND_LENGTH_BYTES 10 // minimal length of a command to nova
-
 // we expect a command following this template:
-// modcode:opcode:arg1:arg2:arg3<
-// where modcode, opcode, arg1-3 are one to three bytes containing an int value (as string)
+// >modcode:opcode:arg1:arg2:arg3<
+// where modcode, opcode, arg1-3 are bytes containing an int value (as string)
 
 Communication::Communication(int baud_rate) {
-  // initialize command array
   Serial.begin(baud_rate);
-  Serial.setTimeout(500);
 }
 
 bool Communication::commandAvailable() {
@@ -65,28 +61,22 @@ void Communication::parseInput() {
 NovaCommand* Communication::readCommand() {
   if(commandAvailable()) {
     NovaCommand cmd = _commands.pop();
-    // TODO novacommand copy constructor
+    // TODO novacommand copy constructor?
     NovaCommand *retval = new NovaCommand;
+
     retval->modulecode = cmd.modulecode;
     retval->operandcode = cmd.operandcode;
     retval->arg1 = cmd.arg1;
     retval->arg2 = cmd.arg2;
     retval->arg3 = cmd.arg3;
 
-    delete &cmd; // cleanup the command that came from the queue
-
     return retval;
   } else
     return NULL;
 }
 
-void Communication::writeCommand() {
-  // TODO only ACK supported for now; use parametrised version for other commands
-  Serial.println(CMD_ACK);
-}
-
 void Communication::writeCommand(int modcode, int opcode, int arg1, int arg2, int arg3) {
-  String message = String(">");
+  String message = String(">"); // TODO: use config / constants for these markers
   message.concat(modcode);
   message.concat(':');
   message.concat(opcode);
@@ -98,7 +88,7 @@ void Communication::writeCommand(int modcode, int opcode, int arg1, int arg2, in
   message.concat(arg3);
   message.concat('<');
 
-  Serial.println(message);
+  Serial.print(message);
 }
 
 void Communication::run() {

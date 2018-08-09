@@ -74,11 +74,12 @@ void FaceDetectionControlLoop::actuate() {
 }
 
 void FaceDetectionControlLoop::run(NovaCommand* cmd) {
-  if(cmd != NULL) {
+    // TODO put values in constants file
+  if(cmd != NULL && cmd->modulecode == 5 && cmd->operandcode == 5) { // MOD_FACE_DETECTION and OP_FACE_DETECTION_SET_COORDINATES
     observe(cmd);
     computeControl();
     actuate();
 
-    _comm->writeCommand(); // TODO placeholder ACK for now
+    _comm->writeCommand(5,6,0,0,0); // TODO: put in constants file: MOD_FACE_DETECTION and OP_FACE_DETECTION_ACK_COORDINATES
   }
 }

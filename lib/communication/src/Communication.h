@@ -19,7 +19,6 @@ class Communication {
     Communication(int baud_rate);
     void run();
     bool commandAvailable();
-    void writeCommand();
     void writeCommand(int modcode, int opcode, int arg1, int arg2, int arg3);
     NovaCommand* readCommand();
 
