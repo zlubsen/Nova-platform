@@ -3,6 +3,7 @@
 
 #include <HardwareConfig.h>
 #include <NovaConfig.h>
+#include <NovaConstants.h>
 #include <PID_v1.h>
 
 class FaceDetectionControlLoop {

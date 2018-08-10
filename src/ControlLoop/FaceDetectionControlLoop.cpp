@@ -74,19 +74,24 @@ void FaceDetectionControlLoop::actuate() {
 }
 
 void FaceDetectionControlLoop::run(NovaCommand* cmd) {
-    // TODO put values in constants file
-  if(cmd != NULL
-      && cmd->modulecode == NovaConfig->MOD_FACE_DETECTION
-      && cmd->operandcode == NovaConfig->OP_FACE_DETECTION_SET_COORDINATES) {
-    observe(cmd);
-    computeControl();
-    actuate();
+  if(cmd != NULL) {
+    if(cmd->modulecode == NovaConstants::MOD_FACE_DETECTION
+        && cmd->operandcode == NovaConstants::OP_FACE_DETECTION_SET_COORDINATES) {
+      observe(cmd);
+      computeControl();
+      actuate();
+
+      _comm->writeCommand(
+        NovaConstants::MOD_FACE_DETECTION,
+        NovaConstants::OP_FACE_DETECTION_ACK_COORDINATES,
+        0,0,0);
+    }
+    if(cmd->modulecode == NovaConstants::MOD_FACE_DETECTION
+        && (cmd->operandcode == NovaConstants::OP_FACE_DETECTION_X_PID_TUNING
+        || cmd->operandcode == NovaConstants::OP_FACE_DETECTION_Y_PID_TUNING)) {
+      // placeholder
+    }
 
     delete cmd; // cleanup the processed command
-
-    _comm->writeCommand(
-      NovaConfig->MOD_FACE_DETECTION,
-      NovaConfig->OP_FACE_DETECTION_ACK_COORDINATES,
-      0,0,0);
   }
 }
