@@ -55,6 +55,17 @@ void FaceDetectionControlLoop::setupPIDcontroller(PID* pid, pid_config* config, 
     pid->SetMode(config->mode);
 }
 
+void FaceDetectionControlLoop::setPIDTuning(int opcode, int p_value, int i_value, int d_value) {
+  double new_p = ((double) p_value)/1000;
+  double new_i = ((double) i_value)/1000;
+  double new_d = ((double) d_value)/1000;
+
+  if(opcode == NovaConstants::OP_FACE_DETECTION_X_PID_TUNING)
+    _pid_x->SetTunings(new_p, new_i, new_d);
+  else if(opcode == NovaConstants::OP_FACE_DETECTION_X_PID_TUNING)
+    _pid_y->SetTunings(new_p, new_i, new_d);
+}
+
 void FaceDetectionControlLoop::observe(NovaCommand *cmd) {
   _pid_values_x.input = cmd->arg1;
   _pid_values_y.input = cmd->arg2;
@@ -89,7 +100,7 @@ void FaceDetectionControlLoop::run(NovaCommand* cmd) {
     if(cmd->modulecode == NovaConstants::MOD_FACE_DETECTION
         && (cmd->operandcode == NovaConstants::OP_FACE_DETECTION_X_PID_TUNING
         || cmd->operandcode == NovaConstants::OP_FACE_DETECTION_Y_PID_TUNING)) {
-      // placeholder
+        __setPIDTuning(cmd->operandcode, cmd->arg1, cmd->arg2, cmd->arg3);
     }
 
     delete cmd; // cleanup the processed command

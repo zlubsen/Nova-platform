@@ -25,6 +25,7 @@ class FaceDetectionControlLoop {
     void observe(NovaCommand* cmd);
     void actuate();
     void computeControl();
+    void setPIDTuning(int opcode, int p_value, int i_value, int d_value);
 };
 
 #endif
