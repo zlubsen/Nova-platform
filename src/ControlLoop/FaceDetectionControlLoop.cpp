@@ -62,7 +62,7 @@ void FaceDetectionControlLoop::setPIDTuning(int opcode, int p_value, int i_value
 
   if(opcode == NovaConstants::OP_FACE_DETECTION_X_PID_TUNING)
     _pid_x->SetTunings(new_p, new_i, new_d);
-  else if(opcode == NovaConstants::OP_FACE_DETECTION_X_PID_TUNING)
+  else if(opcode == NovaConstants::OP_FACE_DETECTION_Y_PID_TUNING)
     _pid_y->SetTunings(new_p, new_i, new_d);
 }
 
