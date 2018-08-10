@@ -86,7 +86,7 @@ void Communication::writeCommand(int modcode, int opcode, int arg1, int arg2, in
   message.concat(arg2);
   message.concat(CMD_SEPARATOR);
   message.concat(arg3);
-  message.concat(CMD_END);
+  message.concat(CMD_END_MARKER);
 
   Serial.print(message);
 }
