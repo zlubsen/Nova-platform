@@ -4,7 +4,7 @@
 #include <Arduino.h>
 #include <Queue.h>
 
-#define numBytes 32
+#define numBytes 32 // We can read a maximum of 32 bytes per loop
 
 typedef struct {
   int modulecode;
@@ -25,13 +25,12 @@ class Communication {
   private:
     void parseInput();
     void recvBytesWithStartEndMarkers();
-    const int MAX_COMMAND_SIZE = 20;
-    char MSG_SEPARATOR = ':';
-    char MSG_START = '>';
-    char MSG_END = '<';
-    char CMD_ACK = '&';
+    const int MAX_COMMAND_SIZE = 20; // we can store a maximum of 20 commands per loop (which won't fit in 32 bytes anyhow - see 'define numBytes')
+    char CMD_SEPARATOR = ':';
+    char CMD_START_MARKER = '>';
+    char CMD_END_MARKER = '<';
     Queue<NovaCommand> _commands = Queue<NovaCommand>(MAX_COMMAND_SIZE);
-    char _startMarker = 0x3E; // '>'
+    char _startMarker = 0x3E; // '>' TODO: there is redundancy in using both char and byte version of the markers/msg-indicators
     char _endMarker = 0x3C; // '<'
     char _receivedBytes[numBytes];
     char _tempBytes[numBytes];

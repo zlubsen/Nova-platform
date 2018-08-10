@@ -37,9 +37,10 @@ FaceDetectionControlLoop::FaceDetectionControlLoop(HardwareConfig *hardwareConfi
     _pid_y->SetSampleTime(_pid_config_y.sampleTime);
     _pid_y->SetOutputLimits(_pid_config_y.outputLimitMin, _pid_config_y.outputLimitMax);
     _pid_y->SetMode(_pid_config_y.mode);
-  _pid_values_y.output = 0.0; // explicitly set output to zero, otherwise there is garbage in the memory...
+  _pid_values_y.output = 0.0; // explicitly set output to zero, otherwise there appears to be garbage in the memory...
 }
 
+// TODO: this one does not work well, pointers given to the PID are not passed correctly...
 void FaceDetectionControlLoop::setupPIDcontroller(PID* pid, pid_config* config, pid_dynamic_values* values) {
   pid = new PID(&(values->input),
     &(values->output),
@@ -57,7 +58,6 @@ void FaceDetectionControlLoop::setupPIDcontroller(PID* pid, pid_config* config, 
 void FaceDetectionControlLoop::observe(NovaCommand *cmd) {
   _pid_values_x.input = cmd->arg1;
   _pid_values_y.input = cmd->arg2;
-  delete cmd;
 }
 
 void FaceDetectionControlLoop::computeControl() {
@@ -75,11 +75,18 @@ void FaceDetectionControlLoop::actuate() {
 
 void FaceDetectionControlLoop::run(NovaCommand* cmd) {
     // TODO put values in constants file
-  if(cmd != NULL && cmd->modulecode == 5 && cmd->operandcode == 5) { // MOD_FACE_DETECTION and OP_FACE_DETECTION_SET_COORDINATES
+  if(cmd != NULL
+      && cmd->modulecode == NovaConfig->MOD_FACE_DETECTION
+      && cmd->operandcode == NovaConfig->OP_FACE_DETECTION_SET_COORDINATES) {
     observe(cmd);
     computeControl();
     actuate();
 
-    _comm->writeCommand(5,6,0,0,0); // TODO: put in constants file: MOD_FACE_DETECTION and OP_FACE_DETECTION_ACK_COORDINATES
+    delete cmd; // cleanup the processed command
+
+    _comm->writeCommand(
+      NovaConfig->MOD_FACE_DETECTION,
+      NovaConfig->OP_FACE_DETECTION_ACK_COORDINATES,
+      0,0,0);
   }
 }

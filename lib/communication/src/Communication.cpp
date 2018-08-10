@@ -76,17 +76,17 @@ NovaCommand* Communication::readCommand() {
 }
 
 void Communication::writeCommand(int modcode, int opcode, int arg1, int arg2, int arg3) {
-  String message = String(">"); // TODO: use config / constants for these markers
+  String message = String(CMD_START_MARKER);
   message.concat(modcode);
-  message.concat(':');
+  message.concat(CMD_SEPARATOR);
   message.concat(opcode);
-  message.concat(':');
+  message.concat(CMD_SEPARATOR);
   message.concat(arg1);
-  message.concat(':');
+  message.concat(CMD_SEPARATOR);
   message.concat(arg2);
-  message.concat(':');
+  message.concat(CMD_SEPARATOR);
   message.concat(arg3);
-  message.concat('<');
+  message.concat(CMD_END);
 
   Serial.print(message);
 }
