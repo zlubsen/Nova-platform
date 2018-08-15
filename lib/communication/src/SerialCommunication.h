@@ -1,5 +1,5 @@
-#ifndef Nova_Util_Communication_h
-#define Nova_Util_Communication_h
+#ifndef Nova_Util_Serial_Communication_h
+#define Nova_Util_Serial_Communication_h
 
 #include <Arduino.h>
 #include <Queue.h>
@@ -14,9 +14,9 @@ typedef struct {
   int arg3;
 } NovaCommand;
 
-class Communication {
+class SerialCommunication {
   public:
-    Communication(int baud_rate);
+    SerialCommunication(int baud_rate);
     void run();
     bool commandAvailable();
     void writeCommand(int modcode, int opcode, int arg1, int arg2, int arg3);

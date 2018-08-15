@@ -100,7 +100,7 @@ void FaceDetectionControlLoop::run(NovaCommand* cmd) {
     if(cmd->modulecode == NovaConstants::MOD_FACE_DETECTION
         && (cmd->operandcode == NovaConstants::OP_FACE_DETECTION_X_PID_TUNING
         || cmd->operandcode == NovaConstants::OP_FACE_DETECTION_Y_PID_TUNING)) {
-        __setPIDTuning(cmd->operandcode, cmd->arg1, cmd->arg2, cmd->arg3);
+        setPIDTuning(cmd->operandcode, cmd->arg1, cmd->arg2, cmd->arg3);
     }
 
     delete cmd; // cleanup the processed command

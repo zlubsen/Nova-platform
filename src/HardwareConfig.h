@@ -4,7 +4,7 @@
 #include <NovaServo.h>
 #include <Joystick.h>
 #include <UltraSoundSensor.h>
-#include <Communication.h>
+#include <SerialCommunication.h>
 
 typedef struct {
   int pin;
@@ -33,7 +33,7 @@ class HardwareConfig {
     Joystick* joystick_left;
     Joystick* joystick_right;
     UltraSoundSensor* ultraSoundSensor;
-    Communication* comm;
+    SerialCommunication* comm;
 };
 
 #endif

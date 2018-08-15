@@ -1,18 +1,18 @@
-#include <Communication.h>
+#include <SerialCommunication.h>
 
 // we expect a command following this template:
 // >modcode:opcode:arg1:arg2:arg3<
 // where modcode, opcode, arg1-3 are bytes containing an int value (as string)
 
-Communication::Communication(int baud_rate) {
+SerialCommunication::SerialCommunication(int baud_rate) {
   Serial.begin(baud_rate);
 }
 
-bool Communication::commandAvailable() {
+bool SerialCommunication::commandAvailable() {
   return _commands.count() > 0;
 }
 
-void Communication::recvBytesWithStartEndMarkers() {
+void SerialCommunication::recvBytesWithStartEndMarkers() {
   static boolean recvInProgress = false;
   static byte ndx = 0;
   byte rb;
@@ -42,7 +42,7 @@ void Communication::recvBytesWithStartEndMarkers() {
   }
 }
 
-void Communication::parseInput() {
+void SerialCommunication::parseInput() {
   if(_newData) {
     strcpy(_tempBytes, _receivedBytes);
 
@@ -58,7 +58,7 @@ void Communication::parseInput() {
   }
 }
 
-NovaCommand* Communication::readCommand() {
+NovaCommand* SerialCommunication::readCommand() {
   if(commandAvailable()) {
     NovaCommand cmd = _commands.pop();
     // TODO novacommand copy constructor?
@@ -75,7 +75,7 @@ NovaCommand* Communication::readCommand() {
     return NULL;
 }
 
-void Communication::writeCommand(int modcode, int opcode, int arg1, int arg2, int arg3) {
+void SerialCommunication::writeCommand(int modcode, int opcode, int arg1, int arg2, int arg3) {
   String message = String(CMD_START_MARKER);
   message.concat(modcode);
   message.concat(CMD_SEPARATOR);
@@ -91,7 +91,7 @@ void Communication::writeCommand(int modcode, int opcode, int arg1, int arg2, in
   Serial.print(message);
 }
 
-void Communication::run() {
+void SerialCommunication::run() {
   recvBytesWithStartEndMarkers();
   parseInput();
 }

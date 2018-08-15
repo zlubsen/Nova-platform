@@ -32,7 +32,7 @@ void HardwareConfig::configureUltrasound() {
 }
 
 void HardwareConfig::configureCommunication() {
-  comm = new Communication(28800);
+  comm = new SerialCommunication(28800);
   while (!Serial) {
     ; // wait for serial port to connect. Needed for native USB
   }

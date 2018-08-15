@@ -1,5 +1,5 @@
 #include <Arduino.h>
-#include <Communication.h>
+#include <SerialCommunication.h>
 #include "ControlLoop/JoystickControlLoop.h"
 #include "ControlLoop/DistanceAvoidControlLoop.h"
 #include "ControlLoop/FaceDetectionControlLoop.h"
@@ -7,7 +7,7 @@
 HardwareConfig* hardwareConfig;
 NovaConfig* novaConfig;
 
-Communication* comm;
+SerialCommunication* comm;
 
 JoystickControlLoop* joyControlLoop;
 DistanceAvoidControlLoop* distanceAvoidControlLoop;
