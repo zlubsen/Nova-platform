@@ -4,6 +4,7 @@
 #include <config/NovaConfig.h>
 #include <config/NovaConstants.h>
 #include <controlloops/AbstractControlLoop.h>
+#include <controlloops/StatusPublishLoop.h>
 #include <controlloops/JoystickControlLoop.h>
 #include <controlloops/DistanceAvoidControlLoop.h>
 #include <controlloops/FaceDetectionControlLoop.h>
@@ -13,7 +14,9 @@ NovaConfig* novaConfig;
 
 SerialCommunication* comm;
 
-//AbstractControlLoop* control_loops[2];
+//AbstractControlLoop* controlLoops[2];
+
+StatusPublishLoop* statusPublishLoop;
 
 JoystickControlLoop* joyControlLoop;
 DistanceAvoidControlLoop* distanceAvoidControlLoop;
@@ -28,12 +31,13 @@ void setup() {
 
   comm = hardwareConfig->comm;
 
+  statusPublishLoop = new StatusPublishLoop(hardwareConfig, novaConfig->_status_publish_frequency_ms);
   joyControlLoop = new JoystickControlLoop(hardwareConfig, novaConfig);
   distanceAvoidControlLoop = new DistanceAvoidControlLoop(hardwareConfig, novaConfig);
   faceDetectionControlLoop = new FaceDetectionControlLoop(hardwareConfig, novaConfig);
 
-  //control_loops[0] = faceDetectionControlLoop;
-  //control_loops[1] = ...
+  //controlLoops[0] = statusPublishLoop;
+  //controlLoops[1] = faceDetectionControlLoop
 }
 
 void loop() {
@@ -41,10 +45,11 @@ void loop() {
 
   NovaCommand *cmd = comm->readCommand(); // now processes one command per loop
 
-  //for(loop : control_loops) {
+  //for(loop : controlLoops) {
   //  loop->run(cmd);
   //}
   //joyControlLoop->run();
   //distanceAvoidControlLoop->run();
   faceDetectionControlLoop->run(cmd);
+  statusPublishLoop->run(cmd);
 }
