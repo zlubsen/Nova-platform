@@ -3,9 +3,10 @@
 #include <config/HardwareConfig.h>
 #include <config/NovaConfig.h>
 #include <config/NovaConstants.h>
-#include <ControlLoop/JoystickControlLoop.h>
-#include <ControlLoop/DistanceAvoidControlLoop.h>
-#include <ControlLoop/FaceDetectionControlLoop.h>
+#include <controlloops/AbstractControlLoop.h>
+#include <controlloops/JoystickControlLoop.h>
+#include <controlloops/DistanceAvoidControlLoop.h>
+#include <controlloops/FaceDetectionControlLoop.h>
 
 HardwareConfig* hardwareConfig;
 NovaConfig* novaConfig;

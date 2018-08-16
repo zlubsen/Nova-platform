@@ -5,7 +5,7 @@
 #include "config/HardwareConfig.h"
 #include "config/NovaConfig.h"
 #include <PID_v1.h>
-#include <ControlLoop/AbstractControlLoop.h>
+#include <controlloops/AbstractControlLoop.h>
 
 class DistanceAvoidControlLoop : public AbstractControlLoop {
   public:

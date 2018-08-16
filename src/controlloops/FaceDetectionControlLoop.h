@@ -5,7 +5,7 @@
 #include <config/NovaConfig.h>
 #include <config/NovaConstants.h>
 #include <PID_v1.h>
-#include <ControlLoop/AbstractControlLoop.h>
+#include <controlloops/AbstractControlLoop.h>
 
 class FaceDetectionControlLoop : public AbstractControlLoop {
   public:

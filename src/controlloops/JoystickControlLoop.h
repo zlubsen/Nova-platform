@@ -5,7 +5,7 @@
 #include <sensors/Joystick.h>
 #include <config/HardwareConfig.h>
 #include <config/NovaConfig.h>
-#include <ControlLoop/AbstractControlLoop.h>
+#include <controlloops/AbstractControlLoop.h>
 
 typedef struct {
     float x;
