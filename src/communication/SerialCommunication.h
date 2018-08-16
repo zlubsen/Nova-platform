@@ -26,7 +26,7 @@ class SerialCommunication {
   private:
     void parseInput();
     void recvBytesWithStartEndMarkers();
-    void sendOutGoingCommands();
+    void sendOutgoingCommands();
     const int MAX_COMMAND_SIZE = 20; // we can store a maximum of 20 commands per loop (which won't fit in 32 bytes anyhow - see 'define numBytes')
     //char CMD_SEPARATOR = ':';
     //char CMD_START_MARKER = '>';

@@ -86,7 +86,7 @@ void SerialCommunication::writeCommand(int modcode, int opcode, int arg1, int ar
   _commands_out.push(cmd);
 }
 
-void SerialCommunication::sendOutGoingCommands() {
+void SerialCommunication::sendOutgoingCommands() {
   while(_commands_out.count() > 0) {
     NovaCommand cmd = _commands_out.pop();
 
@@ -107,7 +107,7 @@ void SerialCommunication::sendOutGoingCommands() {
 }
 
 void SerialCommunication::run() {
-  sendOutGoingCommands();
+  sendOutgoingCommands();
   recvBytesWithStartEndMarkers();
   parseInput();
 }
