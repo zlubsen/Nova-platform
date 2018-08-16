@@ -1,5 +1,5 @@
 #include <Arduino.h>
-#include <HardwareConfig.h>
+#include "HardwareConfig.h"
 
 HardwareConfig::HardwareConfig() {
   configureServos();

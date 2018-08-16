@@ -2,6 +2,11 @@
 #define Nova_Constants_h
 
 namespace NovaConstants {
+  // command protocol markers
+  static const char CMD_SEPARATOR = ':';
+  static const char CMD_START_MARKER = '>';
+  static const char CMD_END_MARKER = '<';
+
   // module codes
   static const int MOD_STATUS_NOVA = 0;
   static const int MOD_JOYSTICK_CONTROL_ABOLUTE = 1;

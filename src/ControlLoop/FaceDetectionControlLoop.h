@@ -1,9 +1,9 @@
 #ifndef ControlLoop_Face_Detection_h
 #define ControlLoop_Face_Detection_h
 
-#include <HardwareConfig.h>
-#include <NovaConfig.h>
-#include <NovaConstants.h>
+#include <config/HardwareConfig.h>
+#include <config/NovaConfig.h>
+#include <config/NovaConstants.h>
 #include <PID_v1.h>
 #include <ControlLoop/AbstractControlLoop.h>
 

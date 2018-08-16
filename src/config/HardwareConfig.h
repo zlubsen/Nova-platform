@@ -1,10 +1,10 @@
 #ifndef Hardware_Config_h
 #define Hardware_Config_h
 
-#include <NovaServo.h>
-#include <Joystick.h>
-#include <UltraSoundSensor.h>
-#include <SerialCommunication.h>
+#include <actuators/NovaServo.h>
+#include <sensors/Joystick.h>
+#include <sensors/UltraSoundSensor.h>
+#include <communication/SerialCommunication.h>
 
 typedef struct {
   int pin;

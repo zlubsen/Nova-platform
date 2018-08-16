@@ -1,9 +1,9 @@
 #ifndef ControlLoop_Distance_Avoid_h
 #define ControlLoop_Distance_Avoid_h
 
-#include <UltraSoundSensor.h>
-#include <HardwareConfig.h>
-#include <NovaConfig.h>
+#include "sensors/UltraSoundSensor.h"
+#include "config/HardwareConfig.h"
+#include "config/NovaConfig.h"
 #include <PID_v1.h>
 #include <ControlLoop/AbstractControlLoop.h>
 

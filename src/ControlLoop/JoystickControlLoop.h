@@ -1,10 +1,10 @@
 #ifndef ControlLoop_Joystick_h
 #define ControlLoop_Joystick_h
 
-#include <NovaServo.h>
-#include <Joystick.h>
-#include <HardwareConfig.h>
-#include <NovaConfig.h>
+#include <actuators/NovaServo.h>
+#include <sensors/Joystick.h>
+#include <config/HardwareConfig.h>
+#include <config/NovaConfig.h>
 #include <ControlLoop/AbstractControlLoop.h>
 
 typedef struct {

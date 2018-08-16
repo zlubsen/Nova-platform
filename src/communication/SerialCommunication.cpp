@@ -1,4 +1,4 @@
-#include <SerialCommunication.h>
+#include "SerialCommunication.h"
 
 // we expect a command following this template:
 // >modcode:opcode:arg1:arg2:arg3<
@@ -9,7 +9,7 @@ SerialCommunication::SerialCommunication(int baud_rate) {
 }
 
 bool SerialCommunication::commandAvailable() {
-  return _commands.count() > 0;
+  return _commands_in.count() > 0;
 }
 
 void SerialCommunication::recvBytesWithStartEndMarkers() {
@@ -53,14 +53,14 @@ void SerialCommunication::parseInput() {
     cmd.arg2 = atoi(strtok(NULL, ":"));
     cmd.arg3 = atoi(strtok(NULL, ":"));
 
-    _commands.push(cmd);
+    _commands_in.push(cmd);
     _newData = false;
   }
 }
 
 NovaCommand* SerialCommunication::readCommand() {
   if(commandAvailable()) {
-    NovaCommand cmd = _commands.pop();
+    NovaCommand cmd = _commands_in.pop();
     // TODO novacommand copy constructor?
     NovaCommand *retval = new NovaCommand;
 
@@ -76,22 +76,38 @@ NovaCommand* SerialCommunication::readCommand() {
 }
 
 void SerialCommunication::writeCommand(int modcode, int opcode, int arg1, int arg2, int arg3) {
-  String message = String(CMD_START_MARKER);
-  message.concat(modcode);
-  message.concat(CMD_SEPARATOR);
-  message.concat(opcode);
-  message.concat(CMD_SEPARATOR);
-  message.concat(arg1);
-  message.concat(CMD_SEPARATOR);
-  message.concat(arg2);
-  message.concat(CMD_SEPARATOR);
-  message.concat(arg3);
-  message.concat(CMD_END_MARKER);
+  NovaCommand cmd;
+  cmd.modulecode = modcode;
+  cmd.operandcode = opcode;
+  cmd.arg1 = arg1;
+  cmd.arg2 = arg2;
+  cmd.arg3 = arg3;
 
-  Serial.print(message);
+  _commands_out.push(cmd);
+}
+
+void SerialCommunication::sendOutGoingCommands() {
+  while(_commands_out.count() > 0) {
+    NovaCommand cmd = _commands_out.pop();
+
+    String message = String(NovaConstants::CMD_START_MARKER);
+    message.concat(cmd.modulecode);
+    message.concat(NovaConstants::CMD_SEPARATOR);
+    message.concat(cmd.operandcode);
+    message.concat(NovaConstants::CMD_SEPARATOR);
+    message.concat(cmd.arg1);
+    message.concat(NovaConstants::CMD_SEPARATOR);
+    message.concat(cmd.arg2);
+    message.concat(NovaConstants::CMD_SEPARATOR);
+    message.concat(cmd.arg3);
+    message.concat(NovaConstants::CMD_END_MARKER);
+
+    Serial.print(message);
+  }
 }
 
 void SerialCommunication::run() {
+  sendOutGoingCommands();
   recvBytesWithStartEndMarkers();
   parseInput();
 }

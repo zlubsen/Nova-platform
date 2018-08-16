@@ -1,5 +1,5 @@
 #include <Arduino.h>
-#include <UltraSoundSensor.h>
+#include "UltraSoundSensor.h"
 
 UltraSoundSensor::UltraSoundSensor(int trigPin, int echoPin) {
   _trig_pin = trigPin;
