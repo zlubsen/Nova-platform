@@ -5,8 +5,9 @@
 #include <NovaConfig.h>
 #include <NovaConstants.h>
 #include <PID_v1.h>
+#include <ControlLoop/AbstractControlLoop.h>
 
-class FaceDetectionControlLoop {
+class FaceDetectionControlLoop : public AbstractControlLoop {
   public:
     FaceDetectionControlLoop(HardwareConfig *hardwareConfig, NovaConfig *novaConfig);
     void run(NovaCommand* cmd);

@@ -5,6 +5,7 @@
 #include <Joystick.h>
 #include <HardwareConfig.h>
 #include <NovaConfig.h>
+#include <ControlLoop/AbstractControlLoop.h>
 
 typedef struct {
     float x;
@@ -16,10 +17,10 @@ typedef struct {
     int y;
   } output_degrees;
 
-class JoystickControlLoop {
+class JoystickControlLoop : public AbstractControlLoop {
   public:
     JoystickControlLoop(HardwareConfig *hardwareConfig, NovaConfig *novaConfig);
-    void run();
+    void run(NovaCommand* cmd);
 
   private:
     Joystick *_joy_left;

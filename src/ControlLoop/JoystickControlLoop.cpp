@@ -61,7 +61,7 @@ void JoystickControlLoop::filterInput() {
   _joy_right_output.y = _joy_right_output.y * (1 - _filterconst_right.y) + _joy_right_input.y * _filterconst_right.y;
 }
 
-void JoystickControlLoop::run() {
+void JoystickControlLoop::run(NovaCommand* cmd) {
   observe();
   mapInputToRange();
   filterInput();

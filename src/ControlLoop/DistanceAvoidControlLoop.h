@@ -5,11 +5,12 @@
 #include <HardwareConfig.h>
 #include <NovaConfig.h>
 #include <PID_v1.h>
+#include <ControlLoop/AbstractControlLoop.h>
 
-class DistanceAvoidControlLoop {
+class DistanceAvoidControlLoop : public AbstractControlLoop {
   public:
     DistanceAvoidControlLoop(HardwareConfig *hardwareConfig, NovaConfig *novaConfig);
-    void run();
+    void run(NovaCommand* cmd);
 
   private:
     UltraSoundSensor *_ultraSoundSensor;

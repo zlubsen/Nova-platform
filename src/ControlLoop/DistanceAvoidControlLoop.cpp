@@ -49,7 +49,7 @@ void DistanceAvoidControlLoop::computeControl() {
   _pid->Compute();
 }
 
-void DistanceAvoidControlLoop::run() {
+void DistanceAvoidControlLoop::run(NovaCommand* cmd) {
   observe();
   computeControl();
   actuate();
