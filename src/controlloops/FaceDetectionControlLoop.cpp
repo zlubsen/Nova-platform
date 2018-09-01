@@ -55,6 +55,15 @@ void FaceDetectionControlLoop::setupPIDcontroller(PID* pid, pid_config* config, 
     pid->SetMode(config->mode);
 }
 
+void FaceDetectionControlLoop::setSetpoint(int opcode, int new_setpoint) {
+  // TODO validate that the setpoint is in a valid range.
+  if(opcode == NovaConstants::OP_FACE_DETECTION_X_SETPOINT)
+    _pid_values_x.setpoint = new_setpoint;
+  else if (opcode == NovaConstants::OP_FACE_DETECTION_Y_SETPOINT) {
+    _pid_values_y.setpoint = new_setpoint;
+  }
+}
+
 void FaceDetectionControlLoop::setPIDTuning(int opcode, int p_value, int i_value, int d_value) {
   double new_p = ((double) p_value)/1000;
   double new_i = ((double) i_value)/1000;
@@ -84,10 +93,24 @@ void FaceDetectionControlLoop::actuate() {
   _servo_y->setDegree(angle_y);
 }
 
+void FaceDetectionControlLoop::handleCommands(NovaCommand* cmd) {
+  if(cmd->modulecode == NovaConstants::MOD_FACE_DETECTION) {
+    if(cmd->operandcode == NovaConstants::OP_FACE_DETECTION_X_PID_TUNING
+      || cmd->operandcode == NovaConstants::OP_FACE_DETECTION_Y_PID_TUNING) {
+        setPIDTuning(cmd->operandcode, cmd->arg1, cmd->arg2, cmd->arg3);
+    }
+    if(cmd->operandcode == NovaConstants::OP_FACE_DETECTION_X_SETPOINT
+      || cmd->operandcode == NovaConstants::OP_FACE_DETECTION_Y_SETPOINT) {
+        setSetpoint(cmd->operandcode, cmd->arg1);
+    }
+  }
+}
+
 void FaceDetectionControlLoop::run(NovaCommand* cmd) {
-  if(cmd != NULL) {
-    if(cmd->modulecode == NovaConstants::MOD_FACE_DETECTION
-        && cmd->operandcode == NovaConstants::OP_FACE_DETECTION_SET_COORDINATES) {
+  if(cmd != NULL && cmd->modulecode == NovaConstants::MOD_FACE_DETECTION) {
+    handleCommands(cmd);
+
+    if(cmd->operandcode == NovaConstants::OP_FACE_DETECTION_SET_COORDINATES) {
       observe(cmd);
       computeControl();
       actuate();
@@ -96,11 +119,6 @@ void FaceDetectionControlLoop::run(NovaCommand* cmd) {
         NovaConstants::MOD_FACE_DETECTION,
         NovaConstants::OP_FACE_DETECTION_ACK_COORDINATES,
         0,0,0);
-    }
-    if(cmd->modulecode == NovaConstants::MOD_FACE_DETECTION
-        && (cmd->operandcode == NovaConstants::OP_FACE_DETECTION_X_PID_TUNING
-        || cmd->operandcode == NovaConstants::OP_FACE_DETECTION_Y_PID_TUNING)) {
-        setPIDTuning(cmd->operandcode, cmd->arg1, cmd->arg2, cmd->arg3);
     }
 
     delete cmd; // cleanup the processed command
