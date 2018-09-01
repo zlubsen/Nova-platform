@@ -28,6 +28,45 @@ void DistanceAvoidControlLoop::setupPIDcontroller() {
     _pid->SetOutputLimits(_pid_config.outputLimitMin, _pid_config.outputLimitMax);
 }
 
+void DistanceAvoidControlLoop::handleCommands(NovaCommand* cmd) {
+  switch (cmd->operandcode) {
+    case NovaConstants::OP_DISTANCE_SET_MIN_DIST:
+      setDistanceLimit(true, cmd->arg1);
+      break;
+    case NovaConstants::OP_DISTANCE_SET_MAX_DIST:
+      setDistanceLimit(false, cmd->arg1);
+      break;
+    case NovaConstants::OP_DISTANCE_SET_SETPOINT:
+      setSetpoint(cmd->arg1);
+      break;
+    case NovaConstants::OP_DISTANCE_SET_PID_TUNING:
+      setPIDTuning(cmd->arg1, cmd->arg2, cmd->arg3);
+      break;
+  }
+}
+
+void DistanceAvoidControlLoop::setDistanceLimit(bool set_minimum, int new_distance) {
+  // TODO validate that new_distance is a valid min or max distance
+  if(set_minimum) {
+    _min_distance = new_distance;
+  } else {
+    _max_distance = new_distance;
+  }
+}
+
+void DistanceAvoidControlLoop::setSetpoint(int new_distance) {
+  // TODO validate setpoint is in a valid range... (between _min_distance and _max_distance)
+  _pid_values.setpoint = new_distance;
+}
+
+void DistanceAvoidControlLoop::setPIDTuning(int p_value, int i_value, int d_value) {
+  double new_p = ((double) p_value)/1000;
+  double new_i = ((double) i_value)/1000;
+  double new_d = ((double) d_value)/1000;
+
+  _pid->SetTunings(new_p, new_i, new_d);
+}
+
 void DistanceAvoidControlLoop::observe() {
   _pid_values.input = _ultraSoundSensor->measureDistance();
 }
@@ -50,6 +89,10 @@ void DistanceAvoidControlLoop::computeControl() {
 }
 
 void DistanceAvoidControlLoop::run(NovaCommand* cmd) {
+  if(cmd != NULL && cmd->modulecode == NovaConstants::MOD_DISTANCE_AVOIDANCE) {
+    handleCommands(cmd);
+    delete cmd;
+  }
   observe();
   computeControl();
   actuate();

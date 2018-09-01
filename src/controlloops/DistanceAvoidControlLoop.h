@@ -25,6 +25,10 @@ class DistanceAvoidControlLoop : public AbstractControlLoop {
     int _min_distance;
     int _servo_angle;
     void setupPIDcontroller();
+    void handleCommands(NovaCommand* cmd);
+    void setDistanceLimit(bool set_minimum, int new_distance);
+    void setSetpoint(int new_distance);
+    void setPIDTuning(int p_value, int i_value, int d_value);
     void computeControl();
     void observe();
     void actuate();
