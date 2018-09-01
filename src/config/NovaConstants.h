@@ -26,6 +26,12 @@ namespace NovaConstants {
   static const int OP_STATUS_RECEIVE_JOY_RIGHT = 8;        // (x, y, pushed in arg1, arg2, arg3)
   static const int OP_STATUS_SEND_SET_MODE = 9;           // (set new modulecode as arg1)
 
+  static const int OP_KEYMOUSE_SET_AXIS_1 = 1;            // (degree change in arg1)
+  static const int OP_KEYMOUSE_SET_AXIS_2 = 2;            // (degree change in arg1)
+  static const int OP_KEYMOUSE_SET_AXIS_3 = 3;            // (degree change in arg1)
+  static const int OP_KEYMOUSE_SET_AXIS_4 = 4;            // (degree change in arg1)
+  static const int OP_KEYMOUSE_SET_AXIS_5 = 5;            // (degree change in arg1)
+
   static const int OP_DISTANCE_SET_MIN_DIST = 1;          // (new minimum distance in arg1)
   static const int OP_DISTANCE_SET_MAX_DIST = 2;          // (new maximum distance in arg1)
   static const int OP_DISTANCE_SET_SETPOINT = 3;          // (new setpoint in arg1)
