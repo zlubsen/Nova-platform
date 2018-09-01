@@ -23,15 +23,20 @@ void JoystickControlLoop::observe() {
 }
 
 void JoystickControlLoop::actuate() {
-  actuateContinousInputServo(_servo1,_joy_left_output.y);
-  actuateContinousInputServo(_servo2,_joy_right_output.x);
-  actuateContinousInputServo(_servo3,_joy_right_output.y);
-  actuateContinousInputServo(_servo4,_joy_left_output.x);
+  _servo1->setDegree(_joy_left_output.y);
+  _servo2->setDegree(_joy_right_output.x);
+  _servo3->setDegree(_joy_right_output.y);
+  _servo4->setDegree(_joy_left_output.x);
+  //actuateContinousInputServo(_servo1,_joy_left_output.y);
+  //actuateContinousInputServo(_servo2,_joy_right_output.x);
+  //actuateContinousInputServo(_servo3,_joy_right_output.y);
+  //actuateContinousInputServo(_servo4,_joy_left_output.x);
   actuateStepwiseInputServo(_servo5);
 }
 
+// TODO DEPRECATED
 void JoystickControlLoop::actuateContinousInputServo(NovaServo* servo, int degree) {
-  if(degree > servo->getMinimum() && degree < servo->getMaximum())
+  //if(degree > servo->getMinimum() && degree < servo->getMaximum())
     servo->setDegree(degree);
 }
 
