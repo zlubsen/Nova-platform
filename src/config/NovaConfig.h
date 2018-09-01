@@ -40,6 +40,7 @@ class NovaConfig {
     pid_config _face_detection_pid_config_x;
     pid_config _face_detection_pid_config_y;
     int _status_publish_frequency_ms;
+    int _joystick_relative_degrees_range;
 };
 
 #endif
