@@ -28,9 +28,6 @@ class SerialCommunication {
     void recvBytesWithStartEndMarkers();
     void sendOutgoingCommands();
     const int MAX_COMMAND_SIZE = 20; // we can store a maximum of 20 commands per loop (which won't fit in 32 bytes anyhow - see 'define numBytes')
-    //char CMD_SEPARATOR = ':';
-    //char CMD_START_MARKER = '>';
-    //char CMD_END_MARKER = '<';
     Queue<NovaCommand> _commands_in = Queue<NovaCommand>(MAX_COMMAND_SIZE);
     Queue<NovaCommand> _commands_out = Queue<NovaCommand>(MAX_COMMAND_SIZE);
     char _startMarker = 0x3E; // '>' TODO: there is redundancy in using both char and byte version of the markers/msg-indicators
