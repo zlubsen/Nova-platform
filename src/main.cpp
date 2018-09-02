@@ -6,6 +6,8 @@
 #include <controlloops/AbstractControlLoop.h>
 #include <controlloops/StatusPublishLoop.h>
 #include <controlloops/JoystickControlLoop.h>
+#include <controlloops/JoystickRelativeControlLoop.h>
+#include <controlloops/KeyboardMouseControlLoop.h>
 #include <controlloops/DistanceAvoidControlLoop.h>
 #include <controlloops/FaceDetectionControlLoop.h>
 
@@ -22,6 +24,8 @@ AbstractControlLoop* controlLoops[2];
 StatusPublishLoop* statusPublishLoop;
 
 JoystickControlLoop* joyControlLoop;
+JoystickRelativeControlLoop* joyRelativeControlLoop;
+KeyboardMouseControlLoop* keyboardMouseControlLoop;
 DistanceAvoidControlLoop* distanceAvoidControlLoop;
 FaceDetectionControlLoop* faceDetectionControlLoop;
 
@@ -36,6 +40,8 @@ void setup() {
 
   statusPublishLoop = new StatusPublishLoop(hardwareConfig, novaConfig->_status_publish_frequency_ms);
   joyControlLoop = new JoystickControlLoop(hardwareConfig, novaConfig);
+  joyRelativeControlLoop = new JoystickRelativeControlLoop(hardwareConfig, novaConfig);
+  keyboardMouseControlLoop = new KeyboardMouseControlLoop(hardwareConfig, novaConfig);
   distanceAvoidControlLoop = new DistanceAvoidControlLoop(hardwareConfig, novaConfig);
   faceDetectionControlLoop = new FaceDetectionControlLoop(hardwareConfig, novaConfig);
 
