@@ -9,17 +9,11 @@ HardwareConfig::HardwareConfig() {
 }
 
 void HardwareConfig::configureServos() {
-  servo1 = new NovaServo(32, 85, 160); // mid: 122.5
-  servo2 = new NovaServo(34, 0, 180); // mid: 90
-  servo3 = new NovaServo(36, 35, 175); // mid: 105
-  servo4 = new NovaServo(38, 10, 170); // mid: 90
-  servo5 = new NovaServo(40, 75, 145); // mid: 110
-
-  servo1->goToMiddle();
-  servo2->goToMiddle();
-  servo3->goToMiddle();
-  servo4->goToMiddle();
-  servo5->goToMiddle();
+  servo1 = new NovaServo(32, 85, 160); // mid: 122.5  // Head Movement - Front and Back
+  servo2 = new NovaServo(34, 5, 175); // mid: 90      // Head Rotation - Clockwise and Anticlockwise
+  servo3 = new NovaServo(36, 35, 175); // mid: 105    // Head Rotation - Up and Down
+  servo4 = new NovaServo(38, 10, 170); // mid: 90     // Whole Body Rotation - Z axis
+  servo5 = new NovaServo(40, 75, 145); // mid: 110    // Head Movement - Up and Down
 }
 
 void HardwareConfig::configureJoysticks() {
