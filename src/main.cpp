@@ -61,10 +61,10 @@ void setMode(int mode) {
       controlLoops[1] = joyControlLoop;
       break;
     case NovaConstants::MOD_JOYSTICK_CONTROL_RELATIVE:
-      //controlLoops[1] = joyControlLoop;
+      controlLoops[1] = joyRelativeControlLoop;
       break;
     case NovaConstants::MOD_KEYBOARD_MOUSE_CONTROL:
-      //controlLoops[1] = joyControlLoop;
+      controlLoops[1] = keyboardMouseControlLoop;
       break;
     case NovaConstants::MOD_DISTANCE_AVOIDANCE:
       controlLoops[1] = distanceAvoidControlLoop;
