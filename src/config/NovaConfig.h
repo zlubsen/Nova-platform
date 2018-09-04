@@ -33,13 +33,16 @@ typedef struct {
 class NovaConfig {
   public:
     NovaConfig();
-    joystick_filter_constants _joy_left_config;
-    joystick_filter_constants _joy_right_config;
+    joystick_filter_constants _joy_left_config_absolute;
+    joystick_filter_constants _joy_right_config_absolute;
+    joystick_filter_constants _joy_left_config_relative;
+    joystick_filter_constants _joy_right_config_relative;
     pid_config _distance_avoid_pid_config;
     ultrasoundsensor_config _ultrasound_config;
     pid_config _face_detection_pid_config_x;
     pid_config _face_detection_pid_config_y;
     int _status_publish_frequency_ms;
+    int _joystick_control_delay_frequency_ms;
     int _joystick_relative_degrees_range;
 };
 

@@ -3,6 +3,11 @@
 
 JoystickRelativeControlLoop::JoystickRelativeControlLoop(HardwareConfig *hardwareConfig, NovaConfig *novaConfig) : JoystickControlLoop(hardwareConfig, novaConfig) {
   _max_degrees = novaConfig->_joystick_relative_degrees_range;
+
+  _filterconst_left.x = novaConfig->_joy_left_config_relative.x;
+  _filterconst_left.y = novaConfig->_joy_left_config_relative.y;
+  _filterconst_right.x = novaConfig->_joy_right_config_relative.x;
+  _filterconst_right.y = novaConfig->_joy_right_config_relative.y;
 }
 
 void JoystickRelativeControlLoop::mapInputToRange() {
@@ -19,4 +24,13 @@ void JoystickRelativeControlLoop::actuate() {
   _servo3->setDegree(_servo3->getDegree() + _joy_right_output.y);
   _servo4->setDegree(_servo4->getDegree() + _joy_left_output.x);
   actuateStepwiseInputServo(_servo5);
+}
+
+void JoystickRelativeControlLoop::run(NovaCommand* cmd) {
+  if(_timer->elapsed()) {
+    observe();
+    mapInputToRange();
+    filterInput();
+    actuate();
+  }
 }

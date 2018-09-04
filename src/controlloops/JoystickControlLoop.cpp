@@ -2,10 +2,12 @@
 #include "JoystickControlLoop.h"
 
 JoystickControlLoop::JoystickControlLoop(HardwareConfig *hardwareConfig, NovaConfig *novaConfig) {
-  _filterconst_left.x = novaConfig->_joy_left_config.x;
-  _filterconst_left.y = novaConfig->_joy_left_config.y;
-  _filterconst_right.x = novaConfig->_joy_right_config.x;
-  _filterconst_right.y = novaConfig->_joy_right_config.y;
+  _filterconst_left.x = novaConfig->_joy_left_config_absolute.x;
+  _filterconst_left.y = novaConfig->_joy_left_config_absolute.y;
+  _filterconst_right.x = novaConfig->_joy_right_config_absolute.x;
+  _filterconst_right.y = novaConfig->_joy_right_config_absolute.y;
+
+  _timer = new FrequencyTimer(novaConfig->_joystick_control_delay_frequency_ms);
 
   _servo1 = hardwareConfig->servo1;
   _servo2 = hardwareConfig->servo2;
@@ -27,17 +29,7 @@ void JoystickControlLoop::actuate() {
   _servo2->setDegree(_joy_right_output.x);
   _servo3->setDegree(_joy_right_output.y);
   _servo4->setDegree(_joy_left_output.x);
-  //actuateContinousInputServo(_servo1,_joy_left_output.y);
-  //actuateContinousInputServo(_servo2,_joy_right_output.x);
-  //actuateContinousInputServo(_servo3,_joy_right_output.y);
-  //actuateContinousInputServo(_servo4,_joy_left_output.x);
   actuateStepwiseInputServo(_servo5);
-}
-
-// TODO DEPRECATED
-void JoystickControlLoop::actuateContinousInputServo(NovaServo* servo, int degree) {
-  //if(degree > servo->getMinimum() && degree < servo->getMaximum())
-    servo->setDegree(degree);
 }
 
 void JoystickControlLoop::actuateStepwiseInputServo(NovaServo* servo) {
@@ -67,8 +59,10 @@ void JoystickControlLoop::filterInput() {
 }
 
 void JoystickControlLoop::run(NovaCommand* cmd) {
-  observe();
-  mapInputToRange();
-  filterInput();
-  actuate();
+  if(_timer->elapsed()) {
+    observe();
+    mapInputToRange();
+    filterInput();
+    actuate();
+  }
 }

@@ -11,11 +11,14 @@
 class JoystickRelativeControlLoop : public JoystickControlLoop {
   public:
     JoystickRelativeControlLoop(HardwareConfig *hardwareConfig, NovaConfig *novaConfig);
+    void run(NovaCommand* cmd);
+
+  protected:
+    void mapInputToRange();
+    void actuate();
 
   private:
     int _max_degrees;
-    void mapInputToRange();
-    void actuate();
 };
 
 #endif

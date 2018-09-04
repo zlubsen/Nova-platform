@@ -3,13 +3,19 @@
 
 NovaConfig::NovaConfig() {
   _status_publish_frequency_ms = 2000;
+  _joystick_control_delay_frequency_ms = 30;
 
-  _joy_left_config.x = 0.05;
-  _joy_left_config.y = 0.05;
-  _joy_right_config.x = 0.08;
-  _joy_right_config.y = 0.08;
+  _joy_left_config_absolute.x = 0.05;
+  _joy_left_config_absolute.y = 0.05;
+  _joy_right_config_absolute.x = 0.08;
+  _joy_right_config_absolute.y = 0.08;
 
-  _joystick_relative_degrees_range = 20;
+  _joy_left_config_relative.x = 0.2;
+  _joy_left_config_relative.y = 0.2;
+  _joy_right_config_relative.x = 0.4;
+  _joy_right_config_relative.y = 0.4;
+
+  _joystick_relative_degrees_range = 10;
 
   _distance_avoid_pid_config.Kp = 0.51;
   _distance_avoid_pid_config.Ki = 1.1;
