@@ -5,7 +5,7 @@
 #include <config/NovaConstants.h>
 #include <controlloops/AbstractControlLoop.h>
 #include <controlloops/StatusPublishLoop.h>
-#include <controlloops/JoystickControlLoop.h>
+#include <controlloops/JoystickAbsoluteControlLoop.h>
 #include <controlloops/JoystickRelativeControlLoop.h>
 #include <controlloops/KeyboardMouseControlLoop.h>
 #include <controlloops/DistanceAvoidControlLoop.h>
@@ -23,7 +23,7 @@ AbstractControlLoop* controlLoops[2];
 
 StatusPublishLoop* statusPublishLoop;
 
-JoystickControlLoop* joyControlLoop;
+JoystickAbsoluteControlLoop* joyAbsoluteControlLoop;
 JoystickRelativeControlLoop* joyRelativeControlLoop;
 KeyboardMouseControlLoop* keyboardMouseControlLoop;
 DistanceAvoidControlLoop* distanceAvoidControlLoop;
@@ -39,7 +39,7 @@ void setup() {
   comm = hardwareConfig->comm;
 
   statusPublishLoop = new StatusPublishLoop(hardwareConfig, novaConfig->_status_publish_frequency_ms);
-  joyControlLoop = new JoystickControlLoop(hardwareConfig, novaConfig);
+  joyAbsoluteControlLoop = new JoystickAbsoluteControlLoop(hardwareConfig, novaConfig);
   joyRelativeControlLoop = new JoystickRelativeControlLoop(hardwareConfig, novaConfig);
   keyboardMouseControlLoop = new KeyboardMouseControlLoop(hardwareConfig, novaConfig);
   distanceAvoidControlLoop = new DistanceAvoidControlLoop(hardwareConfig, novaConfig);
@@ -58,7 +58,7 @@ void handleCommands(NovaCommand* cmd) {
 void setMode(int mode) {
   switch (mode) {
     case NovaConstants::MOD_JOYSTICK_CONTROL_ABOLUTE:
-      controlLoops[1] = joyControlLoop;
+      controlLoops[1] = joyAbsoluteControlLoop;
       break;
     case NovaConstants::MOD_JOYSTICK_CONTROL_RELATIVE:
       controlLoops[1] = joyRelativeControlLoop;
@@ -73,7 +73,7 @@ void setMode(int mode) {
       controlLoops[1] = faceDetectionControlLoop;
       break;
     default:
-      controlLoops[1] = joyControlLoop; //TODO if something is wrong, default to standard joystick control?
+      controlLoops[1] = joyAbsoluteControlLoop; //TODO if something is wrong, default to standard joystick control?
       break;
   }
 }
@@ -81,7 +81,7 @@ void setMode(int mode) {
 void loop() {
   comm->run();
 
-  NovaCommand *cmd = comm->readCommand(); // now processes one command per loop
+  NovaCommand *cmd = comm->readCommand(); // TODO now processes one command per loop
 
   if(cmd != NULL && cmd->modulecode == NovaConstants::MOD_STATUS_NOVA) {
     handleCommands(cmd);
@@ -91,8 +91,4 @@ void loop() {
   for(AbstractControlLoop* loop : controlLoops) {
     loop->run(cmd);
   }
-  //joyControlLoop->run();
-  //distanceAvoidControlLoop->run();
-  //faceDetectionControlLoop->run(cmd);
-  //statusPublishLoop->run(cmd);
 }

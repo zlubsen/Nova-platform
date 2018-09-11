@@ -18,9 +18,9 @@ typedef struct {
     int y;
   } output_degrees;
 
-class JoystickControlLoop : public AbstractControlLoop {
+class JoystickAbsoluteControlLoop : public AbstractControlLoop {
   public:
-    JoystickControlLoop(HardwareConfig *hardwareConfig, NovaConfig *novaConfig);
+    JoystickAbsoluteControlLoop(HardwareConfig *hardwareConfig, NovaConfig *novaConfig);
     virtual void run(NovaCommand* cmd);
 
   protected:

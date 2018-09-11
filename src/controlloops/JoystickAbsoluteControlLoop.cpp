@@ -1,7 +1,7 @@
 #include <Arduino.h>
-#include "JoystickControlLoop.h"
+#include "JoystickAbsoluteControlLoop.h"
 
-JoystickControlLoop::JoystickControlLoop(HardwareConfig *hardwareConfig, NovaConfig *novaConfig) {
+JoystickAbsoluteControlLoop::JoystickAbsoluteControlLoop(HardwareConfig *hardwareConfig, NovaConfig *novaConfig) {
   _filterconst_left.x = novaConfig->_joy_left_config_absolute.x;
   _filterconst_left.y = novaConfig->_joy_left_config_absolute.y;
   _filterconst_right.x = novaConfig->_joy_right_config_absolute.x;
@@ -19,12 +19,12 @@ JoystickControlLoop::JoystickControlLoop(HardwareConfig *hardwareConfig, NovaCon
   _joy_right = hardwareConfig->joystick_right;
 }
 
-void JoystickControlLoop::observe() {
+void JoystickAbsoluteControlLoop::observe() {
   _joy_left->getStatus(&_joy_left_input);
   _joy_right->getStatus(&_joy_right_input);
 }
 
-void JoystickControlLoop::actuate() {
+void JoystickAbsoluteControlLoop::actuate() {
   _servo1->setDegree(_joy_left_output.y);
   _servo2->setDegree(_joy_right_output.x);
   _servo3->setDegree(_joy_right_output.y);
@@ -32,7 +32,7 @@ void JoystickControlLoop::actuate() {
   actuateStepwiseInputServo(_servo5);
 }
 
-void JoystickControlLoop::actuateStepwiseInputServo(NovaServo* servo) {
+void JoystickAbsoluteControlLoop::actuateStepwiseInputServo(NovaServo* servo) {
   int servo_degree = servo->getDegree();
   if (_joy_left_input.sw) {
     if(servo_degree < servo->getMaximum()) servo_degree = servo_degree + _switch_degree_stepsize;
@@ -43,7 +43,7 @@ void JoystickControlLoop::actuateStepwiseInputServo(NovaServo* servo) {
   servo->setDegree(servo_degree);
 }
 
-void JoystickControlLoop::mapInputToRange() {
+void JoystickAbsoluteControlLoop::mapInputToRange() {
   // servo4 has an inverted range, from high to low degrees;
   _joy_left_input.x = map(_joy_left_input.x, 0, 1024, _servo4->getMaximum(), _servo4->getMinimum());
   _joy_left_input.y = map(_joy_left_input.y, 0, 1024, _servo1->getMinimum(), _servo1->getMaximum());
@@ -51,14 +51,14 @@ void JoystickControlLoop::mapInputToRange() {
   _joy_right_input.y = map(_joy_right_input.y, 0, 1024, _servo3->getMinimum(), _servo3->getMaximum());
 }
 
-void JoystickControlLoop::filterInput() {
+void JoystickAbsoluteControlLoop::filterInput() {
   _joy_left_output.x = _joy_left_output.x * (1 - _filterconst_left.x) + _joy_left_input.x * _filterconst_left.x;
   _joy_left_output.y = _joy_left_output.y * (1 - _filterconst_left.y) + _joy_left_input.y * _filterconst_left.y;
   _joy_right_output.x = _joy_right_output.x * (1 - _filterconst_right.x) + _joy_right_input.x * _filterconst_right.x;
   _joy_right_output.y = _joy_right_output.y * (1 - _filterconst_right.y) + _joy_right_input.y * _filterconst_right.y;
 }
 
-void JoystickControlLoop::run(NovaCommand* cmd) {
+void JoystickAbsoluteControlLoop::run(NovaCommand* cmd) {
   if(_timer->elapsed()) {
     observe();
     mapInputToRange();

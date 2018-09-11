@@ -1,7 +1,7 @@
 #include <Arduino.h>
 #include "JoystickRelativeControlLoop.h"
 
-JoystickRelativeControlLoop::JoystickRelativeControlLoop(HardwareConfig *hardwareConfig, NovaConfig *novaConfig) : JoystickControlLoop(hardwareConfig, novaConfig) {
+JoystickRelativeControlLoop::JoystickRelativeControlLoop(HardwareConfig *hardwareConfig, NovaConfig *novaConfig) : JoystickAbsoluteControlLoop(hardwareConfig, novaConfig) {
   _max_degrees = novaConfig->_joystick_relative_degrees_range;
 
   _filterconst_left.x = novaConfig->_joy_left_config_relative.x;

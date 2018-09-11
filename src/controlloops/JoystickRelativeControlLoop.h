@@ -6,9 +6,9 @@
 #include <config/HardwareConfig.h>
 #include <config/NovaConfig.h>
 #include <controlloops/AbstractControlLoop.h>
-#include <controlloops/JoystickControlLoop.h>
+#include <controlloops/JoystickAbsoluteControlLoop.h>
 
-class JoystickRelativeControlLoop : public JoystickControlLoop {
+class JoystickRelativeControlLoop : public JoystickAbsoluteControlLoop {
   public:
     JoystickRelativeControlLoop(HardwareConfig *hardwareConfig, NovaConfig *novaConfig);
     void run(NovaCommand* cmd);
