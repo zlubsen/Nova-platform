@@ -1,14 +1,14 @@
-#ifndef ControlLoop_KeyboardMouse_h
-#define ControlLoop_KeyboardMouse_h
+#ifndef ControlLoop_ExternalInput_h
+#define ControlLoop_ExternalInput_h
 
 #include <actuators/NovaServo.h>
 #include <config/HardwareConfig.h>
 #include <config/NovaConfig.h>
 #include <controlloops/AbstractControlLoop.h>
 
-class KeyboardMouseControlLoop : public AbstractControlLoop {
+class ExternalInputControlLoop : public AbstractControlLoop {
   public:
-    KeyboardMouseControlLoop(HardwareConfig *hardwareConfig, NovaConfig *novaConfig);
+    ExternalInputControlLoop(HardwareConfig *hardwareConfig, NovaConfig *novaConfig);
     void run(NovaCommand* cmd);
 
   private:

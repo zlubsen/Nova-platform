@@ -7,7 +7,7 @@
 #include <controlloops/StatusPublishLoop.h>
 #include <controlloops/JoystickAbsoluteControlLoop.h>
 #include <controlloops/JoystickRelativeControlLoop.h>
-#include <controlloops/KeyboardMouseControlLoop.h>
+#include <controlloops/ExternalInputControlLoop.h>
 #include <controlloops/DistanceAvoidControlLoop.h>
 #include <controlloops/FaceDetectionControlLoop.h>
 
@@ -25,7 +25,7 @@ StatusPublishLoop* statusPublishLoop;
 
 JoystickAbsoluteControlLoop* joyAbsoluteControlLoop;
 JoystickRelativeControlLoop* joyRelativeControlLoop;
-KeyboardMouseControlLoop* keyboardMouseControlLoop;
+ExternalInputControlLoop* externalInputControlLoop;
 DistanceAvoidControlLoop* distanceAvoidControlLoop;
 FaceDetectionControlLoop* faceDetectionControlLoop;
 
@@ -41,12 +41,12 @@ void setup() {
   statusPublishLoop = new StatusPublishLoop(hardwareConfig, novaConfig->_status_publish_frequency_ms);
   joyAbsoluteControlLoop = new JoystickAbsoluteControlLoop(hardwareConfig, novaConfig);
   joyRelativeControlLoop = new JoystickRelativeControlLoop(hardwareConfig, novaConfig);
-  keyboardMouseControlLoop = new KeyboardMouseControlLoop(hardwareConfig, novaConfig);
+  externalInputControlLoop = new ExternalInputControlLoop(hardwareConfig, novaConfig);
   distanceAvoidControlLoop = new DistanceAvoidControlLoop(hardwareConfig, novaConfig);
   faceDetectionControlLoop = new FaceDetectionControlLoop(hardwareConfig, novaConfig);
 
   controlLoops[0] = statusPublishLoop;
-  controlLoops[1] = faceDetectionControlLoop; //TODO default control loop is now face detection?
+  controlLoops[1] = externalInputControlLoop; //TODO default control loop is now face detection?
 }
 
 void handleCommands(NovaCommand* cmd) {
@@ -56,6 +56,7 @@ void handleCommands(NovaCommand* cmd) {
 }
 
 void setMode(int mode) {
+  // pause input to servos
   switch (mode) {
     case NovaConstants::MOD_JOYSTICK_CONTROL_ABOLUTE:
       controlLoops[1] = joyAbsoluteControlLoop;
@@ -63,8 +64,8 @@ void setMode(int mode) {
     case NovaConstants::MOD_JOYSTICK_CONTROL_RELATIVE:
       controlLoops[1] = joyRelativeControlLoop;
       break;
-    case NovaConstants::MOD_KEYBOARD_MOUSE_CONTROL:
-      controlLoops[1] = keyboardMouseControlLoop;
+    case NovaConstants::MOD_EXTERNAL_INPUT_CONTROL:
+      controlLoops[1] = externalInputControlLoop;
       break;
     case NovaConstants::MOD_DISTANCE_AVOIDANCE:
       controlLoops[1] = distanceAvoidControlLoop;
@@ -76,6 +77,7 @@ void setMode(int mode) {
       controlLoops[1] = joyAbsoluteControlLoop; //TODO if something is wrong, default to standard joystick control?
       break;
   }
+  // resume input to servos
 }
 
 void loop() {
@@ -85,10 +87,11 @@ void loop() {
 
   if(cmd != NULL && cmd->modulecode == NovaConstants::MOD_STATUS_NOVA) {
     handleCommands(cmd);
-    delete cmd;
   }
 
   for(AbstractControlLoop* loop : controlLoops) {
     loop->run(cmd);
   }
+
+  delete cmd;
 }
