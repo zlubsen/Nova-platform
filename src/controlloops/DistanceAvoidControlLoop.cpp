@@ -91,7 +91,6 @@ void DistanceAvoidControlLoop::computeControl() {
 void DistanceAvoidControlLoop::run(NovaCommand* cmd) {
   if(cmd != NULL && cmd->modulecode == NovaConstants::MOD_DISTANCE_AVOIDANCE) {
     handleCommands(cmd);
-    delete cmd;
   }
   observe();
   computeControl();

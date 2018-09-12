@@ -120,7 +120,5 @@ void FaceDetectionControlLoop::run(NovaCommand* cmd) {
         NovaConstants::OP_FACE_DETECTION_ACK_COORDINATES,
         0,0,0);
     }
-
-    delete cmd; // cleanup the processed command
   }
 }
