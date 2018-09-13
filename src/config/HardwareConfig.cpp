@@ -31,3 +31,11 @@ void HardwareConfig::configureCommunication() {
     ; // wait for serial port to connect. Needed for native USB
   }
 }
+
+void HardwareConfig::resetServosToMiddle() {
+  servo1->goToMiddle();
+  servo2->goToMiddle();
+  servo3->goToMiddle();
+  servo4->goToMiddle();
+  servo5->goToMiddle();
+}

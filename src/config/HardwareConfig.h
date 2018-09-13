@@ -25,6 +25,7 @@ class HardwareConfig {
     void configureJoysticks();
     void configureUltrasound();
     void configureCommunication();
+    void resetServosToMiddle();
     NovaServo* servo1;
     NovaServo* servo2;
     NovaServo* servo3;
