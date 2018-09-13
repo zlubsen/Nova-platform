@@ -9,7 +9,7 @@ namespace NovaConstants {
 
   // module codes
   static const int MOD_STATUS_NOVA = 0;
-  static const int MOD_JOYSTICK_CONTROL_ABOLUTE = 1;
+  static const int MOD_JOYSTICK_CONTROL_ABSOLUTE = 1;
   static const int MOD_JOYSTICK_CONTROL_RELATIVE = 2;
   static const int MOD_EXTERNAL_INPUT_CONTROL = 3;
   static const int MOD_DISTANCE_AVOIDANCE = 4;
