@@ -5,10 +5,10 @@ NovaServo::NovaServo(int pin) : NovaServo(pin, 0, 180) {
 }
 
 NovaServo::NovaServo(int pin, int min, int max) {
-  _min = min;
-  _max = max;
+  _pin = pin;
+  setAllowedRange(min, max);
   goToMiddle();
-  _servo.attach(pin);
+  //_servo.attach(_pin);
 }
 
 void NovaServo::setAllowedRange(int min, int max) {
@@ -47,4 +47,13 @@ void NovaServo::setDegree(int degree) {
 
 int NovaServo::getDegree() {
   return _servo.read();
+}
+
+void NovaServo::attach() {
+  _servo.attach(_pin);
+}
+
+void NovaServo::detach() {
+  goToMiddle();
+  _servo.detach();
 }

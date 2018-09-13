@@ -37,49 +37,48 @@ void setup() {
 
   statusPublishLoop = new StatusPublishLoop(hardwareConfig, novaConfig->_status_publish_frequency_ms);
 
-  /*
   joyRelativeControlLoop = new JoystickRelativeControlLoop(hardwareConfig, novaConfig);
   externalInputControlLoop = new ExternalInputControlLoop(hardwareConfig, novaConfig);
   distanceAvoidControlLoop = new DistanceAvoidControlLoop(hardwareConfig, novaConfig);
   faceDetectionControlLoop = new FaceDetectionControlLoop(hardwareConfig, novaConfig);
-  */
+
 
   controlLoops[0] = statusPublishLoop;
   //TODO default control loop is now joystick absolute?
   controlLoops[1] = new JoystickAbsoluteControlLoop(hardwareConfig, novaConfig);
+
+  hardwareConfig->activateServos();
 }
 
 void handleCommands(NovaCommand* cmd) {
   if(cmd->operandcode == NovaConstants::OP_STATUS_SEND_SET_MODE) {
     // reset input to servos
-    hardwareConfig->resetServosToMiddle();
+    hardwareConfig->suspendServos();
     setMode(cmd->arg1);
+    hardwareConfig->activateServos();
   }
 }
 
 void setMode(int mode) {
-  AbstractControlLoop* current_mode = controlLoops[1];
-  delete current_mode;
-
   switch (mode) {
     case NovaConstants::MOD_JOYSTICK_CONTROL_ABSOLUTE:
-      controlLoops[1] = new JoystickAbsoluteControlLoop(hardwareConfig, novaConfig);//joyAbsoluteControlLoop;
+      controlLoops[1] = joyAbsoluteControlLoop;
       break;
     case NovaConstants::MOD_JOYSTICK_CONTROL_RELATIVE:
-      controlLoops[1] = new JoystickRelativeControlLoop(hardwareConfig, novaConfig);//joyRelativeControlLoop;
+      controlLoops[1] = joyRelativeControlLoop;
       break;
     case NovaConstants::MOD_EXTERNAL_INPUT_CONTROL:
-      controlLoops[1] = new ExternalInputControlLoop(hardwareConfig, novaConfig);//externalInputControlLoop;
+      controlLoops[1] = externalInputControlLoop;
       break;
     case NovaConstants::MOD_DISTANCE_AVOIDANCE:
-      controlLoops[1] = new DistanceAvoidControlLoop(hardwareConfig, novaConfig);//distanceAvoidControlLoop;
+      controlLoops[1] = distanceAvoidControlLoop;
       break;
     case NovaConstants::MOD_FACE_DETECTION:
-      controlLoops[1] = new FaceDetectionControlLoop(hardwareConfig, novaConfig);//faceDetectionControlLoop;
+      controlLoops[1] = faceDetectionControlLoop;
       break;
     default:
       // TODO if something is wrong, default to standard joystick control?
-      controlLoops[1] = new JoystickAbsoluteControlLoop(hardwareConfig, novaConfig);//joyAbsoluteControlLoop;
+      controlLoops[1] = joyAbsoluteControlLoop;
       break;
   }
 }

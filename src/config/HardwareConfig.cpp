@@ -32,10 +32,18 @@ void HardwareConfig::configureCommunication() {
   }
 }
 
-void HardwareConfig::resetServosToMiddle() {
-  servo1->goToMiddle();
-  servo2->goToMiddle();
-  servo3->goToMiddle();
-  servo4->goToMiddle();
-  servo5->goToMiddle();
+void HardwareConfig::suspendServos() {
+  servo1->detach();
+  servo2->detach();
+  servo3->detach();
+  servo4->detach();
+  servo5->detach();
+}
+
+void HardwareConfig::activateServos() {
+  servo1->attach();
+  servo2->attach();
+  servo3->attach();
+  servo4->attach();
+  servo5->attach();
 }

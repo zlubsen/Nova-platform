@@ -21,6 +21,8 @@ class NovaServo {
     void goToMiddle();
     void setDegree(int degree);
     int getDegree();
+    void attach();
+    void detach();
 };
 
 #endif
