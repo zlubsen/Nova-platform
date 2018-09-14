@@ -24,6 +24,10 @@ int NovaServo::getMaximum() {
   return _max;
 }
 
+int NovaServo::getMiddle() {
+  return ( ( _max - _min ) / 2 ) + _min;
+}
+
 void NovaServo::goToMinimum() {
   setDegree(_min);
 }
@@ -33,7 +37,7 @@ void NovaServo::goToMaximum() {
 }
 
 void NovaServo::goToMiddle() {
-  setDegree( ( ( _max - _min ) / 2 ) + _min);
+  setDegree(getMiddle());
 }
 
 void NovaServo::setDegree(int degree) {
@@ -45,6 +49,27 @@ void NovaServo::setDegree(int degree) {
     _servo.write(degree);
 }
 
+void NovaServo::setDegreeSmooth(int degree) {
+  const int step_size = 10; // TODO make configuration item
+  int current_degree = getDegree();
+  int diff = current_degree - degree;
+  diff = abs(diff);
+
+  int no_of_steps = diff / step_size;
+
+  for(int steps = no_of_steps; steps > 0; steps--) {
+    if(current_degree < degree)
+      current_degree += step_size;
+    else
+      current_degree -= step_size;
+
+    setDegree(current_degree);
+    delay(50); // TODO make configuration item
+  }
+
+  goToMiddle();
+}
+
 int NovaServo::getDegree() {
   return _servo.read();
 }
@@ -54,6 +79,6 @@ void NovaServo::attach() {
 }
 
 void NovaServo::detach() {
-  goToMiddle();
+  setDegreeSmooth(getMiddle());
   _servo.detach();
 }

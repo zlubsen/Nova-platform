@@ -16,10 +16,12 @@ class NovaServo {
     void setAllowedRange(int min, int max);
     int getMinimum();
     int getMaximum();
+    int getMiddle();
     void goToMinimum();
     void goToMaximum();
     void goToMiddle();
     void setDegree(int degree);
+    void setDegreeSmooth(int degree);
     int getDegree();
     void attach();
     void detach();
