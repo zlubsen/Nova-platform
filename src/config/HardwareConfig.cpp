@@ -6,6 +6,7 @@ HardwareConfig::HardwareConfig() {
   configureJoysticks();
   configureUltrasound();
   configureCommunication();
+  configureLCDShield();
 }
 
 void HardwareConfig::configureServos() {
@@ -30,6 +31,12 @@ void HardwareConfig::configureCommunication() {
   while (!Serial) {
     ; // wait for serial port to connect. Needed for native USB
   }
+}
+
+void HardwareConfig::configureLCDShield() {
+  RGBLCDShield = new Adafruit_RGBLCDShield();
+  lcdScreen = new LCDShieldScreen(RGBLCDShield);
+  selectButtons = new LCDShieldButtons(RGBLCDShield);
 }
 
 void HardwareConfig::suspendServos() {

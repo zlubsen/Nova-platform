@@ -1,9 +1,12 @@
 #ifndef Hardware_Config_h
 #define Hardware_Config_h
 
+#include <Adafruit_RGBLCDShield.h>
 #include <actuators/NovaServo.h>
+#include <actuators/LCDShieldScreen.h>
 #include <sensors/Joystick.h>
 #include <sensors/UltraSoundSensor.h>
+#include <sensors/LCDShieldButtons.h>
 #include <communication/SerialCommunication.h>
 
 typedef struct {
@@ -21,10 +24,6 @@ typedef struct {
 class HardwareConfig {
   public:
     HardwareConfig();
-    void configureServos();
-    void configureJoysticks();
-    void configureUltrasound();
-    void configureCommunication();
     void suspendServos();
     void activateServos();
     NovaServo* servo1;
@@ -36,6 +35,15 @@ class HardwareConfig {
     Joystick* joystick_right;
     UltraSoundSensor* ultraSoundSensor;
     SerialCommunication* comm;
+    LCDShieldScreen* lcdScreen;
+    LCDShieldButtons* selectButtons;
+  private:
+    void configureServos();
+    void configureJoysticks();
+    void configureUltrasound();
+    void configureCommunication();
+    void configureLCDShield();
+    Adafruit_RGBLCDShield* RGBLCDShield;
 };
 
 #endif
