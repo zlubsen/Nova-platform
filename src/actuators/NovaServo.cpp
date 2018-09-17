@@ -7,7 +7,7 @@ NovaServo::NovaServo(int pin) : NovaServo(pin, 0, 180) {
 NovaServo::NovaServo(int pin, int min, int max) {
   _pin = pin;
   setAllowedRange(min, max);
-  goToMiddle();
+  setDegreeSmooth(getMiddle());
   //_servo.attach(_pin);
 }
 
@@ -50,7 +50,7 @@ void NovaServo::setDegree(int degree) {
 }
 
 void NovaServo::setDegreeSmooth(int degree) {
-  const int step_size = 10; // TODO make configuration item
+  const int step_size = 5; // TODO make configuration item
   int current_degree = getDegree();
   int diff = current_degree - degree;
   diff = abs(diff);
@@ -64,7 +64,7 @@ void NovaServo::setDegreeSmooth(int degree) {
       current_degree -= step_size;
 
     setDegree(current_degree);
-    delay(50); // TODO make configuration item
+    delay(75); // TODO make configuration item
   }
 
   goToMiddle();
