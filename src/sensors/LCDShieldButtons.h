@@ -4,7 +4,7 @@
 #include <Adafruit_RGBLCDShield.h>
 
 enum class Buttons {
-  UP,
+  UP = 0,
   DOWN,
   LEFT,
   RIGHT,
@@ -14,7 +14,7 @@ enum class Buttons {
 class LCDShieldButtons {
   public:
     LCDShieldButtons(Adafruit_RGBLCDShield* shield);
-    void readButtons(uint8_t* num_pressed, Buttons* pressed_buttons);
+    Buttons readButtons();
 
   private:
     Adafruit_RGBLCDShield* _buttons;
