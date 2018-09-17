@@ -48,6 +48,12 @@ void setup() {
   controlLoops[1] = new JoystickAbsoluteControlLoop(hardwareConfig, novaConfig);
 
   hardwareConfig->activateServos();
+
+  hardwareConfig->lcdScreen->setCursor(0,0);
+  hardwareConfig->lcdScreen->print("NOVA DIY Robot");
+  hardwareConfig->lcdScreen->setCursor(0,1);
+  hardwareConfig->lcdScreen->print("By Zeeger Lubsen");
+  hardwareConfig->lcdScreen->setBacklight(0x2);
 }
 
 void handleCommands(NovaCommand* cmd) {

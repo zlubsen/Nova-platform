@@ -2,6 +2,7 @@
 
 LCDShieldScreen::LCDShieldScreen(Adafruit_RGBLCDShield* shield) {
   _lcd = shield;
+  _lcd->begin(16, 2);
 }
 
 void LCDShieldScreen::setCursor(char column, char line) {
