@@ -6,8 +6,7 @@ ModeSelectControlLoop::ModeSelectControlLoop(HardwareConfig* hardwareConfig, Nov
   _lcd = hardwareConfig->lcdScreen;
   _buttons = hardwareConfig->selectButtons;
   setupControlLoops(hardwareConfig, novaConfig);
-
-  _selectedEntry = 0;
+  setupLCDScreen(novaConfig);
 }
 
 void ModeSelectControlLoop::setupControlLoops(HardwareConfig* hardwareConfig, NovaConfig* novaConfig) {
@@ -25,16 +24,24 @@ void ModeSelectControlLoop::setupControlLoops(HardwareConfig* hardwareConfig, No
   _availableControlLoops[3] = distanceAvoidControlLoop;
   _availableControlLoops[4] = faceDetectionControlLoop;
 
-  _activeControlLoops[0] = statusPublishLoop;
+  /*_activeControlLoops[0] = statusPublishLoop;
   _activeControlLoops[1] = modeSelectControlLoop;
-  _activeControlLoops[2] = joyAbsoluteControlLoop;
+  _activeControlLoops[2] = joyAbsoluteControlLoop;*/
+  activeControlLoop = joyAbsoluteControlLoop;
+}
+
+void ModeSelectControlLoop::setupLCDScreen(NovaConfig* novaConfig) {
+  _lcd_menu_timeout_timer = new FrequencyTimer(novaConfig->_lcd_menu_timeout_ms);
+  _lcd->setBacklight(novaConfig->_lcd_menu_background_color);
+  showStatusScreen();
 }
 
 void ModeSelectControlLoop::handleCommands(NovaCommand* cmd) {
   if(cmd->operandcode == NovaConstants::OP_STATUS_SEND_SET_MODE) {
     // disable/reenable input to servos to minimize servo jitter
     _hardwareConfig->suspendServos();
-    setMode(cmd->arg1 - 1); // TODO this is a nasty way to align the novaconstants with the array index used in this class
+    int mode = cmd->arg1 - 1; // TODO this is a nasty way to align the novaconstants with the array index used in this class
+    setMode(mode);
     _hardwareConfig->activateServos();
   }
 }
@@ -55,34 +62,54 @@ void ModeSelectControlLoop::handleButtons() {
     case Buttons::SELECT:
       setMode(_selectedEntry);
       break;
+    case Buttons::NONE_PRESSED:
     default:
+      // nothing pressed, do nothing
       break;
   }
 }
 
+//TODO make min/max index numbers constants/defines
 void ModeSelectControlLoop::navigateModeSelectMenuUp() {
-  _selectedEntry--;
-  if(_selectedEntry < 0)
+  if(_selectedEntry == 0)
     _selectedEntry = 4;
+  else
+    _selectedEntry--;
 
-  updateScreen();
+  showSelectScreen();
 }
 
+//TODO make min/max index numbers constants/defines
 void ModeSelectControlLoop::navigateModeSelectMenuDown() {
-  _selectedEntry++;
-  if(_selectedEntry > 4)
+  if(_selectedEntry == 4)
     _selectedEntry = 0;
+  else
+    _selectedEntry++;
 
-  updateScreen();
+  showSelectScreen();
 }
 
-void ModeSelectControlLoop::updateScreen() {
+void ModeSelectControlLoop::showSelectScreen() {
   _lcd->setCursor(0,0);
+  _lcd->print("Select mode.....");
+  _lcd->setCursor(0,1);
   _lcd->print(_controlLoopDescriptions[_selectedEntry]);
+
+  _lcd_menu_timeout_timer->resetTimer();
+}
+
+void ModeSelectControlLoop::showStatusScreen() {
+  _lcd->setCursor(0,0);
+  _lcd->print("NOVA is in mode:");
+  _lcd->setCursor(0,1);
+  _lcd->print(_controlLoopDescriptions[_currentMode]);
 }
 
 void ModeSelectControlLoop::setMode(int mode) {
-  _activeControlLoops[2] = _availableControlLoops[mode];
+  activeControlLoop = _availableControlLoops[mode];
+  _currentMode = mode;
+
+  showStatusScreen();
 }
 
 void ModeSelectControlLoop::run(NovaCommand* cmd) {
@@ -91,4 +118,8 @@ void ModeSelectControlLoop::run(NovaCommand* cmd) {
   }
 
   handleButtons();
+
+  if(_lcd_menu_timeout_timer->elapsed()) {
+    showStatusScreen();
+  }
 }

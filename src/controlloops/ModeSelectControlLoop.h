@@ -12,26 +12,32 @@
 #include <controlloops/ExternalInputControlLoop.h>
 #include <controlloops/DistanceAvoidControlLoop.h>
 #include <controlloops/FaceDetectionControlLoop.h>
+#include <FrequencyTimer.h>
 
 class ModeSelectControlLoop : public AbstractControlLoop {
   public:
     ModeSelectControlLoop(HardwareConfig*  hardwareConfig, NovaConfig* novaConfig);
     void run(NovaCommand* cmd);
+    StatusPublishLoop* statusPublishLoop;
+    ModeSelectControlLoop* modeSelectControlLoop;
+    AbstractControlLoop* activeControlLoop;
   private:
     void setupControlLoops(HardwareConfig* hardwareConfig, NovaConfig* novaConfig);
+    void setupLCDScreen(NovaConfig* novaConfig);
     void handleCommands(NovaCommand* cmd);
-    void setMode(int mode);
     void handleButtons();
     void navigateModeSelectMenuUp();
     void navigateModeSelectMenuDown();
-    void updateScreen();
+    void setMode(int mode);
+    void showSelectScreen();
+    void showStatusScreen();
     HardwareConfig* _hardwareConfig;
     LCDShieldButtons* _buttons;
     LCDShieldScreen* _lcd;
-    uint8_t _selectedEntry;
+    int _selectedEntry = 0;
+    int _currentMode = 0;
+    FrequencyTimer* _lcd_menu_timeout_timer;
 
-    StatusPublishLoop* statusPublishLoop;
-    ModeSelectControlLoop* modeSelectControlLoop;
     JoystickAbsoluteControlLoop* joyAbsoluteControlLoop;
     JoystickRelativeControlLoop* joyRelativeControlLoop;
     ExternalInputControlLoop* externalInputControlLoop;
@@ -40,7 +46,7 @@ class ModeSelectControlLoop : public AbstractControlLoop {
 
     AbstractControlLoop* _activeControlLoops[3];
     AbstractControlLoop* _availableControlLoops[5];
-    
+
     String _controlLoopDescriptions[5] = {
       "1 Joystick - abs",
       "2 Joystick - rel",

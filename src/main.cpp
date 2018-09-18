@@ -4,6 +4,7 @@
 #include <config/NovaConfig.h>
 #include <config/NovaConstants.h>
 #include <controlloops/AbstractControlLoop.h>
+#include <controlloops/ModeSelectControlLoop.h>
 #include <controlloops/StatusPublishLoop.h>
 #include <controlloops/JoystickAbsoluteControlLoop.h>
 #include <controlloops/JoystickRelativeControlLoop.h>
@@ -19,15 +20,17 @@ NovaConfig* novaConfig;
 
 SerialCommunication* comm;
 
-AbstractControlLoop* controlLoops[2];
+//AbstractControlLoop* controlLoops[2];
+AbstractControlLoop* controlLoops[3];
 
 StatusPublishLoop* statusPublishLoop;
+ModeSelectControlLoop* modeSelectControlLoop;
 
-JoystickAbsoluteControlLoop* joyAbsoluteControlLoop;
+/*JoystickAbsoluteControlLoop* joyAbsoluteControlLoop;
 JoystickRelativeControlLoop* joyRelativeControlLoop;
 ExternalInputControlLoop* externalInputControlLoop;
 DistanceAvoidControlLoop* distanceAvoidControlLoop;
-FaceDetectionControlLoop* faceDetectionControlLoop;
+FaceDetectionControlLoop* faceDetectionControlLoop;*/
 
 void setup() {
   hardwareConfig = new HardwareConfig();
@@ -35,28 +38,32 @@ void setup() {
 
   comm = hardwareConfig->comm;
 
-  statusPublishLoop = new StatusPublishLoop(hardwareConfig, novaConfig->_status_publish_frequency_ms);
+  modeSelectControlLoop = new ModeSelectControlLoop(hardwareConfig, novaConfig);
+  //statusPublishLoop = new StatusPublishLoop(hardwareConfig, novaConfig->_status_publish_frequency_ms);
+  statusPublishLoop = modeSelectControlLoop->statusPublishLoop;
 
-  joyRelativeControlLoop = new JoystickRelativeControlLoop(hardwareConfig, novaConfig);
+  /*joyRelativeControlLoop = new JoystickRelativeControlLoop(hardwareConfig, novaConfig);
   externalInputControlLoop = new ExternalInputControlLoop(hardwareConfig, novaConfig);
   distanceAvoidControlLoop = new DistanceAvoidControlLoop(hardwareConfig, novaConfig);
-  faceDetectionControlLoop = new FaceDetectionControlLoop(hardwareConfig, novaConfig);
+  faceDetectionControlLoop = new FaceDetectionControlLoop(hardwareConfig, novaConfig);*/
 
 
-  controlLoops[0] = statusPublishLoop;
+  controlLoops[0] = modeSelectControlLoop;
+  controlLoops[1] = statusPublishLoop;
+  controlLoops[2] = modeSelectControlLoop->activeControlLoop;
   //TODO default control loop is now joystick absolute?
-  controlLoops[1] = new JoystickAbsoluteControlLoop(hardwareConfig, novaConfig);
+  //controlLoops[1] = new JoystickAbsoluteControlLoop(hardwareConfig, novaConfig);
 
   hardwareConfig->activateServos();
 
-  hardwareConfig->lcdScreen->setCursor(0,0);
+  /*hardwareConfig->lcdScreen->setCursor(0,0);
   hardwareConfig->lcdScreen->print("NOVA DIY Robot");
   hardwareConfig->lcdScreen->setCursor(0,1);
   hardwareConfig->lcdScreen->print("By Zeeger Lubsen");
-  hardwareConfig->lcdScreen->setBacklight(0x2);
+  hardwareConfig->lcdScreen->setBacklight(0x2);*/
 }
 
-void handleCommands(NovaCommand* cmd) {
+/*void handleCommands(NovaCommand* cmd) {
   if(cmd->operandcode == NovaConstants::OP_STATUS_SEND_SET_MODE) {
     // reset input to servos
     hardwareConfig->suspendServos();
@@ -87,16 +94,16 @@ void setMode(int mode) {
       controlLoops[1] = joyAbsoluteControlLoop;
       break;
   }
-}
+}*/
 
 void loop() {
   comm->run();
 
   NovaCommand *cmd = comm->readCommand(); // TODO now processes one command per loop
 
-  if(cmd != NULL && cmd->modulecode == NovaConstants::MOD_STATUS_NOVA) {
+  /*if(cmd != NULL && cmd->modulecode == NovaConstants::MOD_STATUS_NOVA) {
     handleCommands(cmd);
-  }
+  }*/
 
   for(AbstractControlLoop* loop : controlLoops) {
     loop->run(cmd);
