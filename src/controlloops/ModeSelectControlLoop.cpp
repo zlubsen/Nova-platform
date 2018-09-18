@@ -24,6 +24,7 @@ void ModeSelectControlLoop::setupControlLoops(HardwareConfig* hardwareConfig, No
   _availableControlLoops[3] = distanceAvoidControlLoop;
   _availableControlLoops[4] = faceDetectionControlLoop;
 
+  // TODO use of this array would be the preffered way of maintaining the active controlloops (instead of in main.cpp)
   /*_activeControlLoops[0] = statusPublishLoop;
   _activeControlLoops[1] = modeSelectControlLoop;
   _activeControlLoops[2] = joyAbsoluteControlLoop;*/
@@ -38,11 +39,8 @@ void ModeSelectControlLoop::setupLCDScreen(NovaConfig* novaConfig) {
 
 void ModeSelectControlLoop::handleCommands(NovaCommand* cmd) {
   if(cmd->operandcode == NovaConstants::OP_STATUS_SEND_SET_MODE) {
-    // disable/reenable input to servos to minimize servo jitter
-    _hardwareConfig->suspendServos();
     int mode = cmd->arg1 - 1; // TODO this is a nasty way to align the novaconstants with the array index used in this class
     setMode(mode);
-    _hardwareConfig->activateServos();
   }
 }
 
@@ -106,10 +104,15 @@ void ModeSelectControlLoop::showStatusScreen() {
 }
 
 void ModeSelectControlLoop::setMode(int mode) {
+  // disable/reenable input to servos to minimize servo jitter
+  _hardwareConfig->suspendServos();
+
   activeControlLoop = _availableControlLoops[mode];
   _currentMode = mode;
 
   showStatusScreen();
+
+  _hardwareConfig->activateServos();
 }
 
 void ModeSelectControlLoop::run(NovaCommand* cmd) {
@@ -121,5 +124,6 @@ void ModeSelectControlLoop::run(NovaCommand* cmd) {
 
   if(_lcd_menu_timeout_timer->elapsed()) {
     showStatusScreen();
+    _selectedEntry = _currentMode;
   }
 }
