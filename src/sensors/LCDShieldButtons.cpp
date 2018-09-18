@@ -23,5 +23,5 @@ Buttons LCDShieldButtons::readButtons() {
     if (buttons & BUTTON_SELECT) {
       return Buttons::SELECT;
     }
-  }
+  } else return Buttons::NONE_PRESSED;
 }

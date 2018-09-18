@@ -8,7 +8,8 @@ enum class Buttons {
   DOWN,
   LEFT,
   RIGHT,
-  SELECT
+  SELECT,
+  NONE_PRESSED
 };
 
 class LCDShieldButtons {
