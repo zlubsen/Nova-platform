@@ -1,7 +1,19 @@
 #include "NovaConfig.h"
 #include <PID_v1.h>
 
+// LCD Background colors
+#define RED 0x1
+#define GREEN 0x2
+#define YELLOW 0x3
+#define BLUE 0x4
+#define VIOLET 0x5
+#define TEAL 0x6
+#define WHITE 0x7
+
 NovaConfig::NovaConfig() {
+  _lcd_menu_timeout_ms = 5000;
+  _lcd_menu_background_color = BLUE;
+
   _status_publish_frequency_ms = 2000;
   _joystick_control_delay_frequency_ms = 30;
 

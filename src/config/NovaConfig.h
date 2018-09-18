@@ -44,6 +44,8 @@ class NovaConfig {
     int _status_publish_frequency_ms;
     int _joystick_control_delay_frequency_ms;
     int _joystick_relative_degrees_range;
+    int _lcd_menu_timeout_ms;
+    int _lcd_menu_background_color;
 };
 
 #endif
