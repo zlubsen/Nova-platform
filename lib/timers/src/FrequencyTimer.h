@@ -8,6 +8,7 @@ class FrequencyTimer {
     FrequencyTimer(int frequency_ms);
     bool elapsed();
     void setFrequency(int frequency_ms);
+    void resetTimer();
 
   private:
     unsigned long _frequency_ms;

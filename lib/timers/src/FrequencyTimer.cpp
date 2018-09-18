@@ -20,6 +20,10 @@ bool FrequencyTimer::elapsed() {
   return false;
 }
 
+void FrequencyTimer::resetTimer() {
+  setLastTime();
+}
+
 void FrequencyTimer::setFrequency(int frequency_ms) {
   _frequency_ms = frequency_ms;
 }
