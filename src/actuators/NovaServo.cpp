@@ -7,8 +7,6 @@ NovaServo::NovaServo(int pin) : NovaServo(pin, 0, 180) {
 NovaServo::NovaServo(int pin, int min, int max) {
   _pin = pin;
   setAllowedRange(min, max);
-  setDegreeSmooth(getMiddle());
-  //_servo.attach(_pin);
 }
 
 void NovaServo::setAllowedRange(int min, int max) {
