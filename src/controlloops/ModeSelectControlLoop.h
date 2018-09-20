@@ -47,6 +47,7 @@ class ModeSelectControlLoop : public AbstractControlLoop {
     AbstractControlLoop* _activeControlLoops[3];
     AbstractControlLoop* _availableControlLoops[5];
 
+    // TODO make these texts a configuration item - possibly tied to the comm protocol in NovaConstants
     String _controlLoopDescriptions[5] = {
       "1 Joystick - abs",
       "2 Joystick - rel",

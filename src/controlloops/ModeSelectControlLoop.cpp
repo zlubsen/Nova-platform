@@ -28,7 +28,7 @@ void ModeSelectControlLoop::setupControlLoops(HardwareConfig* hardwareConfig, No
   /*_activeControlLoops[0] = statusPublishLoop;
   _activeControlLoops[1] = modeSelectControlLoop;
   _activeControlLoops[2] = joyAbsoluteControlLoop;*/
-  activeControlLoop = joyAbsoluteControlLoop;
+  activeControlLoop = _availableControlLoops[_currentMode];
 }
 
 void ModeSelectControlLoop::setupLCDScreen(NovaConfig* novaConfig) {
