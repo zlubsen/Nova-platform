@@ -8,6 +8,12 @@ JoystickRelativeControlLoop::JoystickRelativeControlLoop(HardwareConfig *hardwar
   _filterconst_left.y = novaConfig->_joy_left_config_relative.y;
   _filterconst_right.x = novaConfig->_joy_right_config_relative.x;
   _filterconst_right.y = novaConfig->_joy_right_config_relative.y;
+
+  // default output, to prevent excessive motion at startup
+  _joy_left_output.x = 0;
+  _joy_left_output.y = 0;
+  _joy_right_output.x = 0;
+  _joy_right_output.y = 0;
 }
 
 void JoystickRelativeControlLoop::mapInputToRange() {

@@ -17,6 +17,12 @@ JoystickAbsoluteControlLoop::JoystickAbsoluteControlLoop(HardwareConfig *hardwar
 
   _joy_left = hardwareConfig->joystick_left;
   _joy_right = hardwareConfig->joystick_right;
+
+  // default output, to prevent excessive motion at startup
+  _joy_left_output.x = _servo4->getMiddle();
+  _joy_left_output.y = _servo1->getMiddle();
+  _joy_right_output.x = _servo2->getMiddle();
+  _joy_right_output.y = _servo3->getMiddle();
 }
 
 void JoystickAbsoluteControlLoop::observe() {
