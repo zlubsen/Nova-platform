@@ -25,6 +25,9 @@ namespace NovaConstants {
   static const int OP_STATUS_RECEIVE_JOY_LEFT = 7;        // (x, y, pushed in arg1, arg2, arg3)
   static const int OP_STATUS_RECEIVE_JOY_RIGHT = 8;       // (x, y, pushed in arg1, arg2, arg3)
   static const int OP_STATUS_SEND_SET_MODE = 9;           // (set new modulecode as arg1)
+  static const int OP_STATUS_RECEIVE_DISTANCE_PID = 10;       // (Kp, Ki, Kd values in arg1, arg2, arg3)
+  static const int OP_STATUS_RECEIVE_FACEDETECT_PID_X = 11;   // (Kp, Ki, Kd values in arg1, arg2, arg3)
+  static const int OP_STATUS_RECEIVE_FACEDETECT_PID_Y = 12;   // (Kp, Ki, Kd values in arg1, arg2, arg3)
 
   static const int OP_EXTERNAL_INPUT_SET_AXIS_1 = 1;      // (degree change in arg1)
   static const int OP_EXTERNAL_INPUT_SET_AXIS_2 = 2;      // (degree change in arg1)
