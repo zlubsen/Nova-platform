@@ -40,12 +40,13 @@ namespace NovaConstants {
   static const int OP_DISTANCE_SET_SETPOINT = 3;          // (new setpoint in arg1)
   static const int OP_DISTANCE_SET_PID_TUNING = 4;        // (p, i, d in arg1, arg2, arg3)
 
-  static const int OP_FACE_DETECTION_X_SETPOINT = 1;      // (new setpoint in arg1)
-  static const int OP_FACE_DETECTION_Y_SETPOINT = 2;      // (new setpoint in arg1)
-  static const int OP_FACE_DETECTION_X_PID_TUNING = 3;    // (p, i, d in arg1, arg2, arg3)
-  static const int OP_FACE_DETECTION_Y_PID_TUNING = 4;    // (p, i, d in arg1, arg2, arg3)
-  static const int OP_FACE_DETECTION_SET_COORDINATES = 5; // (x, y) in arg1, arg2)
-  static const int OP_FACE_DETECTION_ACK_COORDINATES = 6; // ack for received coordinates
+  static const int OP_FACE_DETECTION_SET_COORDINATES = 1; // (x, y) in arg1, arg2)
+  static const int OP_FACE_DETECTION_ACK_COORDINATES = 2; // ack for received coordinates
+  static const int OP_FACE_DETECTION_X_SETPOINT = 3;      // (new setpoint in arg1)
+  static const int OP_FACE_DETECTION_Y_SETPOINT = 4;      // (new setpoint in arg1)
+  static const int OP_FACE_DETECTION_X_PID_TUNING = 5;    // (p, i, d in arg1, arg2, arg3)
+  static const int OP_FACE_DETECTION_Y_PID_TUNING = 6;    // (p, i, d in arg1, arg2, arg3)
+
 }
 
 #endif
