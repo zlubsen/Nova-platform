@@ -38,6 +38,8 @@ FaceDetectionControlLoop::FaceDetectionControlLoop(HardwareConfig *hardwareConfi
     _pid_y->SetOutputLimits(_pid_config_y.outputLimitMin, _pid_config_y.outputLimitMax);
     _pid_y->SetMode(_pid_config_y.mode);
   _pid_values_y.output = 0.0; // explicitly set output to zero, otherwise there appears to be garbage in the memory...
+
+  statusPublishPIDValues();
 }
 
 // TODO: this one does not work well, pointers given to the PID are not passed correctly...
@@ -73,6 +75,20 @@ void FaceDetectionControlLoop::setPIDTuning(int opcode, int p_value, int i_value
     _pid_x->SetTunings(new_p, new_i, new_d);
   else if(opcode == NovaConstants::OP_FACE_DETECTION_Y_PID_TUNING)
     _pid_y->SetTunings(new_p, new_i, new_d);
+
+  statusPublishPIDValues();
+}
+
+void FaceDetectionControlLoop::statusPublishPIDValues() {
+  int Kp_x = (int)(_pid_x->GetKp()*1000);
+  int Ki_x = (int)(_pid_x->GetKi()*1000);
+  int Kd_x = (int)(_pid_x->GetKd()*1000);
+  _comm->writeCommand(NovaConstants::MOD_STATUS_NOVA, NovaConstants::OP_STATUS_RECEIVE_FACEDETECT_PID_X, Kp_x, Ki_x, Kd_x);
+
+  int Kp_y = (int)(_pid_y->GetKp()*1000);
+  int Ki_y = (int)(_pid_y->GetKi()*1000);
+  int Kd_y = (int)(_pid_y->GetKd()*1000);
+  _comm->writeCommand(NovaConstants::MOD_STATUS_NOVA, NovaConstants::OP_STATUS_RECEIVE_FACEDETECT_PID_Y, Kp_y, Ki_y, Kd_y);
 }
 
 void FaceDetectionControlLoop::observe(NovaCommand *cmd) {

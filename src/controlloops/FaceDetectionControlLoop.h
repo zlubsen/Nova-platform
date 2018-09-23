@@ -25,6 +25,7 @@ class FaceDetectionControlLoop : public AbstractControlLoop {
     void handleCommands(NovaCommand* cmd);
     void setSetpoint(int opcode, int new_setpoint);
     void setupPIDcontroller(PID* pid, pid_config* config, pid_dynamic_values* values);
+    void statusPublishPIDValues();
     void observe(NovaCommand* cmd);
     void actuate();
     void computeControl();
