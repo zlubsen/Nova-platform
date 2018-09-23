@@ -13,6 +13,7 @@ class DistanceAvoidControlLoop : public AbstractControlLoop {
     void run(NovaCommand* cmd);
 
   private:
+    SerialCommunication* _comm;
     UltraSoundSensor *_ultraSoundSensor;
     NovaServo *_servo;
     PID *_pid;
@@ -26,12 +27,14 @@ class DistanceAvoidControlLoop : public AbstractControlLoop {
     int _servo_angle;
     void setupPIDcontroller();
     void handleCommands(NovaCommand* cmd);
-    void setDistanceLimit(bool set_minimum, int new_distance);
+    void setMinimumDistanceLimit(int new_distance);
+    void setMaximumDistanceLimit(int new_distance);
     void setSetpoint(int new_distance);
     void setPIDTuning(int p_value, int i_value, int d_value);
     void computeControl();
     void observe();
     void actuate();
+    void statusPublishPIDValues();
 };
 
 #endif
