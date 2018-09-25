@@ -41,6 +41,7 @@ class JoystickAbsoluteControlLoop : public AbstractControlLoop {
     void filterInput();
     virtual void actuate();
     void actuateStepwiseInputServo(NovaServo* servo);
+    int correctJoystickInput(int position, int mid_deviation);
 
   private:
     Joystick *_joy_left;

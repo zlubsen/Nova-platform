@@ -51,10 +51,17 @@ void JoystickAbsoluteControlLoop::actuateStepwiseInputServo(NovaServo* servo) {
 
 void JoystickAbsoluteControlLoop::mapInputToRange() {
   // servo4 has an inverted range, from high to low degrees;
-  _joy_left_input.x = map(_joy_left_input.x, 0, 1024, _servo4->getMaximum(), _servo4->getMinimum());
-  _joy_left_input.y = map(_joy_left_input.y, 0, 1024, _servo1->getMinimum(), _servo1->getMaximum());
-  _joy_right_input.x = map(_joy_right_input.x, 0, 1024, _servo2->getMinimum(), _servo2->getMaximum());
-  _joy_right_input.y = map(_joy_right_input.y, 0, 1024, _servo3->getMinimum(), _servo3->getMaximum());
+  _joy_left_input.x = map(correctJoystickInput(_joy_left_input.x, 73), 0, 1023, _servo4->getMaximum(), _servo4->getMinimum());
+  _joy_left_input.y = map(correctJoystickInput(_joy_left_input.y, 47), 0, 1023, _servo1->getMinimum(), _servo1->getMaximum());
+  _joy_right_input.x = map(correctJoystickInput(_joy_right_input.x, 76), 0, 1023, _servo2->getMinimum(), _servo2->getMaximum());
+  _joy_right_input.y = map(correctJoystickInput(_joy_right_input.y, 59), 0, 1023, _servo3->getMinimum(), _servo3->getMaximum());
+}
+
+int JoystickAbsoluteControlLoop::correctJoystickInput(int position, int mid_deviation) {
+  int scale_position = 1 - (abs(position-512)/512);
+  int scale_factor = 1 - (abs(position-(scale_position*mid_deviation)-512)/(512));
+  int new_position = position - scale_factor * mid_deviation;
+  return new_position;
 }
 
 void JoystickAbsoluteControlLoop::filterInput() {
