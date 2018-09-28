@@ -51,3 +51,8 @@ void ExternalInputControlLoop::run(NovaCommand* cmd) {
     actuate();
   }
 }
+
+String ExternalInputControlLoop::getLCDStatusString() {
+  String status = "                ";
+  return status;
+}

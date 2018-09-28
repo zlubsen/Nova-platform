@@ -33,6 +33,7 @@ void ModeSelectControlLoop::setupControlLoops(HardwareConfig* hardwareConfig, No
 
 void ModeSelectControlLoop::setupLCDScreen(NovaConfig* novaConfig) {
   _lcd_menu_timeout_timer = new FrequencyTimer(novaConfig->_lcd_menu_timeout_ms);
+  _lcd_status_update_timer = new FrequencyTimer(novaConfig->_lcd_status_update_ms);
   _lcd->setBacklight(novaConfig->_lcd_menu_background_color);
   showStatusScreen();
 }
@@ -88,6 +89,8 @@ void ModeSelectControlLoop::navigateModeSelectMenuDown() {
 }
 
 void ModeSelectControlLoop::showSelectScreen() {
+  _lcd_status_mode = false;
+
   _lcd->setCursor(0,0);
   _lcd->print("Select mode.....");
   _lcd->setCursor(0,1);
@@ -97,10 +100,16 @@ void ModeSelectControlLoop::showSelectScreen() {
 }
 
 void ModeSelectControlLoop::showStatusScreen() {
+  _lcd_status_mode = true;
+
   _lcd->setCursor(0,0);
-  _lcd->print("NOVA is in mode:");
-  _lcd->setCursor(0,1);
   _lcd->print(_controlLoopDescriptions[_currentMode]);
+  updateStatusScreen();
+}
+
+void ModeSelectControlLoop::updateStatusScreen() {
+  _lcd->setCursor(0,1);
+  _lcd->print(activeControlLoop->getLCDStatusString());
 }
 
 void ModeSelectControlLoop::setMode(int mode) {
@@ -122,8 +131,20 @@ void ModeSelectControlLoop::run(NovaCommand* cmd) {
 
   handleButtons();
 
-  if(_lcd_menu_timeout_timer->elapsed()) {
+  handleUpdateLCD();
+}
+
+void ModeSelectControlLoop::handleUpdateLCD() {
+  if(_lcd_status_mode && _lcd_status_update_timer->elapsed())
+    updateStatusScreen();
+
+  if(!_lcd_status_mode && _lcd_menu_timeout_timer->elapsed()) {
     showStatusScreen();
     _selectedEntry = _currentMode;
   }
+}
+
+String ModeSelectControlLoop::getLCDStatusString() {
+  String status = "                ";
+  return status;
 }

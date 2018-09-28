@@ -10,6 +10,7 @@ class ExternalInputControlLoop : public AbstractControlLoop {
   public:
     ExternalInputControlLoop(HardwareConfig *hardwareConfig, NovaConfig *novaConfig);
     void run(NovaCommand* cmd);
+    String getLCDStatusString();
 
   private:
     NovaServo *_servo1;

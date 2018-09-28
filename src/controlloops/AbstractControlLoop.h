@@ -4,6 +4,7 @@
 class AbstractControlLoop {
   public:
     virtual void run(NovaCommand* cmd) = 0;
+    virtual String getLCDStatusString() = 0;
 };
 
 #endif

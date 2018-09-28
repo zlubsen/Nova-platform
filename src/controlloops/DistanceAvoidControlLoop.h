@@ -11,6 +11,7 @@ class DistanceAvoidControlLoop : public AbstractControlLoop {
   public:
     DistanceAvoidControlLoop(HardwareConfig *hardwareConfig, NovaConfig *novaConfig);
     void run(NovaCommand* cmd);
+    String getLCDStatusString();
 
   private:
     SerialCommunication* _comm;

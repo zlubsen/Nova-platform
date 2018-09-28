@@ -11,6 +11,7 @@ class FaceDetectionControlLoop : public AbstractControlLoop {
   public:
     FaceDetectionControlLoop(HardwareConfig *hardwareConfig, NovaConfig *novaConfig);
     void run(NovaCommand* cmd);
+    String getLCDStatusString();
 
   private:
     NovaServo* _servo_x;

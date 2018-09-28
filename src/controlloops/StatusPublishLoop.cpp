@@ -23,3 +23,8 @@ void StatusPublishLoop::run(NovaCommand* cmd) {
     _comm->writeCommand(NovaConstants::MOD_STATUS_NOVA, NovaConstants::OP_STATUS_RECEIVE_USS, ultraSoundSensor->measureDistance(),0,0);
   }
 }
+
+String StatusPublishLoop::getLCDStatusString() {
+  String status = "                ";
+  return status;
+}

@@ -18,9 +18,11 @@ class ModeSelectControlLoop : public AbstractControlLoop {
   public:
     ModeSelectControlLoop(HardwareConfig*  hardwareConfig, NovaConfig* novaConfig);
     void run(NovaCommand* cmd);
+    String getLCDStatusString();
     StatusPublishLoop* statusPublishLoop;
     ModeSelectControlLoop* modeSelectControlLoop;
     AbstractControlLoop* activeControlLoop;
+
   private:
     void setupControlLoops(HardwareConfig* hardwareConfig, NovaConfig* novaConfig);
     void setupLCDScreen(NovaConfig* novaConfig);
@@ -31,12 +33,16 @@ class ModeSelectControlLoop : public AbstractControlLoop {
     void setMode(int mode);
     void showSelectScreen();
     void showStatusScreen();
+    void updateStatusScreen();
+    void handleUpdateLCD();
     HardwareConfig* _hardwareConfig;
     LCDShieldButtons* _buttons;
     LCDShieldScreen* _lcd;
     int _selectedEntry = 0;
     int _currentMode = 0;
+    bool _lcd_status_mode = true;
     FrequencyTimer* _lcd_menu_timeout_timer;
+    FrequencyTimer* _lcd_status_update_timer;
 
     JoystickAbsoluteControlLoop* joyAbsoluteControlLoop;
     JoystickRelativeControlLoop* joyRelativeControlLoop;

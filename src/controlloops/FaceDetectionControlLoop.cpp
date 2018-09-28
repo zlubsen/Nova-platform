@@ -138,3 +138,8 @@ void FaceDetectionControlLoop::run(NovaCommand* cmd) {
     }
   }
 }
+
+String FaceDetectionControlLoop::getLCDStatusString() {
+  String status = "                ";
+  return status;
+}

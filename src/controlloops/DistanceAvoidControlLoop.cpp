@@ -85,12 +85,7 @@ void DistanceAvoidControlLoop::observe() {
 
 void DistanceAvoidControlLoop::actuate() {
   if(_pid_values.input < _max_distance && _pid_values.input > _min_distance) {
-       _servo_angle = _servo_angle - _pid_values.output;
-
-       if(_servo_angle > _servo->getMaximum())
-          _servo_angle = _servo->getMaximum();
-       if(_servo_angle < _servo->getMinimum())
-          _servo_angle = _servo->getMinimum();
+       _servo_angle = _servo->getDegree() - _pid_values.output;
 
        _servo->setDegree(_servo_angle);
   }
@@ -107,4 +102,20 @@ void DistanceAvoidControlLoop::run(NovaCommand* cmd) {
   observe();
   computeControl();
   actuate();
+
+  //_comm->writeCommand(99,0,_pid_values.input,_pid_values.output,_servo_angle);
+}
+
+String DistanceAvoidControlLoop::getLCDStatusString() {
+  String str_start = "Dist:";
+  String str_value = String((int)_pid_values.input);
+  String str_end = " cm";
+  int text_length = str_start.length() + str_value.length() + str_end.length();
+  String mid_padding = "";
+
+  for(int i = (16-text_length); i > 0; i--) {
+    mid_padding.concat(" ");
+  }
+
+  return (str_start + mid_padding + str_value + str_end);
 }
