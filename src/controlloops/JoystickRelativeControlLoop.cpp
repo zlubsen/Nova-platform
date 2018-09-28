@@ -18,10 +18,10 @@ JoystickRelativeControlLoop::JoystickRelativeControlLoop(HardwareConfig *hardwar
 
 void JoystickRelativeControlLoop::mapInputToRange() {
   // servo4 has an inverted range, from high to low degrees;
-  _joy_left_input.x = map(_joy_left_input.x, 0, 1023, _max_degrees, -_max_degrees);
-  _joy_left_input.y = map(_joy_left_input.y, 0, 1023, -_max_degrees, _max_degrees);
-  _joy_right_input.x = map(_joy_right_input.x, 0, 1023, -_max_degrees, _max_degrees);
-  _joy_right_input.y = map(_joy_right_input.y, 0, 1023, -_max_degrees, _max_degrees);
+  _joy_left_input.x = map(correctJoystickInput(_joy_left_input.x, 73), 0, 1023, _max_degrees, -_max_degrees);
+  _joy_left_input.y = map(correctJoystickInput(_joy_left_input.y, 47), 0, 1023, -_max_degrees, _max_degrees);
+  _joy_right_input.x = map(correctJoystickInput(_joy_right_input.x, 76), 0, 1023, -_max_degrees, _max_degrees);
+  _joy_right_input.y = map(correctJoystickInput(_joy_right_input.y, 59), 0, 1023, -_max_degrees, _max_degrees);
 }
 
 void JoystickRelativeControlLoop::actuate() {
@@ -39,4 +39,9 @@ void JoystickRelativeControlLoop::run(NovaCommand* cmd) {
     filterInput();
     actuate();
   }
+}
+
+String JoystickRelativeControlLoop::getLCDStatusString() {
+  String status = "                ";
+  return status;
 }
