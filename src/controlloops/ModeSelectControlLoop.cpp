@@ -125,7 +125,7 @@ void ModeSelectControlLoop::setMode(int mode) {
 }
 
 void ModeSelectControlLoop::run(NovaCommand* cmd) {
-  if(cmd != NULL && cmd->modulecode == NovaConstants::MOD_STATUS_NOVA) {
+  if(cmd != nullptr && cmd->modulecode == NovaConstants::MOD_STATUS_NOVA) {
     handleCommands(cmd);
   }
 

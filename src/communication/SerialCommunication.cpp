@@ -72,7 +72,7 @@ NovaCommand* SerialCommunication::readCommand() {
 
     return retval;
   } else
-    return NULL;
+    return nullptr;
 }
 
 void SerialCommunication::writeCommand(int modcode, int opcode, int arg1, int arg2, int arg3) {

@@ -123,7 +123,7 @@ void FaceDetectionControlLoop::handleCommands(NovaCommand* cmd) {
 }
 
 void FaceDetectionControlLoop::run(NovaCommand* cmd) {
-  if(cmd != NULL && cmd->modulecode == NovaConstants::MOD_FACE_DETECTION) {
+  if(cmd != nullptr && cmd->modulecode == NovaConstants::MOD_FACE_DETECTION) {
     handleCommands(cmd);
 
     if(cmd->operandcode == NovaConstants::OP_FACE_DETECTION_SET_COORDINATES) {

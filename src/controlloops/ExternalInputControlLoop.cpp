@@ -46,7 +46,7 @@ void ExternalInputControlLoop::actuate() {
 }
 
 void ExternalInputControlLoop::run(NovaCommand* cmd) {
-  if(cmd != NULL && cmd->modulecode == NovaConstants::MOD_EXTERNAL_INPUT_CONTROL) {
+  if(cmd != nullptr && cmd->modulecode == NovaConstants::MOD_EXTERNAL_INPUT_CONTROL) {
     observe(cmd);
     actuate();
   }
