@@ -13,6 +13,7 @@
 NovaConfig::NovaConfig() {
   _lcd_menu_timeout_ms = 5000;
   _lcd_menu_background_color = BLUE;
+  _lcd_status_update_ms = 500;
 
   _status_publish_frequency_ms = 2000;
   _joystick_control_delay_frequency_ms = 30;
@@ -27,11 +28,11 @@ NovaConfig::NovaConfig() {
   _joy_right_config_relative.x = 0.4;
   _joy_right_config_relative.y = 0.4;
 
-  _joystick_relative_degrees_range = 10;
+  _joystick_relative_degrees_range = 7;
 
-  _distance_avoid_pid_config.Kp = 0.51;
-  _distance_avoid_pid_config.Ki = 1.1;
-  _distance_avoid_pid_config.Kd = 0;
+  _distance_avoid_pid_config.Kp = 0.126;//0.51
+  _distance_avoid_pid_config.Ki = 0.400;//1.1
+  _distance_avoid_pid_config.Kd = 0.400;
   _distance_avoid_pid_config.sampleTime = 10;
   _distance_avoid_pid_config.outputLimitMin = -1;
   _distance_avoid_pid_config.outputLimitMax = 1;

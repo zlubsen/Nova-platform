@@ -46,6 +46,7 @@ class NovaConfig {
     int _joystick_relative_degrees_range;
     int _lcd_menu_timeout_ms;
     int _lcd_menu_background_color;
+    int _lcd_status_update_ms;
 };
 
 #endif
