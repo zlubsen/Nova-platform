@@ -28,7 +28,7 @@ NovaConfig::NovaConfig() {
   _joy_right_config_relative.x = 0.4;
   _joy_right_config_relative.y = 0.4;
 
-  _joystick_relative_degrees_range = 7;
+  _joystick_relative_degrees_range = 8;
 
   _distance_avoid_pid_config.Kp = 0.126;//0.51
   _distance_avoid_pid_config.Ki = 0.400;//1.1
