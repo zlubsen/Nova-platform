@@ -12,6 +12,8 @@
 #include <controlloops/DistanceAvoidControlLoop.h>
 #include <controlloops/FaceDetectionControlLoop.h>
 
+#include <vector>
+
 void updateControlLoops();
 
 HardwareConfig* hardwareConfig;
@@ -20,6 +22,7 @@ NovaConfig* novaConfig;
 SerialCommunication* comm;
 
 AbstractControlLoop* controlLoops[3];
+//std::vector<AbstractControlLoop*> controlLoops;
 
 StatusPublishLoop* statusPublishLoop;
 ModeSelectControlLoop* modeSelectControlLoop;
@@ -37,6 +40,10 @@ void setup() {
   controlLoops[0] = modeSelectControlLoop;
   controlLoops[1] = statusPublishLoop;
   controlLoops[2] = modeSelectControlLoop->activeControlLoop;
+  //controlLoops.reserve(3);
+  //controlLoops.push_back(modeSelectControlLoop);
+  //controlLoops.push_back(statusPublishLoop);
+  //controlLoops.push_back(modeSelectControlLoop->activeControlLoop);
 
   hardwareConfig->activateServos();
 
