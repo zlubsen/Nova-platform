@@ -1,6 +1,0 @@
-*.o
-config.status
-Config.mk
-config.h
-docs/html
-ustl.pc
