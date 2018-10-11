@@ -50,7 +50,7 @@ void setup() {
 void loop() {
   comm->run();
 
-  NovaCommand *cmd = comm->readCommand(); // TODO now processes one command per loop
+  NovaCommand *cmd = comm->readCommand();
 
   for(AbstractControlLoop* loop : controlLoops) {
     loop->run(cmd);
