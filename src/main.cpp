@@ -12,6 +12,8 @@
 #include <controlloops/DistanceAvoidControlLoop.h>
 #include <controlloops/FaceDetectionControlLoop.h>
 
+#include <uvector.h>
+
 void updateControlLoops();
 
 HardwareConfig* hardwareConfig;
@@ -20,6 +22,7 @@ NovaConfig* novaConfig;
 SerialCommunication* comm;
 
 AbstractControlLoop* controlLoops[3];
+vector<int> v;
 
 StatusPublishLoop* statusPublishLoop;
 ModeSelectControlLoop* modeSelectControlLoop;
