@@ -24,8 +24,8 @@ void SerialCommunication::recvBytesWithStartEndMarkers() {
         if (rb != _endMarker) {
             _receivedBytes[ndx] = rb;
             ndx++;
-            if (ndx >= numBytes) {
-                ndx = numBytes - 1;
+            if (ndx >= serial_num_bytes) {
+                ndx = serial_num_bytes - 1;
             }
         }
         else {
