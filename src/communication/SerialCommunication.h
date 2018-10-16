@@ -2,8 +2,8 @@
 #define Nova_Util_Serial_Communication_h
 
 #include <Arduino.h>
-#include <Queue.h>
 #include <config/NovaConstants.h>
+#include <queue>
 
 #define serial_num_bytes 32 // We can read a maximum of 32 bytes per loop
 
@@ -27,11 +27,8 @@ class SerialCommunication {
     void parseInput();
     void recvBytesWithStartEndMarkers();
     void sendOutgoingCommands();
-    const int MAX_COMMAND_SIZE = 20; // we can store a maximum of 20 commands per loop (which won't fit in 32 bytes anyhow - see 'define serial_num_bytes')
-    Queue<NovaCommand> _commands_in = Queue<NovaCommand>(MAX_COMMAND_SIZE);
-    Queue<NovaCommand> _commands_out = Queue<NovaCommand>(MAX_COMMAND_SIZE);
-    char _startMarker = 0x3E; // '>' TODO: there is redundancy in using both char and byte version of the markers/msg-indicators
-    char _endMarker = 0x3C; // '<'
+    std::queue<NovaCommand> _commands_in;
+    std::queue<NovaCommand> _commands_out;
     char _receivedBytes[serial_num_bytes];
     char _tempBytes[serial_num_bytes];
     byte _numReceived = 0;

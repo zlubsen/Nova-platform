@@ -9,7 +9,7 @@ SerialCommunication::SerialCommunication(int baud_rate) {
 }
 
 bool SerialCommunication::commandAvailable() {
-  return _commands_in.count() > 0;
+  return _commands_in.size() > 0;
 }
 
 void SerialCommunication::recvBytesWithStartEndMarkers() {
@@ -21,7 +21,7 @@ void SerialCommunication::recvBytesWithStartEndMarkers() {
     rb = Serial.read();
 
     if (recvInProgress == true) {
-        if (rb != _endMarker) {
+        if (rb != NovaConstants::CMD_END_MARKER) {
             _receivedBytes[ndx] = rb;
             ndx++;
             if (ndx >= serial_num_bytes) {
@@ -36,7 +36,7 @@ void SerialCommunication::recvBytesWithStartEndMarkers() {
             _newData = true;
         }
     }
-    else if (rb == _startMarker) {
+    else if (rb == NovaConstants::CMD_START_MARKER) {
         recvInProgress = true;
     }
   }
@@ -60,8 +60,8 @@ void SerialCommunication::parseInput() {
 
 NovaCommand* SerialCommunication::readCommand() {
   if(commandAvailable()) {
-    NovaCommand cmd = _commands_in.pop();
-    // TODO novacommand copy constructor?
+    NovaCommand cmd = _commands_in.front();
+    _commands_in.pop();
     NovaCommand *retval = new NovaCommand;
 
     retval->modulecode = cmd.modulecode;
@@ -87,8 +87,9 @@ void SerialCommunication::writeCommand(int modcode, int opcode, int arg1, int ar
 }
 
 void SerialCommunication::sendOutgoingCommands() {
-  while(_commands_out.count() > 0) {
-    NovaCommand cmd = _commands_out.pop();
+  while(_commands_out.size() > 0) {
+    NovaCommand cmd = _commands_out.front();
+    _commands_out.pop();
 
     String message = String(NovaConstants::CMD_START_MARKER);
     message.concat(cmd.modulecode);
