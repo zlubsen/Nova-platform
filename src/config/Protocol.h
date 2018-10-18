@@ -15,61 +15,61 @@ class NovaCommand {
 class ProtocolNode {
   public:
     ProtocolNode() {}
-    ProtocolNode(String id, int code) { _id = id; _code = code;}
+    ProtocolNode(String id, int8_t code) { _id = id; _code = code;}
     String _id;
-    int _code;
+    int8_t _code;
     std::map<String, ProtocolNode> children;
 };
 
 class ProtocolLeaf : public ProtocolNode {
   public:
-    ProtocolLeaf(String id, int code) : ProtocolNode(id, code) {}
+    ProtocolLeaf(String id, int8_t code) : ProtocolNode(id, code) {}
 };
 
 class ModuleNode : public ProtocolNode {
   public:
-    ModuleNode(String id, int code);
+    ModuleNode(String id, int8_t code);
 };
 
 class ServoNode : public ProtocolNode {
   public:
-    ServoNode(String id, int code);
+    ServoNode(String id, int8_t code);
     //std::map<String, ProtocolNode> children;
 };
 
 class UltraSoundNode : public ProtocolNode {
   public:
-    UltraSoundNode(String id, int code);
+    UltraSoundNode(String id, int8_t code);
     //std::map<String, ProtocolNode> children;
 };
 
 class PIDNode : public ProtocolNode {
   public:
-    PIDNode(String id, int code);
+    PIDNode(String id, int8_t code);
     //std::map<String, ProtocolNode> children;
 };
 
 class NovaNode : public ProtocolNode {
   public:
-    NovaNode(String id, int code);
+    NovaNode(String id, int8_t code);
     //std::map<String, ProtocolNode> children;
 };
 
 class ExternalInputNode : public ProtocolNode {
   public:
-    ExternalInputNode(String id, int code);
+    ExternalInputNode(String id, int8_t code);
     //std::map<String, ProtocolNode> children;
 };
 
 class KeepDistanceNode : public ProtocolNode {
   public:
-    KeepDistanceNode(String id, int code);
+    KeepDistanceNode(String id, int8_t code);
     //std::map<String, ProtocolNode> children;
 };
 
 class TrackObjectNode : public ProtocolNode {
   public:
-    TrackObjectNode(String id, int code);
+    TrackObjectNode(String id, int8_t code);
     std::map<String, ProtocolNode> children;
 };
 
