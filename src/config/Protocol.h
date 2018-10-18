@@ -2,76 +2,97 @@
 #define Nova_Protocol_h
 
 #include <map>
+#include <vector>
+
+class NovaCommand {
+  public:
+    String module;
+    String asset;
+    String operation;
+    std::vector<int> args;
+};
 
 class ProtocolNode {
   public:
-    ProtocolNode(String id, int code);
+    ProtocolNode() {}
+    ProtocolNode(String id, int code) { _id = id; _code = code;}
     String _id;
     int _code;
+    std::map<String, ProtocolNode> children;
 };
 
-class ProtocolLeaf {
+class ProtocolLeaf : public ProtocolNode {
   public:
-    ProtocolLeaf(String id, int code);
-    String _id;
-    int _code;
+    ProtocolLeaf(String id, int code) : ProtocolNode(id, code) {}
 };
 
 class ModuleNode : public ProtocolNode {
   public:
-    ModuleNode();
+    ModuleNode(String id, int code);
 };
 
 class ServoNode : public ProtocolNode {
   public:
     ServoNode(String id, int code);
-    std::map<String, int> children;
+    //std::map<String, ProtocolNode> children;
 };
 
 class UltraSoundNode : public ProtocolNode {
   public:
     UltraSoundNode(String id, int code);
-    std::map<String, int> children;
+    //std::map<String, ProtocolNode> children;
 };
 
 class PIDNode : public ProtocolNode {
   public:
     PIDNode(String id, int code);
-    std::map<String, int> children;
+    //std::map<String, ProtocolNode> children;
 };
 
 class NovaNode : public ProtocolNode {
   public:
     NovaNode(String id, int code);
-    std::map<String, int> children;
+    //std::map<String, ProtocolNode> children;
 };
 
 class ExternalInputNode : public ProtocolNode {
   public:
     ExternalInputNode(String id, int code);
-    std::map<String, int> children;
+    //std::map<String, ProtocolNode> children;
 };
 
 class KeepDistanceNode : public ProtocolNode {
   public:
-    ExternalInputNode(String id, int code);
-    std::map<String, int> children;
-}
+    KeepDistanceNode(String id, int code);
+    //std::map<String, ProtocolNode> children;
+};
 
 class TrackObjectNode : public ProtocolNode {
   public:
     TrackObjectNode(String id, int code);
-    std::map<String, int> children;
-}
+    std::map<String, ProtocolNode> children;
+};
 
 class Root : public ProtocolNode {
   public:
     Root();
-    std::map<String, int> children;
-}
+    std::map<String, ProtocolNode> children;
+};
 
 class NovaProtocolCommandBuilder {
-
+  public:
+    NovaProtocolCommandBuilder() {}
+    NovaProtocolCommandBuilder setModule(String module);
+    NovaProtocolCommandBuilder setAsset(String asset);
+    NovaProtocolCommandBuilder setOperation(String operation);
+    NovaProtocolCommandBuilder setArgs(std::vector<char> args);
+    NovaProtocolCommandBuilder setModeArg(String module_name);
+    std::vector<int> build();
+  private:
+    ProtocolNode module;
+    ProtocolNode asset;
+    ProtocolNode operation;
+    std::vector<char> args;
 };
 
 class NovaProtocolCommandReader {
