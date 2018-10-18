@@ -1,5 +1,5 @@
-#ifndef Nova_Protocol_h
-#define Nova_Protocol_h
+#ifndef Nova_Protocol_Nodes_h
+#define Nova_Protocol_Nodes_h
 
 #include <map>
 #include <vector>
@@ -77,26 +77,6 @@ class Root : public ProtocolNode {
   public:
     Root();
     std::map<String, ProtocolNode> children;
-};
-
-class NovaProtocolCommandBuilder {
-  public:
-    NovaProtocolCommandBuilder() {}
-    NovaProtocolCommandBuilder setModule(String module);
-    NovaProtocolCommandBuilder setAsset(String asset);
-    NovaProtocolCommandBuilder setOperation(String operation);
-    NovaProtocolCommandBuilder setArgs(std::vector<char> args);
-    NovaProtocolCommandBuilder setModeArg(String module_name);
-    std::vector<int> build();
-  private:
-    ProtocolNode module;
-    ProtocolNode asset;
-    ProtocolNode operation;
-    std::vector<char> args;
-};
-
-class NovaProtocolCommandReader {
-
 };
 
 #endif
