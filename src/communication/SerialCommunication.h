@@ -4,6 +4,8 @@
 #include <Arduino.h>
 #include <config/NovaConstants.h>
 #include <queue>
+#include <string>
+#include <sstream>
 
 #define serial_num_bytes 32 // We can read a maximum of 32 bytes per loop
 

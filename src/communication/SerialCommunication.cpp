@@ -91,19 +91,34 @@ void SerialCommunication::sendOutgoingCommands() {
     NovaCommand cmd = _commands_out.front();
     _commands_out.pop();
 
-    String message = String(NovaConstants::CMD_START_MARKER);
-    message.concat(cmd.modulecode);
-    message.concat(NovaConstants::CMD_SEPARATOR);
-    message.concat(cmd.operandcode);
-    message.concat(NovaConstants::CMD_SEPARATOR);
-    message.concat(cmd.arg1);
-    message.concat(NovaConstants::CMD_SEPARATOR);
-    message.concat(cmd.arg2);
-    message.concat(NovaConstants::CMD_SEPARATOR);
-    message.concat(cmd.arg3);
-    message.concat(NovaConstants::CMD_END_MARKER);
+    std::stringstream s;
+    s << NovaConstants::CMD_START_MARKER
+      << cmd.modulecode
+      << NovaConstants::CMD_SEPARATOR
+      << cmd.operandcode
+      << NovaConstants::CMD_SEPARATOR
+      << cmd.arg1
+      << NovaConstants::CMD_SEPARATOR
+      << cmd.arg2
+      << NovaConstants::CMD_SEPARATOR
+      << cmd.arg3
+      << NovaConstants::CMD_END_MARKER;
 
-    Serial.print(message);
+    std::string message = s.str();
+    /*
+    String message = String(NovaConstants::CMD_START_MARKER);
+    message.append(cmd.modulecode);
+    message.append(NovaConstants::CMD_SEPARATOR);
+    message.append(cmd.operandcode);
+    message.append(NovaConstants::CMD_SEPARATOR);
+    message.append(cmd.arg1);
+    message.append(NovaConstants::CMD_SEPARATOR);
+    message.append(cmd.arg2);
+    message.append(NovaConstants::CMD_SEPARATOR);
+    message.append(cmd.arg3);
+    message.append(NovaConstants::CMD_END_MARKER);
+    */
+    Serial.print(message.c_str());
   }
 }
 
