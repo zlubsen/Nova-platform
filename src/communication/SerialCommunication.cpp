@@ -105,19 +105,6 @@ void SerialCommunication::sendOutgoingCommands() {
       << NovaConstants::CMD_END_MARKER;
 
     std::string message = s.str();
-    /*
-    String message = String(NovaConstants::CMD_START_MARKER);
-    message.append(cmd.modulecode);
-    message.append(NovaConstants::CMD_SEPARATOR);
-    message.append(cmd.operandcode);
-    message.append(NovaConstants::CMD_SEPARATOR);
-    message.append(cmd.arg1);
-    message.append(NovaConstants::CMD_SEPARATOR);
-    message.append(cmd.arg2);
-    message.append(NovaConstants::CMD_SEPARATOR);
-    message.append(cmd.arg3);
-    message.append(NovaConstants::CMD_END_MARKER);
-    */
     Serial.print(message.c_str());
   }
 }
