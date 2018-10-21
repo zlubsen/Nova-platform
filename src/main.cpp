@@ -21,8 +21,8 @@ NovaConfig* novaConfig;
 
 SerialCommunication* comm;
 
-AbstractControlLoop* controlLoops[3];
-//std::vector<AbstractControlLoop*> controlLoops;
+//AbstractControlLoop* controlLoops[3];
+std::vector<AbstractControlLoop*> controlLoops;
 
 StatusPublishLoop* statusPublishLoop;
 ModeSelectControlLoop* modeSelectControlLoop;
@@ -37,13 +37,13 @@ void setup() {
   statusPublishLoop = modeSelectControlLoop->statusPublishLoop;
 
   // TODO how to have controlLoops point to an array in ModeSelectControlLoop?
-  controlLoops[0] = modeSelectControlLoop;
-  controlLoops[1] = statusPublishLoop;
-  controlLoops[2] = modeSelectControlLoop->activeControlLoop;
-  //controlLoops.reserve(3);
-  //controlLoops.push_back(modeSelectControlLoop);
-  //controlLoops.push_back(statusPublishLoop);
-  //controlLoops.push_back(modeSelectControlLoop->activeControlLoop);
+  //controlLoops[0] = modeSelectControlLoop;
+  //controlLoops[1] = statusPublishLoop;
+  //controlLoops[2] = modeSelectControlLoop->activeControlLoop;
+  controlLoops.reserve(3);
+  controlLoops.push_back(modeSelectControlLoop);
+  controlLoops.push_back(statusPublishLoop);
+  controlLoops.push_back(modeSelectControlLoop->activeControlLoop);
 
   hardwareConfig->activateServos();
 }
