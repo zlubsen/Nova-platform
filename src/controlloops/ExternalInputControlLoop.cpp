@@ -52,7 +52,7 @@ void ExternalInputControlLoop::run(NovaCommand* cmd) {
   }
 }
 
-String ExternalInputControlLoop::getLCDStatusString() {
-  String status = "                ";
+std::string ExternalInputControlLoop::getLCDStatusString() {
+  std::string status(16, ' ');
   return status;
 }

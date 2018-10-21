@@ -41,7 +41,7 @@ void JoystickRelativeControlLoop::run(NovaCommand* cmd) {
   }
 }
 
-String JoystickRelativeControlLoop::getLCDStatusString() {
-  String status = "                ";
+std::string JoystickRelativeControlLoop::getLCDStatusString() {
+  std::string status(16, ' ');
   return status;
 }

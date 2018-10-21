@@ -139,7 +139,7 @@ void FaceDetectionControlLoop::run(NovaCommand* cmd) {
   }
 }
 
-String FaceDetectionControlLoop::getLCDStatusString() {
-  String status = "                ";
+std::string FaceDetectionControlLoop::getLCDStatusString() {
+  std::string status(16, ' ');
   return status;
 }

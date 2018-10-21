@@ -94,7 +94,7 @@ void ModeSelectControlLoop::showSelectScreen() {
   _lcd->setCursor(0,0);
   _lcd->print("Select mode.....");
   _lcd->setCursor(0,1);
-  _lcd->print(_controlLoopDescriptions[_selectedEntry]);
+  _lcd->print(_controlLoopDescriptions.at(_selectedEntry));
 
   _lcd_menu_timeout_timer->resetTimer();
 }
@@ -103,7 +103,7 @@ void ModeSelectControlLoop::showStatusScreen() {
   _lcd_status_mode = true;
 
   _lcd->setCursor(0,0);
-  _lcd->print(_controlLoopDescriptions[_currentMode]);
+  _lcd->print(_controlLoopDescriptions.at(_selectedEntry));
   updateStatusScreen();
 }
 
@@ -144,7 +144,7 @@ void ModeSelectControlLoop::handleUpdateLCD() {
   }
 }
 
-String ModeSelectControlLoop::getLCDStatusString() {
-  String status = "                ";
+std::string ModeSelectControlLoop::getLCDStatusString() {
+  std::string status(16, ' ');
   return status;
 }
