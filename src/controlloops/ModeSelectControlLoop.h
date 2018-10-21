@@ -18,7 +18,7 @@ class ModeSelectControlLoop : public AbstractControlLoop {
   public:
     ModeSelectControlLoop(HardwareConfig*  hardwareConfig, NovaConfig* novaConfig);
     void run(NovaCommand* cmd);
-    String getLCDStatusString();
+    std::string getLCDStatusString();
     StatusPublishLoop* statusPublishLoop;
     ModeSelectControlLoop* modeSelectControlLoop;
     AbstractControlLoop* activeControlLoop;
@@ -54,7 +54,15 @@ class ModeSelectControlLoop : public AbstractControlLoop {
     AbstractControlLoop* _availableControlLoops[5];
 
     // TODO make these texts a configuration item - possibly tied to the comm protocol in NovaConstants
-    String _controlLoopDescriptions[5] = {
+  /*String _controlLoopDescriptions[5] = {
+      "1 Joystick - abs",
+      "2 Joystick - rel",
+      "3 External input",
+      "4 Distance avoid",
+      "5 Face detection",
+    };*/
+
+    std::vector<std::string> _controlLoopDescriptions{
       "1 Joystick - abs",
       "2 Joystick - rel",
       "3 External input",

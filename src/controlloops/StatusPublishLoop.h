@@ -10,7 +10,7 @@ class StatusPublishLoop : public AbstractControlLoop {
   public:
     StatusPublishLoop(HardwareConfig* hardwareConfig, int frequency_ms);
     void run(NovaCommand* cmd);
-    String getLCDStatusString();
+    std::string getLCDStatusString();
 
   private:
     SerialCommunication* _comm;

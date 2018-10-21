@@ -22,7 +22,7 @@ class JoystickAbsoluteControlLoop : public AbstractControlLoop {
   public:
     JoystickAbsoluteControlLoop(HardwareConfig *hardwareConfig, NovaConfig *novaConfig);
     virtual void run(NovaCommand* cmd);
-    String getLCDStatusString();
+    std::string getLCDStatusString();
 
   protected:
     FrequencyTimer* _timer;

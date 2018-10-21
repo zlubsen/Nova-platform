@@ -82,7 +82,7 @@ void JoystickAbsoluteControlLoop::run(NovaCommand* cmd) {
   }
 }
 
-String JoystickAbsoluteControlLoop::getLCDStatusString() {
-  String status = "                ";
+std::string JoystickAbsoluteControlLoop::getLCDStatusString() {
+  std::string status(16, ' ');
   return status;
 }
