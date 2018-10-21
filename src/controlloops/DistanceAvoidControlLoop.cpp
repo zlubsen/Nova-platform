@@ -102,20 +102,21 @@ void DistanceAvoidControlLoop::run(NovaCommand* cmd) {
   observe();
   computeControl();
   actuate();
-
-  // FIXME telemetry attempt
-  //_comm->writeCommand(99,0,_pid_values.input,_pid_values.output,_servo_angle);
 }
 
 std::string DistanceAvoidControlLoop::getLCDStatusString() {
   std::string str_start = "Dist:";
-  std::string str_value = "" + (int)_pid_values.input;
   std::string str_end = " cm";
+
+  char buffer[3];
+  sprintf(buffer, "%d", (int)_pid_values.input);
+  std::string str_value(buffer);
+
   int text_length = str_start.size() + str_value.size() + str_end.size();
   std::string mid_padding(16-text_length, ' ');
 
   std::stringstream s;
-  s << "Dist:" << mid_padding << str_value << str_end;
+  s << str_start << mid_padding << str_value << str_end;
 
   return s.str();
 }
