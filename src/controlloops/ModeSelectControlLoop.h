@@ -14,14 +14,16 @@
 #include <controlloops/FaceDetectionControlLoop.h>
 #include <FrequencyTimer.h>
 
+#include <vector>
+
 class ModeSelectControlLoop : public AbstractControlLoop {
   public:
     ModeSelectControlLoop(HardwareConfig*  hardwareConfig, NovaConfig* novaConfig);
     void run(NovaCommand* cmd);
     std::string getLCDStatusString();
+    std::vector<AbstractControlLoop*>* getActiveControlLoops();
     StatusPublishLoop* statusPublishLoop;
     ModeSelectControlLoop* modeSelectControlLoop;
-    AbstractControlLoop* activeControlLoop;
 
   private:
     void setupControlLoops(HardwareConfig* hardwareConfig, NovaConfig* novaConfig);
@@ -38,7 +40,7 @@ class ModeSelectControlLoop : public AbstractControlLoop {
     HardwareConfig* _hardwareConfig;
     LCDShieldButtons* _buttons;
     LCDShieldScreen* _lcd;
-    int _selectedEntry = 0;
+    uint8_t _selectedEntry = 0;
     int _currentMode = 0;
     bool _lcd_status_mode = true;
     FrequencyTimer* _lcd_menu_timeout_timer;
@@ -50,18 +52,10 @@ class ModeSelectControlLoop : public AbstractControlLoop {
     DistanceAvoidControlLoop* distanceAvoidControlLoop;
     FaceDetectionControlLoop* faceDetectionControlLoop;
 
-    AbstractControlLoop* _activeControlLoops[3];
-    AbstractControlLoop* _availableControlLoops[5];
+    std::vector<AbstractControlLoop*> _activeControlLoops;
+    std::vector<AbstractControlLoop*> _availableControlLoops;
 
-    // TODO make these texts a configuration item - possibly tied to the comm protocol in NovaConstants
-  /*String _controlLoopDescriptions[5] = {
-      "1 Joystick - abs",
-      "2 Joystick - rel",
-      "3 External input",
-      "4 Distance avoid",
-      "5 Face detection",
-    };*/
-
+    // TODO make these texts a configuration item - possibly tied to the comm protocol in NovaConstants, or merge into _availableControlLoops
     std::vector<std::string> _controlLoopDescriptions{
       "1 Joystick - abs",
       "2 Joystick - rel",
