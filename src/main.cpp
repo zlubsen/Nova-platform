@@ -21,11 +21,7 @@ NovaConfig* novaConfig;
 
 SerialCommunication* comm;
 
-AbstractControlLoop* controlLoops[3];
-//std::vector<AbstractControlLoop*> controlLoops;
-
-StatusPublishLoop* statusPublishLoop;
-ModeSelectControlLoop* modeSelectControlLoop;
+std::vector<AbstractControlLoop*>* controlLoops;
 
 void setup() {
   hardwareConfig = new HardwareConfig();
@@ -33,25 +29,10 @@ void setup() {
 
   comm = hardwareConfig->comm;
 
-  modeSelectControlLoop = new ModeSelectControlLoop(hardwareConfig, novaConfig);
-  statusPublishLoop = modeSelectControlLoop->statusPublishLoop;
-
-  // TODO how to have controlLoops point to an array in ModeSelectControlLoop?
-  controlLoops[0] = modeSelectControlLoop;
-  controlLoops[1] = statusPublishLoop;
-  controlLoops[2] = modeSelectControlLoop->activeControlLoop;
-  //controlLoops.reserve(3);
-  //controlLoops.push_back(modeSelectControlLoop);
-  //controlLoops.push_back(statusPublishLoop);
-  //controlLoops.push_back(modeSelectControlLoop->activeControlLoop);
+  ModeSelectControlLoop* modeSelectControlLoop = new ModeSelectControlLoop(hardwareConfig, novaConfig);
+  controlLoops = modeSelectControlLoop->getActiveControlLoops();
 
   hardwareConfig->activateServos();
-
-  /*hardwareConfig->lcdScreen->setCursor(0,0);
-  hardwareConfig->lcdScreen->print("NOVA DIY Robot");
-  hardwareConfig->lcdScreen->setCursor(0,1);
-  hardwareConfig->lcdScreen->print("By Zeeger Lubsen");
-  hardwareConfig->lcdScreen->setBacklight(0x2);*/
 }
 
 void loop() {
@@ -59,15 +40,9 @@ void loop() {
 
   NovaCommand *cmd = comm->readCommand();
 
-  for(AbstractControlLoop* loop : controlLoops) {
+  for(AbstractControlLoop* loop : *controlLoops) {
     loop->run(cmd);
   }
 
-  updateControlLoops();
-
   delete cmd;
-}
-
-void updateControlLoops() {
-  controlLoops[2] = modeSelectControlLoop->activeControlLoop;
 }

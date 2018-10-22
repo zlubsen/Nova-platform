@@ -18,17 +18,20 @@ void ModeSelectControlLoop::setupControlLoops(HardwareConfig* hardwareConfig, No
   distanceAvoidControlLoop = new DistanceAvoidControlLoop(hardwareConfig, novaConfig);
   faceDetectionControlLoop = new FaceDetectionControlLoop(hardwareConfig, novaConfig);
 
-  _availableControlLoops[0] = joyAbsoluteControlLoop;
-  _availableControlLoops[1] = joyRelativeControlLoop;
-  _availableControlLoops[2] = externalInputControlLoop;
-  _availableControlLoops[3] = distanceAvoidControlLoop;
-  _availableControlLoops[4] = faceDetectionControlLoop;
+  _availableControlLoops.push_back(joyAbsoluteControlLoop);
+  _availableControlLoops.push_back(joyRelativeControlLoop);
+  _availableControlLoops.push_back(externalInputControlLoop);
+  _availableControlLoops.push_back(distanceAvoidControlLoop);
+  _availableControlLoops.push_back(faceDetectionControlLoop);
+  //_availableControlLoops.shrink_to_fit();
 
-  // TODO use of this array would be the preffered way of maintaining the active controlloops (instead of in main.cpp)
-  /*_activeControlLoops[0] = statusPublishLoop;
-  _activeControlLoops[1] = modeSelectControlLoop;
-  _activeControlLoops[2] = joyAbsoluteControlLoop;*/
-  activeControlLoop = _availableControlLoops[_currentMode];
+  // TODO use of this array would be the prefered way of maintaining the active controlloops (instead of in main.cpp)
+  _activeControlLoops.push_back(statusPublishLoop);
+  _activeControlLoops.push_back(modeSelectControlLoop);
+  _activeControlLoops.push_back(joyAbsoluteControlLoop);
+  //_activeControlLoops.shrink_to_fit();
+
+  //_controlLoopDescriptions.shrink_to_fit();
 }
 
 void ModeSelectControlLoop::setupLCDScreen(NovaConfig* novaConfig) {
@@ -36,6 +39,10 @@ void ModeSelectControlLoop::setupLCDScreen(NovaConfig* novaConfig) {
   _lcd_status_update_timer = new FrequencyTimer(novaConfig->_lcd_status_update_ms);
   _lcd->setBacklight(novaConfig->_lcd_menu_background_color);
   showStatusScreen();
+}
+
+std::vector<AbstractControlLoop*>* ModeSelectControlLoop::getActiveControlLoops() {
+  return &_activeControlLoops;
 }
 
 void ModeSelectControlLoop::handleCommands(NovaCommand* cmd) {
@@ -68,19 +75,17 @@ void ModeSelectControlLoop::handleButtons() {
   }
 }
 
-//TODO make min/max index numbers constants/defines
 void ModeSelectControlLoop::navigateModeSelectMenuUp() {
   if(_selectedEntry == 0)
-    _selectedEntry = 4;
+    _selectedEntry = _controlLoopDescriptions.size()-1;
   else
     _selectedEntry--;
 
   showSelectScreen();
 }
 
-//TODO make min/max index numbers constants/defines
 void ModeSelectControlLoop::navigateModeSelectMenuDown() {
-  if(_selectedEntry == 4)
+  if(_selectedEntry == _controlLoopDescriptions.size()-1)
     _selectedEntry = 0;
   else
     _selectedEntry++;
@@ -94,7 +99,7 @@ void ModeSelectControlLoop::showSelectScreen() {
   _lcd->setCursor(0,0);
   _lcd->print("Select mode.....");
   _lcd->setCursor(0,1);
-  _lcd->print(_controlLoopDescriptions[_selectedEntry]);
+  _lcd->print(_controlLoopDescriptions.at(_selectedEntry));
 
   _lcd_menu_timeout_timer->resetTimer();
 }
@@ -103,20 +108,20 @@ void ModeSelectControlLoop::showStatusScreen() {
   _lcd_status_mode = true;
 
   _lcd->setCursor(0,0);
-  _lcd->print(_controlLoopDescriptions[_currentMode]);
+  _lcd->print(_controlLoopDescriptions.at(_selectedEntry));
   updateStatusScreen();
 }
 
 void ModeSelectControlLoop::updateStatusScreen() {
   _lcd->setCursor(0,1);
-  _lcd->print(activeControlLoop->getLCDStatusString());
+  _lcd->print(_activeControlLoops.at(2)->getLCDStatusString());
 }
 
 void ModeSelectControlLoop::setMode(int mode) {
   // disable/reenable input to servos to minimize servo jitter
   _hardwareConfig->suspendServos();
 
-  activeControlLoop = _availableControlLoops[mode];
+  _activeControlLoops.at(2) = _availableControlLoops[mode];
   _currentMode = mode;
 
   showStatusScreen();
@@ -144,7 +149,7 @@ void ModeSelectControlLoop::handleUpdateLCD() {
   }
 }
 
-String ModeSelectControlLoop::getLCDStatusString() {
-  String status = "                ";
+std::string ModeSelectControlLoop::getLCDStatusString() {
+  std::string status(16, ' ');
   return status;
 }

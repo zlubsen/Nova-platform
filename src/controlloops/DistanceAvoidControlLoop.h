@@ -6,12 +6,13 @@
 #include "config/NovaConfig.h"
 #include <PID_v1.h>
 #include <controlloops/AbstractControlLoop.h>
+#include <string>
 
 class DistanceAvoidControlLoop : public AbstractControlLoop {
   public:
     DistanceAvoidControlLoop(HardwareConfig *hardwareConfig, NovaConfig *novaConfig);
     void run(NovaCommand* cmd);
-    String getLCDStatusString();
+    std::string getLCDStatusString();
 
   private:
     SerialCommunication* _comm;

@@ -102,20 +102,21 @@ void DistanceAvoidControlLoop::run(NovaCommand* cmd) {
   observe();
   computeControl();
   actuate();
-
-  //_comm->writeCommand(99,0,_pid_values.input,_pid_values.output,_servo_angle);
 }
 
-String DistanceAvoidControlLoop::getLCDStatusString() {
-  String str_start = "Dist:";
-  String str_value = String((int)_pid_values.input);
-  String str_end = " cm";
-  int text_length = str_start.length() + str_value.length() + str_end.length();
-  String mid_padding = "";
+std::string DistanceAvoidControlLoop::getLCDStatusString() {
+  std::string str_start = "Dist:";
+  std::string str_end = " cm";
 
-  for(int i = (16-text_length); i > 0; i--) {
-    mid_padding.concat(" ");
-  }
+  char buffer[3];
+  sprintf(buffer, "%d", (int)_pid_values.input);
+  std::string str_value(buffer);
 
-  return (str_start + mid_padding + str_value + str_end);
+  int text_length = str_start.size() + str_value.size() + str_end.size();
+  std::string mid_padding(16-text_length, ' ');
+
+  std::stringstream s;
+  s << str_start << mid_padding << str_value << str_end;
+
+  return s.str();
 }

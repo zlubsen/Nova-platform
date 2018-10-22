@@ -24,7 +24,7 @@ void StatusPublishLoop::run(NovaCommand* cmd) {
   }
 }
 
-String StatusPublishLoop::getLCDStatusString() {
-  String status = "                ";
+std::string StatusPublishLoop::getLCDStatusString() {
+  std::string status(16, ' ');
   return status;
 }
