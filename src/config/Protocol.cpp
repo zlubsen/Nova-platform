@@ -10,7 +10,7 @@ Root::Root() : ProtocolNode("root", 0) {
   children["track_object"] = TrackObjectNode("track_object", 5);
 }
 
-ModuleNode::ModuleNode(String id, int8_t code) : ProtocolNode(id, code) {
+ModuleNode::ModuleNode(std::string id, int8_t code) : ProtocolNode(id, code) {
   children["set_mode"] = ProtocolLeaf("set_mode", 1);
   children["servo1"] = ServoNode("servo1", 1);
   children["servo2"] = ServoNode("servo2", 2);
@@ -20,24 +20,24 @@ ModuleNode::ModuleNode(String id, int8_t code) : ProtocolNode(id, code) {
   children["ultrasound"] = UltraSoundNode("ultrasound", 6);
 }
 
-ServoNode::ServoNode(String id, int8_t code) : ProtocolNode(id, code) {
+ServoNode::ServoNode(std::string id, int8_t code) : ProtocolNode(id, code) {
   children["get_degree"] = ProtocolLeaf("get_degree", 1);
   children["set_degree"] = ProtocolLeaf("set_degree", 2);
   children["set_degree_steps"] = ProtocolLeaf("set_degree_steps", 3);
 }
 
-UltraSoundNode::UltraSoundNode(String id, int8_t code) : ProtocolNode(id, code) {
+UltraSoundNode::UltraSoundNode(std::string id, int8_t code) : ProtocolNode(id, code) {
   children["get_distance"] = ProtocolLeaf("get_distance", 1);
 }
 
-PIDNode::PIDNode(String id, int8_t code) : ProtocolNode(id, code) {
+PIDNode::PIDNode(std::string id, int8_t code) : ProtocolNode(id, code) {
   children["toggle_auto"] = ProtocolLeaf("toggle_auto", 1);
   children["set_setpoint"] = ProtocolLeaf("set_setpoint", 2);
   children["set_tuning"] = ProtocolLeaf("set_tuning", 3);
   children["get_tuning"] = ProtocolLeaf("get_tuning", 4);
 }
 
-NovaNode::NovaNode(String id, int8_t code) : ProtocolNode(id, code) {
+NovaNode::NovaNode(std::string id, int8_t code) : ProtocolNode(id, code) {
   children["set_mode"] = ProtocolLeaf("set_mode", 1);
   children["servo1"] = ServoNode("servo1", 1);
   children["servo2"] = ServoNode("servo2", 2);
@@ -47,7 +47,7 @@ NovaNode::NovaNode(String id, int8_t code) : ProtocolNode(id, code) {
   children["ultrasound"] = UltraSoundNode("ultrasound", 6);
 }
 
-ExternalInputNode::ExternalInputNode(String id, int8_t code) : ProtocolNode(id, code) {
+ExternalInputNode::ExternalInputNode(std::string id, int8_t code) : ProtocolNode(id, code) {
   children["servo1"] = ServoNode("servo1", 1);
   children["servo2"] = ServoNode("servo2", 2);
   children["servo3"] = ServoNode("servo3", 3);
@@ -55,13 +55,13 @@ ExternalInputNode::ExternalInputNode(String id, int8_t code) : ProtocolNode(id, 
   children["servo5"] = ServoNode("servo5", 5);
 }
 
-KeepDistanceNode::KeepDistanceNode(String id, int8_t code) : ProtocolNode(id, code) {
+KeepDistanceNode::KeepDistanceNode(std::string id, int8_t code) : ProtocolNode(id, code) {
   children["set_min_distance"] = ProtocolLeaf("set_min_distance", 1);
   children["set_max_distance"] = ProtocolLeaf("set_max_distance", 2);
   children["pid"] = PIDNode("pid", 1);
 }
 
-TrackObjectNode::TrackObjectNode(String id, int8_t code) : ProtocolNode(id, code) {
+TrackObjectNode::TrackObjectNode(std::string id, int8_t code) : ProtocolNode(id, code) {
   children["set_coordinates"] = ProtocolLeaf("set_coordinates", 1);
   children["ack_coordinates"] = ProtocolLeaf("ack_coordinates", 2);
   children["pid_x"] = PIDNode("pid_x", 1);
