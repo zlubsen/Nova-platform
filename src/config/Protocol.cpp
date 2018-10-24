@@ -1,4 +1,3 @@
-#include <Arduino.h>
 #include "Protocol.h"
 
 Root::Root() : ProtocolNode("root", 0) {

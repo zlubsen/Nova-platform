@@ -1,4 +1,3 @@
-#include <Arduino.h>
 #include "ProtocolLogic.h"
 
 NovaProtocolCommandBuilder* NovaProtocolCommandBuilder::setModule(std::string module) {
@@ -152,6 +151,6 @@ NovaCommand* NovaProtocolCommandReader::readCommand(std::vector<int8_t>* receive
   for(int i = 0; i < argcount; i++) {
     cmd->args.push_back(received->at(i+4));
   }
-  
+
   return cmd;
 }
