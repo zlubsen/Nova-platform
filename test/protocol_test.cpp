@@ -2,15 +2,71 @@
 #include <vector>
 #include <ProtocolLogic.hpp>
 
-void test_external_input_move_command() {
+void test_build_external_input_move_command() {
+  // This command can only be received, but provides a nice test for testing the creation of commands
   std::vector<int> expected {3,5,2,1,90};
 
-  Serial.println("heartbeat...");
   NovaProtocolCommandBuilder* builder = NovaProtocolCommandBuilder::createCommand();
   std::vector<int> args {90};
-  std::vector<int>* actual = builder->setModule("external_input")->setAsset("servo5")->setOperation("set_degree")->setArgs(args)->build();
+  std::vector<int>* actual = builder->setModule(cmd_external_input)->setAsset(cmd_servo5)->setOperation(cmd_set_degree)->setArgs(args)->build();
 
   TEST_ASSERT_TRUE(expected == *actual);
+  delete builder;
+  delete actual;
+}
+
+void test_build_track_object_ack_coordinates() {
+  std::vector<int> expected {5,0,2,0};
+
+  NovaProtocolCommandBuilder* builder = NovaProtocolCommandBuilder::createCommand();
+  std::vector<int>* actual = builder->setModule(cmd_track_object)->setOperation(cmd_ack_coordinates)->build();
+
+  TEST_ASSERT_TRUE(expected == *actual);
+  delete builder;
+  delete actual;
+}
+
+void test_build_status_publish_servo() {
+  std::vector<int> expected {0,1,1,1,90};
+
+  NovaProtocolCommandBuilder* builder = NovaProtocolCommandBuilder::createCommand();
+  std::vector<int> args {90};
+  std::vector<int>* actual = builder->setModule(cmd_nova)->setAsset(cmd_servo1)->setOperation(cmd_get_degree)->setArgs(args)->build();
+
+  TEST_ASSERT_TRUE(expected == *actual);
+  delete builder;
+  delete actual;
+}
+
+void test_build_get_pid_tuning() {
+  std::vector<int> expected {4,1,4,3,500,400,0};
+
+  NovaProtocolCommandBuilder* builder = NovaProtocolCommandBuilder::createCommand();
+  std::vector<int> args {500,400,0};
+  std::vector<int>* actual = builder->setModule(cmd_keep_distance)->setAsset(cmd_pid)->setOperation(cmd_get_tuning)->setArgs(args)->build();
+
+  TEST_ASSERT_TRUE(expected == *actual);
+  delete builder;
+  delete actual;
+}
+
+void test_receive_external_input_move_command() {
+  TEST_ASSERT(false);
+}
+
+void test_receive_pid_tuning_command() {
+  std::vector<int> received {4,1,3,3,500,400,0};
+
+  NovaProtocolCommandReader reader;
+  NovaProtocolCommand* cmd = reader.readCommand(&received);
+
+  TEST_ASSERT_EQUAL_INT(cmd_keep_distance, cmd->module);
+  TEST_ASSERT_EQUAL_INT(cmd_pid, cmd->asset);
+  TEST_ASSERT_EQUAL_INT(cmd_set_tuning, cmd->operation);
+  TEST_ASSERT_EQUAL_INT(3, cmd->args.size());
+  TEST_ASSERT_EQUAL_INT(500, cmd->args.at(0));
+  TEST_ASSERT_EQUAL_INT(400, cmd->args.at(1));
+  TEST_ASSERT_EQUAL_INT(0, cmd->args.at(2));
 }
 
 void setup() {
@@ -18,7 +74,14 @@ void setup() {
   Serial.begin(9600);
 
   UNITY_BEGIN();
-  RUN_TEST(test_external_input_move_command);
+  RUN_TEST(test_build_external_input_move_command);
+  RUN_TEST(test_build_track_object_ack_coordinates);
+  RUN_TEST(test_build_status_publish_servo);
+  RUN_TEST(test_build_get_pid_tuning);
+
+  RUN_TEST(test_receive_external_input_move_command);
+  RUN_TEST(test_receive_pid_tuning_command);
+
   UNITY_END();
 }
 

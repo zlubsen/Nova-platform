@@ -11,11 +11,11 @@ class NovaProtocolCommandBuilder {
     NovaProtocolCommandBuilder();
     NovaProtocolCommandBuilder(ProtocolNode* root);
     ~NovaProtocolCommandBuilder();
-    NovaProtocolCommandBuilder* setModule(std::string module);
-    NovaProtocolCommandBuilder* setAsset(std::string asset);
-    NovaProtocolCommandBuilder* setOperation(std::string operation);
+    NovaProtocolCommandBuilder* setModule(uint8_t module);
+    NovaProtocolCommandBuilder* setAsset(uint8_t asset);
+    NovaProtocolCommandBuilder* setOperation(uint8_t operation);
     NovaProtocolCommandBuilder* setArgs(std::vector<int> args);
-    NovaProtocolCommandBuilder* setModeArg(std::string module_name);
+    NovaProtocolCommandBuilder* setModeArg(uint8_t module_name);
     std::vector<int>* build();
     static NovaProtocolCommandBuilder* createCommand();
   //private:
@@ -24,19 +24,22 @@ class NovaProtocolCommandBuilder {
     ProtocolNode* _operation = nullptr;
     std::vector<int> _args;
     ProtocolNode* _root;
+    ProtocolNode* _dummy;
+  private:
+    bool _root_injected = false;
 };
 
 class NovaProtocolCommandReader {
   public:
     NovaProtocolCommandReader();
-    NovaProtocolCommand* readCommand(std::vector<int8_t>* received);
+    NovaProtocolCommand* readCommand(std::vector<int>* received);
   private:
-    std::map<std::string, std::vector<std::string>> _lookup;
+    std::map<int, std::vector<uint8_t>> _lookup;
     void initLookupTree();
     void traverseModules(ProtocolNode* node);
-    void traverseAssets(ProtocolNode* node, std::vector<int8_t>* code_parts, std::vector<std::string>* id_parts);
-    void traverseOperations(ProtocolNode* node, std::vector<int8_t>* code_parts, std::vector<std::string>* id_parts);
-    void addToLookup(std::vector<int8_t>* codes, std::vector<std::string>* ids);
+    void traverseAssets(ProtocolNode* node, std::vector<uint8_t>* code_parts, std::vector<uint8_t>* id_parts);
+    void traverseOperations(ProtocolNode* node, std::vector<uint8_t>* code_parts, std::vector<uint8_t>* id_parts);
+    void addToLookup(std::vector<uint8_t>* codes, std::vector<uint8_t>* ids);
 };
 
 #endif
