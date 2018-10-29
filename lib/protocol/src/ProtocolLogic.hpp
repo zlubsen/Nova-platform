@@ -34,7 +34,7 @@ class NovaProtocolCommandReader {
     NovaProtocolCommandReader();
     NovaProtocolCommand* readCommand(std::vector<int>* received);
   private:
-    std::map<int, std::vector<uint8_t>> _lookup;
+    std::map<std::string, std::vector<uint8_t>> _lookup;
     void initLookupTree();
     void traverseModules(ProtocolNode* node);
     void traverseAssets(ProtocolNode* node, std::vector<uint8_t>* code_parts, std::vector<uint8_t>* id_parts);

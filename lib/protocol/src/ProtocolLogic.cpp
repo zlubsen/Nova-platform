@@ -1,4 +1,5 @@
 #include "ProtocolLogic.hpp"
+#include <typeinfo>
 
 NovaProtocolCommandBuilder::NovaProtocolCommandBuilder() {
   _root = new Root();
@@ -95,18 +96,23 @@ void NovaProtocolCommandReader::traverseModules(ProtocolNode* node) {
 
   for(auto const &item : node->children) {
     auto n = item.second;
+    Serial.println("traverse module:");
+    Serial.print(n._id);
     code_parts.push_back(n._code);
     id_parts.push_back(n._id);
 
     if(n.children.size() > 0) {
+      Serial.println(" has children ");
       traverseAssets(&n, &code_parts, &id_parts);
     } else {
+      Serial.println(" no children, add to lookup ");
       code_parts.push_back(0);
       code_parts.push_back(0);
       id_parts.push_back(0);
       id_parts.push_back(0);
       addToLookup(&code_parts, &id_parts);
     }
+    Serial.println();
 
     code_parts.clear();
     id_parts.clear();
@@ -116,7 +122,8 @@ void NovaProtocolCommandReader::traverseModules(ProtocolNode* node) {
 void NovaProtocolCommandReader::traverseAssets(ProtocolNode* node, std::vector<uint8_t>* code_parts, std::vector<uint8_t>* id_parts) {
   for(auto const &item : node->children) {
     auto n = item.second;
-    if(!n.isLeaf()) {
+    //if(!n.isLeaf()) {
+    if(n.children.size() > 0) {
       code_parts->push_back(n._code);
       id_parts->push_back(n._id);
       traverseOperations(&n, code_parts, id_parts);
@@ -139,7 +146,8 @@ void NovaProtocolCommandReader::traverseAssets(ProtocolNode* node, std::vector<u
 void NovaProtocolCommandReader::traverseOperations(ProtocolNode* node, std::vector<uint8_t>* code_parts, std::vector<uint8_t>* id_parts) {
   for(auto const &item : node->children) {
     auto n = item.second;
-    if(n.isLeaf()) {
+    //if(n.isLeaf()) {
+    if(n.children.size() == 0) {
       code_parts->push_back(n._code);
       id_parts->push_back(n._id);
       addToLookup(code_parts, id_parts);
@@ -150,27 +158,38 @@ void NovaProtocolCommandReader::traverseOperations(ProtocolNode* node, std::vect
 }
 
 void NovaProtocolCommandReader::addToLookup(std::vector<uint8_t>* codes, std::vector<uint8_t>* ids) {
-  //char buffer[8]; // account for three two-digit codes to format together
-  //sprintf(buffer, "%d_%d_%d", codes->at(0), codes->at(1), codes->at(2));
-  //std::string key(buffer);
-  int key = 0;
-  key += codes->at(0) * 10000;
-  key += codes->at(1) * 100;
-  key += codes->at(2);
+  char buffer[8]; // account for three two-digit codes to format together
+  sprintf(buffer, "%d_%d_%d", codes->at(0), codes->at(1), codes->at(2));
+  std::string key(buffer);
+  //long key = 0;
+  //key += codes->at(0) * 10000;
+  //key += codes->at(1) * 100;
+  //key += codes->at(2);
 
   _lookup[key] = *ids;
 }
 
 NovaProtocolCommand* NovaProtocolCommandReader::readCommand(std::vector<int>* received) {
-  //char buffer[8]; // account for three two-digit codes to format together
-  //sprintf(buffer, "%d_%d_%d", received->at(0), received->at(1), received->at(2));
-  //std::string key(buffer);
-
   // TODO refactor together with duplicate in function addToLookup
-  int key = 0;
+  char buffer[8]; // account for three two-digit codes to format together
+  sprintf(buffer, "%d_%d_%d", received->at(0), received->at(1), received->at(2));
+  std::string key(buffer);
+
+  Serial.println("lookup:");
+  for(auto i : _lookup) {
+    Serial.print(i.first.c_str());
+    Serial.print(" : ");
+    for(auto j : i.second) {
+      Serial.print(j);
+      Serial.print(" ");
+    }
+    Serial.println();
+  }
+
+  /*int key = 0;
   key += received->at(0) * 10000;
   key += received->at(1) * 100;
-  key += received->at(2);
+  key += received->at(2);*/
 
   auto parts = _lookup[key];
   NovaProtocolCommand *cmd = new NovaProtocolCommand;

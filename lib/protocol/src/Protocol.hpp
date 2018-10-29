@@ -57,13 +57,14 @@ class ProtocolNode {
     uint8_t _id;
     uint8_t _code;
     std::map<uint8_t, ProtocolNode> children;
-    bool isLeaf() {return false;}
+    virtual bool isLeaf() { return false; }
 };
 
 class ProtocolLeaf : public ProtocolNode {
   public:
     ProtocolLeaf(uint8_t id, uint8_t code) : ProtocolNode(id, code) {}
-    bool isLeaf() {return true;}
+    bool isLeaf() { return true; }
+    std::map<uint8_t, ProtocolNode> children;
 };
 
 class ServoNode : public ProtocolNode {
