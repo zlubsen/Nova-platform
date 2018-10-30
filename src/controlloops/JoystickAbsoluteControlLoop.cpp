@@ -73,7 +73,7 @@ void JoystickAbsoluteControlLoop::filterInput() {
   _joy_right_output.y = _joy_right_output.y * (1 - _filterconst_right.y) + _joy_right_input.y * _filterconst_right.y;
 }
 
-void JoystickAbsoluteControlLoop::run(NovaCommand* cmd) {
+void JoystickAbsoluteControlLoop::run(NovaProtocolCommand* cmd) {
   if(_timer->elapsed()) {
     observe();
     mapInputToRange();

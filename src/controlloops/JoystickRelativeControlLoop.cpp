@@ -32,7 +32,7 @@ void JoystickRelativeControlLoop::actuate() {
   actuateStepwiseInputServo(_servo5);
 }
 
-void JoystickRelativeControlLoop::run(NovaCommand* cmd) {
+void JoystickRelativeControlLoop::run(NovaProtocolCommand* cmd) {
   if(_timer->elapsed()) {
     observe();
     mapInputToRange();
