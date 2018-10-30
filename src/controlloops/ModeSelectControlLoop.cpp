@@ -23,15 +23,10 @@ void ModeSelectControlLoop::setupControlLoops(HardwareConfig* hardwareConfig, No
   _availableControlLoops.push_back(externalInputControlLoop);
   _availableControlLoops.push_back(distanceAvoidControlLoop);
   _availableControlLoops.push_back(faceDetectionControlLoop);
-  //_availableControlLoops.shrink_to_fit();
 
-  // TODO use of this array would be the prefered way of maintaining the active controlloops (instead of in main.cpp)
   _activeControlLoops.push_back(statusPublishLoop);
   _activeControlLoops.push_back(modeSelectControlLoop);
   _activeControlLoops.push_back(joyAbsoluteControlLoop);
-  //_activeControlLoops.shrink_to_fit();
-
-  //_controlLoopDescriptions.shrink_to_fit();
 }
 
 void ModeSelectControlLoop::setupLCDScreen(NovaConfig* novaConfig) {
