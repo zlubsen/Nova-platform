@@ -1,8 +1,9 @@
 #include "SerialCommunication.h"
 
 // we expect a command following this template:
-// >modcode:opcode:arg1:arg2:arg3<
-// where modcode, opcode, arg1-3 are bytes containing an int value (as string)
+// >module_code:asset_code:operation_code:arg_count:[args_list]<
+// all values are uint8_t
+// args_list is a list of integers, separated by colons
 
 SerialCommunication::SerialCommunication(int baud_rate) {
   Serial.begin(baud_rate);
@@ -46,63 +47,82 @@ void SerialCommunication::parseInput() {
   if(_newData) {
     strcpy(_tempBytes, _receivedBytes);
 
-    NovaCommand cmd;
-    cmd.modulecode = atoi(strtok(_tempBytes, ":"));
-    cmd.operandcode = atoi(strtok(NULL, ":"));
-    cmd.arg1 = atoi(strtok(NULL, ":"));
-    cmd.arg2 = atoi(strtok(NULL, ":"));
-    cmd.arg3 = atoi(strtok(NULL, ":"));
+    NovaProtocolCommand cmd;
+    cmd.module = atoi(strtok(_tempBytes, ":"));
+    cmd.asset = atoi(strtok(NULL, ":"));
+    cmd.operation = atoi(strtok(NULL, ":"));
+
+    uint8_t arg_count = atoi(strtok(NULL, ":"));
+    while(arg_count > 0) {
+      cmd.args.push_back(atoi(strtok(NULL, ":")));
+      arg_count--;
+    }
 
     _commands_in.push(cmd);
     _newData = false;
   }
 }
 
-NovaCommand* SerialCommunication::readCommand() {
+NovaProtocolCommand* SerialCommunication::readCommand() {
   if(commandAvailable()) {
-    NovaCommand cmd = _commands_in.front();
+    NovaProtocolCommand cmd = _commands_in.front();
     _commands_in.pop();
-    NovaCommand *retval = new NovaCommand;
+    NovaProtocolCommand *retval = new NovaProtocolCommand;
 
-    retval->modulecode = cmd.modulecode;
-    retval->operandcode = cmd.operandcode;
-    retval->arg1 = cmd.arg1;
-    retval->arg2 = cmd.arg2;
-    retval->arg3 = cmd.arg3;
+    retval->module = cmd.module;
+    retval->asset = cmd.asset;
+    retval->operation = cmd.operation;
+    retval->args = cmd.args;
 
     return retval;
   } else
     return nullptr;
 }
 
-void SerialCommunication::writeCommand(int modcode, int opcode, int arg1, int arg2, int arg3) {
-  NovaCommand cmd;
-  cmd.modulecode = modcode;
-  cmd.operandcode = opcode;
-  cmd.arg1 = arg1;
-  cmd.arg2 = arg2;
-  cmd.arg3 = arg3;
+void SerialCommunication::writeCommand(uint8_t module, uint8_t asset, uint8_t operation) {
+  NovaProtocolCommand cmd;
 
+  cmd.module = module;
+  cmd.asset = asset;
+  cmd.operation = operation;
+
+  _commands_out.push(cmd);
+}
+
+void SerialCommunication::writeCommand(uint8_t module, uint8_t asset, uint8_t operation, std::vector<int>* args) {
+  NovaProtocolCommand cmd;
+
+  cmd.module = module;
+  cmd.asset = asset;
+  cmd.operation = operation;
+  cmd.args = *args;
+
+  _commands_out.push(cmd);
+}
+
+void SerialCommunication::writeCommand(NovaProtocolCommand cmd) {
   _commands_out.push(cmd);
 }
 
 void SerialCommunication::sendOutgoingCommands() {
   while(_commands_out.size() > 0) {
-    NovaCommand cmd = _commands_out.front();
+    NovaProtocolCommand cmd = _commands_out.front();
     _commands_out.pop();
 
     std::stringstream s;
     s << NovaConstants::CMD_START_MARKER
-      << cmd.modulecode
+      << cmd.module
       << NovaConstants::CMD_SEPARATOR
-      << cmd.operandcode
+      << cmd.asset
       << NovaConstants::CMD_SEPARATOR
-      << cmd.arg1
+      << cmd.operation
       << NovaConstants::CMD_SEPARATOR
-      << cmd.arg2
-      << NovaConstants::CMD_SEPARATOR
-      << cmd.arg3
-      << NovaConstants::CMD_END_MARKER;
+      << cmd.args.size();
+      for(int arg : cmd.args) {
+        s << NovaConstants::CMD_SEPARATOR
+        << arg;
+      }
+      s << NovaConstants::CMD_END_MARKER;
 
     std::string message = s.str();
     Serial.print(message.c_str());
