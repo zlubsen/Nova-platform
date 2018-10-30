@@ -89,6 +89,17 @@ void SerialCommunication::writeCommand(uint8_t module, uint8_t asset, uint8_t op
   _commands_out.push(cmd);
 }
 
+void SerialCommunication::writeCommand(uint8_t module, uint8_t asset, uint8_t operation, int single_argument) {
+  NovaProtocolCommand cmd;
+
+  cmd.module = module;
+  cmd.asset = asset;
+  cmd.operation = operation;
+  cmd.args.push_back(single_argument);
+
+  _commands_out.push(cmd);
+}
+
 void SerialCommunication::writeCommand(uint8_t module, uint8_t asset, uint8_t operation, std::vector<int>* args) {
   NovaProtocolCommand cmd;
 

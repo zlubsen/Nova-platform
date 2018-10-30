@@ -13,14 +13,14 @@ StatusPublishLoop::StatusPublishLoop(HardwareConfig* hardwareConfig, int frequen
 
 }
 
-void StatusPublishLoop::run(NovaCommand* cmd) {
+void StatusPublishLoop::run(NovaProtocolCommand* cmd) {
   if(_timer->elapsed()) {
-    _comm->writeCommand(NovaConstants::MOD_STATUS_NOVA, NovaConstants::OP_STATUS_RECEIVE_SERVO_1, servo1->getDegree(),0,0);
-    _comm->writeCommand(NovaConstants::MOD_STATUS_NOVA, NovaConstants::OP_STATUS_RECEIVE_SERVO_2, servo2->getDegree(),0,0);
-    _comm->writeCommand(NovaConstants::MOD_STATUS_NOVA, NovaConstants::OP_STATUS_RECEIVE_SERVO_3, servo3->getDegree(),0,0);
-    _comm->writeCommand(NovaConstants::MOD_STATUS_NOVA, NovaConstants::OP_STATUS_RECEIVE_SERVO_4, servo4->getDegree(),0,0);
-    _comm->writeCommand(NovaConstants::MOD_STATUS_NOVA, NovaConstants::OP_STATUS_RECEIVE_SERVO_5, servo5->getDegree(),0,0);
-    _comm->writeCommand(NovaConstants::MOD_STATUS_NOVA, NovaConstants::OP_STATUS_RECEIVE_USS, ultraSoundSensor->measureDistance(),0,0);
+    _comm->writeCommand(cmd_nova, cmd_module, cmd_get_degree, servo1->getDegree());
+    _comm->writeCommand(cmd_nova, cmd_module, cmd_get_degree, servo2->getDegree());
+    _comm->writeCommand(cmd_nova, cmd_module, cmd_get_degree, servo3->getDegree());
+    _comm->writeCommand(cmd_nova, cmd_module, cmd_get_degree, servo4->getDegree());
+    _comm->writeCommand(cmd_nova, cmd_module, cmd_get_degree, servo5->getDegree());
+    _comm->writeCommand(cmd_nova, cmd_module, cmd_get_distance, ultraSoundSensor->measureDistance());
   }
 }
 

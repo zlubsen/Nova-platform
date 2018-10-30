@@ -17,6 +17,7 @@ class SerialCommunication {
     void run();
     bool commandAvailable();
     void writeCommand(uint8_t module, uint8_t asset, uint8_t operation);
+    void writeCommand(uint8_t module, uint8_t asset, uint8_t operation, int single_argument);
     void writeCommand(uint8_t module, uint8_t asset, uint8_t operation, std::vector<int>* args);
     void writeCommand(NovaProtocolCommand cmd);
     NovaProtocolCommand* readCommand();
