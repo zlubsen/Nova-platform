@@ -57,23 +57,23 @@ void FaceDetectionControlLoop::setupPIDcontroller(PID* pid, pid_config* config, 
     pid->SetMode(config->mode);
 }
 
-void FaceDetectionControlLoop::setSetpoint(int opcode, int new_setpoint) {
+void FaceDetectionControlLoop::setSetpoint(uint8_t asset, int new_setpoint) {
   // TODO validate that the setpoint is in a valid range.
-  if(opcode == NovaConstants::OP_FACE_DETECTION_X_SETPOINT)
+  if(asset == cmd_pid_x)
     _pid_values_x.setpoint = new_setpoint;
-  else if (opcode == NovaConstants::OP_FACE_DETECTION_Y_SETPOINT) {
+  else if (asset == cmd_pid_y) {
     _pid_values_y.setpoint = new_setpoint;
   }
 }
 
-void FaceDetectionControlLoop::setPIDTuning(int opcode, int p_value, int i_value, int d_value) {
+void FaceDetectionControlLoop::setPIDTuning(uint8_t asset, int p_value, int i_value, int d_value) {
   double new_p = ((double) p_value)/1000;
   double new_i = ((double) i_value)/1000;
   double new_d = ((double) d_value)/1000;
 
-  if(opcode == NovaConstants::OP_FACE_DETECTION_X_PID_TUNING)
+  if(asset == cmd_pid_x)
     _pid_x->SetTunings(new_p, new_i, new_d);
-  else if(opcode == NovaConstants::OP_FACE_DETECTION_Y_PID_TUNING)
+  else if(asset == cmd_pid_y)
     _pid_y->SetTunings(new_p, new_i, new_d);
 
   statusPublishPIDValues();
@@ -83,17 +83,21 @@ void FaceDetectionControlLoop::statusPublishPIDValues() {
   int Kp_x = (int)(_pid_x->GetKp()*1000);
   int Ki_x = (int)(_pid_x->GetKi()*1000);
   int Kd_x = (int)(_pid_x->GetKd()*1000);
-  _comm->writeCommand(NovaConstants::MOD_STATUS_NOVA, NovaConstants::OP_STATUS_RECEIVE_FACEDETECT_PID_X, Kp_x, Ki_x, Kd_x);
+  std::vector<int> x_args {Kp_x, Ki_x, Kd_x};
+  _comm->writeCommand(cmd_track_object, cmd_pid_x, cmd_get_tuning, &x_args);
 
   int Kp_y = (int)(_pid_y->GetKp()*1000);
   int Ki_y = (int)(_pid_y->GetKi()*1000);
   int Kd_y = (int)(_pid_y->GetKd()*1000);
-  _comm->writeCommand(NovaConstants::MOD_STATUS_NOVA, NovaConstants::OP_STATUS_RECEIVE_FACEDETECT_PID_Y, Kp_y, Ki_y, Kd_y);
+  std::vector<int> y_args {Kp_y, Ki_y, Kd_y};
+  _comm->writeCommand(cmd_track_object, cmd_pid_y, cmd_get_tuning, &y_args);
 }
 
-void FaceDetectionControlLoop::observe(NovaCommand *cmd) {
-  _pid_values_x.input = cmd->arg1;
-  _pid_values_y.input = cmd->arg2;
+void FaceDetectionControlLoop::observe(NovaProtocolCommand *cmd) {
+  if(cmd->args.size() == 2) {
+    _pid_values_x.input = cmd->args.at(0);
+    _pid_values_y.input = cmd->args.at(1);
+  }
 }
 
 void FaceDetectionControlLoop::computeControl() {
@@ -109,32 +113,26 @@ void FaceDetectionControlLoop::actuate() {
   _servo_y->setDegree(angle_y);
 }
 
-void FaceDetectionControlLoop::handleCommands(NovaCommand* cmd) {
-  if(cmd->modulecode == NovaConstants::MOD_FACE_DETECTION) {
-    if(cmd->operandcode == NovaConstants::OP_FACE_DETECTION_X_PID_TUNING
-      || cmd->operandcode == NovaConstants::OP_FACE_DETECTION_Y_PID_TUNING) {
-        setPIDTuning(cmd->operandcode, cmd->arg1, cmd->arg2, cmd->arg3);
-    }
-    if(cmd->operandcode == NovaConstants::OP_FACE_DETECTION_X_SETPOINT
-      || cmd->operandcode == NovaConstants::OP_FACE_DETECTION_Y_SETPOINT) {
-        setSetpoint(cmd->operandcode, cmd->arg1);
-    }
-  }
+void FaceDetectionControlLoop::handleCommands(NovaProtocolCommand* cmd) {
+  if(cmd->operation == cmd_set_tuning && cmd->args.size() == 3)
+    setPIDTuning(cmd->asset, cmd->args.at(0), cmd->args.at(1), cmd->args.at(2));
+  else if(cmd->operation == cmd_set_setpoint && cmd->args.size() == 1)
+    setSetpoint(cmd->asset, cmd->args.at(0));
 }
 
-void FaceDetectionControlLoop::run(NovaCommand* cmd) {
-  if(cmd != nullptr && cmd->modulecode == NovaConstants::MOD_FACE_DETECTION) {
+void FaceDetectionControlLoop::run(NovaProtocolCommand* cmd) {
+  if(cmd != nullptr && cmd->module == cmd_track_object) {
     handleCommands(cmd);
 
-    if(cmd->operandcode == NovaConstants::OP_FACE_DETECTION_SET_COORDINATES) {
+    if(cmd->asset == cmd_module && cmd->operation == cmd_set_coordinates) {
       observe(cmd);
       computeControl();
       actuate();
 
       _comm->writeCommand(
-        NovaConstants::MOD_FACE_DETECTION,
-        NovaConstants::OP_FACE_DETECTION_ACK_COORDINATES,
-        0,0,0);
+        cmd_track_object,
+        cmd_module,
+        cmd_ack_coordinates);
     }
   }
 }
