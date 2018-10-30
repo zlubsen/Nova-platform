@@ -40,9 +40,11 @@ std::vector<AbstractControlLoop*>* ModeSelectControlLoop::getActiveControlLoops(
   return &_activeControlLoops;
 }
 
-void ModeSelectControlLoop::handleCommands(NovaCommand* cmd) {
-  if(cmd->operandcode == NovaConstants::OP_STATUS_SEND_SET_MODE) {
-    int mode = cmd->arg1 - 1; // TODO this is a nasty way to align the novaconstants with the array index used in this class
+void ModeSelectControlLoop::handleCommands(NovaProtocolCommand* cmd) {
+  if(cmd->asset == cmd_module &&
+      cmd->operation == cmd_set_mode &&
+        cmd->args.size() == 1) {
+    int mode = cmd->args.at(0) - 1; // TODO this is a nasty way to align the novaconstants with the array index used in this class
     setMode(mode);
   }
 }
@@ -124,8 +126,8 @@ void ModeSelectControlLoop::setMode(int mode) {
   _hardwareConfig->activateServos();
 }
 
-void ModeSelectControlLoop::run(NovaCommand* cmd) {
-  if(cmd != nullptr && cmd->modulecode == NovaConstants::MOD_STATUS_NOVA) {
+void ModeSelectControlLoop::run(NovaProtocolCommand* cmd) {
+  if(cmd != nullptr && cmd->module == cmd_nova) {
     handleCommands(cmd);
   }
 

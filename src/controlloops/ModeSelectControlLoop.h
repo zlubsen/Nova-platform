@@ -19,7 +19,7 @@
 class ModeSelectControlLoop : public AbstractControlLoop {
   public:
     ModeSelectControlLoop(HardwareConfig*  hardwareConfig, NovaConfig* novaConfig);
-    void run(NovaCommand* cmd);
+    void run(NovaProtocolCommand* cmd);
     std::string getLCDStatusString();
     std::vector<AbstractControlLoop*>* getActiveControlLoops();
     StatusPublishLoop* statusPublishLoop;
@@ -28,7 +28,7 @@ class ModeSelectControlLoop : public AbstractControlLoop {
   private:
     void setupControlLoops(HardwareConfig* hardwareConfig, NovaConfig* novaConfig);
     void setupLCDScreen(NovaConfig* novaConfig);
-    void handleCommands(NovaCommand* cmd);
+    void handleCommands(NovaProtocolCommand* cmd);
     void handleButtons();
     void navigateModeSelectMenuUp();
     void navigateModeSelectMenuDown();
