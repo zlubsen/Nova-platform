@@ -9,7 +9,7 @@
 class ExternalInputControlLoop : public AbstractControlLoop {
   public:
     ExternalInputControlLoop(HardwareConfig *hardwareConfig, NovaConfig *novaConfig);
-    void run(NovaCommand* cmd);
+    void run(NovaProtocolCommand* cmd);
     std::string getLCDStatusString();
 
   private:
@@ -23,7 +23,7 @@ class ExternalInputControlLoop : public AbstractControlLoop {
     int _offset_axis_3 = 0;
     int _offset_axis_4 = 0;
     int _offset_axis_5 = 0;
-    void observe(NovaCommand* cmd);
+    void observe(NovaProtocolCommand* cmd);
     void actuate();
 };
 

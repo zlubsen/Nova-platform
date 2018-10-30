@@ -9,31 +9,33 @@ ExternalInputControlLoop::ExternalInputControlLoop(HardwareConfig *hardwareConfi
   _servo5 = hardwareConfig->servo5;
 }
 
-void ExternalInputControlLoop::observe(NovaCommand* cmd) {
-  _offset_axis_1 = 0;
-  _offset_axis_2 = 0;
-  _offset_axis_3 = 0;
-  _offset_axis_4 = 0;
-  _offset_axis_5 = 0;
+void ExternalInputControlLoop::observe(NovaProtocolCommand* cmd) {
+  if(!cmd->args.empty()) {
+    _offset_axis_1 = 0;
+    _offset_axis_2 = 0;
+    _offset_axis_3 = 0;
+    _offset_axis_4 = 0;
+    _offset_axis_5 = 0;
 
-  int degree_value = cmd->arg1;
+    int degree_value = cmd->args.at(0);
 
-  switch (cmd->operandcode) {
-    case NovaConstants::OP_EXTERNAL_INPUT_SET_AXIS_1:
-      _offset_axis_1 = degree_value;
-      break;
-    case NovaConstants::OP_EXTERNAL_INPUT_SET_AXIS_2:
-      _offset_axis_2 = degree_value;
-      break;
-    case NovaConstants::OP_EXTERNAL_INPUT_SET_AXIS_3:
-      _offset_axis_3 = degree_value;
-      break;
-    case NovaConstants::OP_EXTERNAL_INPUT_SET_AXIS_4:
-      _offset_axis_4 = degree_value;
-      break;
-    case NovaConstants::OP_EXTERNAL_INPUT_SET_AXIS_5:
-      _offset_axis_5 = degree_value;
-      break;
+    switch (cmd->asset) {
+      case cmd_servo1:
+        _offset_axis_1 = degree_value;
+        break;
+      case cmd_servo2:
+        _offset_axis_2 = degree_value;
+        break;
+      case cmd_servo3:
+        _offset_axis_3 = degree_value;
+        break;
+      case cmd_servo4:
+        _offset_axis_4 = degree_value;
+        break;
+      case cmd_servo5:
+        _offset_axis_5 = degree_value;
+        break;
+    }
   }
 }
 
@@ -45,8 +47,8 @@ void ExternalInputControlLoop::actuate() {
   _servo5->setDegree(_servo5->getDegree() + _offset_axis_5);
 }
 
-void ExternalInputControlLoop::run(NovaCommand* cmd) {
-  if(cmd != nullptr && cmd->modulecode == NovaConstants::MOD_EXTERNAL_INPUT_CONTROL) {
+void ExternalInputControlLoop::run(NovaProtocolCommand* cmd) {
+  if(cmd != nullptr && cmd->module == cmd_external_input) {
     observe(cmd);
     actuate();
   }
