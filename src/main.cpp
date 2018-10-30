@@ -12,9 +12,6 @@
 #include <controlloops/DistanceAvoidControlLoop.h>
 #include <controlloops/FaceDetectionControlLoop.h>
 
-// Needed to test protocol in isolation...
-#include <communication/ProtocolLogic.hpp>
-
 #include <vector>
 
 void updateControlLoops();

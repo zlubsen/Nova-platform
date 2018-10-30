@@ -5,6 +5,7 @@
 #include <vector>
 #include <string>
 
+#define cmd_module 0
 #define cmd_nova 1
 #define cmd_joystick_absolute 2
 #define cmd_joystick_relative 3
@@ -57,14 +58,12 @@ class ProtocolNode {
     uint8_t _id;
     uint8_t _code;
     std::map<uint8_t, ProtocolNode> children;
-    virtual bool isLeaf() { return false; }
 };
 
 class ProtocolLeaf : public ProtocolNode {
   public:
     ProtocolLeaf(uint8_t id, uint8_t code) : ProtocolNode(id, code) {}
-    bool isLeaf() { return true; }
-    std::map<uint8_t, ProtocolNode> children;
+    const std::map<uint8_t, ProtocolNode> children;
 };
 
 class ServoNode : public ProtocolNode {

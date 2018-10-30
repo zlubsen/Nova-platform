@@ -117,7 +117,6 @@ void NovaProtocolCommandReader::traverseModules(ProtocolNode* node) {
 void NovaProtocolCommandReader::traverseAssets(ProtocolNode* node, std::vector<uint8_t>* code_parts, std::vector<uint8_t>* id_parts) {
   for(auto const &item : node->children) {
     auto n = item.second;
-    //if(!n.isLeaf()) {
     if(n.children.size() > 0) {
       code_parts->push_back(n._code);
       id_parts->push_back(n._id);
@@ -141,7 +140,6 @@ void NovaProtocolCommandReader::traverseAssets(ProtocolNode* node, std::vector<u
 void NovaProtocolCommandReader::traverseOperations(ProtocolNode* node, std::vector<uint8_t>* code_parts, std::vector<uint8_t>* id_parts) {
   for(auto const &item : node->children) {
     auto n = item.second;
-    //if(n.isLeaf()) {
     if(n.children.size() == 0) {
       code_parts->push_back(n._code);
       id_parts->push_back(n._id);
