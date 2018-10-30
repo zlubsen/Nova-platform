@@ -11,7 +11,7 @@
 class DistanceAvoidControlLoop : public AbstractControlLoop {
   public:
     DistanceAvoidControlLoop(HardwareConfig *hardwareConfig, NovaConfig *novaConfig);
-    void run(NovaCommand* cmd);
+    void run(NovaProtocolCommand* cmd);
     std::string getLCDStatusString();
 
   private:
@@ -28,7 +28,7 @@ class DistanceAvoidControlLoop : public AbstractControlLoop {
     int _min_distance;
     int _servo_angle;
     void setupPIDcontroller();
-    void handleCommands(NovaCommand* cmd);
+    void handleCommands(NovaProtocolCommand* cmd);
     void setMinimumDistanceLimit(int new_distance);
     void setMaximumDistanceLimit(int new_distance);
     void setSetpoint(int new_distance);

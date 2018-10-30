@@ -30,19 +30,20 @@ void DistanceAvoidControlLoop::setupPIDcontroller() {
     _pid->SetOutputLimits(_pid_config.outputLimitMin, _pid_config.outputLimitMax);
 }
 
-void DistanceAvoidControlLoop::handleCommands(NovaCommand* cmd) {
-  switch (cmd->operandcode) {
-    case NovaConstants::OP_DISTANCE_SET_MIN_DIST:
-      setMinimumDistanceLimit(cmd->arg1);
+void DistanceAvoidControlLoop::handleCommands(NovaProtocolCommand* cmd) {
+  switch (cmd->operation) {
+    case cmd_set_min_distance:
+      setMinimumDistanceLimit(cmd->args.at(0));
       break;
-    case NovaConstants::OP_DISTANCE_SET_MAX_DIST:
-      setMaximumDistanceLimit(cmd->arg1);
+    case cmd_set_max_distance:
+      setMaximumDistanceLimit(cmd->args.at(0));
       break;
-    case NovaConstants::OP_DISTANCE_SET_SETPOINT:
-      setSetpoint(cmd->arg1);
+    case cmd_set_setpoint:
+      setSetpoint(cmd->args.at(0));
       break;
-    case NovaConstants::OP_DISTANCE_SET_PID_TUNING:
-      setPIDTuning(cmd->arg1, cmd->arg2, cmd->arg3);
+    case cmd_set_tuning:
+      if(cmd->asset == cmd_pid && cmd->args.size() == 3)
+        setPIDTuning(cmd->args.at(0), cmd->args.at(1), cmd->args.at(3));
       break;
   }
 }
@@ -76,7 +77,11 @@ void DistanceAvoidControlLoop::statusPublishPIDValues() {
   int Kp = (int)(_pid->GetKp()*1000);
   int Ki = (int)(_pid->GetKi()*1000);
   int Kd = (int)(_pid->GetKd()*1000);
-  _comm->writeCommand(NovaConstants::MOD_STATUS_NOVA, NovaConstants::OP_STATUS_RECEIVE_DISTANCE_PID, Kp, Ki, Kd);
+  std::vector<int> args;
+  args.push_back(Kp);
+  args.push_back(Ki);
+  args.push_back(Kd);
+  _comm->writeCommand(cmd_keep_distance, cmd_pid, cmd_get_tuning, &args);
 }
 
 void DistanceAvoidControlLoop::observe() {
@@ -95,8 +100,8 @@ void DistanceAvoidControlLoop::computeControl() {
   _pid->Compute();
 }
 
-void DistanceAvoidControlLoop::run(NovaCommand* cmd) {
-  if(cmd != nullptr && cmd->modulecode == NovaConstants::MOD_DISTANCE_AVOIDANCE) {
+void DistanceAvoidControlLoop::run(NovaProtocolCommand* cmd) {
+  if(cmd != nullptr && cmd->module == cmd_keep_distance) {
     handleCommands(cmd);
   }
   observe();

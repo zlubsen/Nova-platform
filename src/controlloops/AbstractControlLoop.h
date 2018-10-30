@@ -5,7 +5,7 @@
 
 class AbstractControlLoop {
   public:
-    virtual void run(NovaCommand* cmd) = 0;
+    virtual void run(NovaProtocolCommand* cmd) = 0;
     virtual std::string getLCDStatusString() = 0;
 };
 
