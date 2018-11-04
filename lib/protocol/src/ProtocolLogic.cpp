@@ -1,11 +1,13 @@
 #include "ProtocolLogic.hpp"
 #include <typeinfo>
 
+// Default constructor, use for testing
 NovaProtocolCommandBuilder::NovaProtocolCommandBuilder() {
   _root = new Root();
   _dummy = new ModuleNode();
 }
 
+// Constructor that receives a root of the protocol tree, so it can be reused with NovaProtocolCommandReader
 NovaProtocolCommandBuilder::NovaProtocolCommandBuilder(ProtocolNode* root) {
   _root = root;
   _root_injected = true;
@@ -71,23 +73,44 @@ std::vector<int>* NovaProtocolCommandBuilder::build() {
     for(int arg : _args)
       cmd->push_back(arg);
 
+    reset();
+
     return cmd;
   } else {
     return nullptr;
   }
 }
 
-NovaProtocolCommandBuilder* NovaProtocolCommandBuilder::createCommand() {
+void NovaProtocolCommandBuilder::reset() {
+  _module = nullptr;
+  _asset = nullptr;
+  _operation = nullptr;
+  _args.clear();
+}
+
+NovaProtocolCommandBuilder* NovaProtocolCommandBuilder::createBuilder() {
   NovaProtocolCommandBuilder* builder = new NovaProtocolCommandBuilder();
   return builder;
 }
 
+// Default constructor, does not keep lookup in memory between reads, and use for testing
 NovaProtocolCommandReader::NovaProtocolCommandReader() {
-  initLookupTree();
+  ProtocolNode* root = new Root();
+  initLookupTree(root);
+  delete root;
 }
 
-void NovaProtocolCommandReader::initLookupTree() {
-  traverseModules(new Root());
+// Constructor that receives a root of the protocol tree, so it can be reused with NovaProtocolCommandBuilder
+NovaProtocolCommandReader::NovaProtocolCommandReader(ProtocolNode* root) {
+  initLookupTree(root);
+}
+
+NovaProtocolCommandReader::~NovaProtocolCommandReader() {
+  _lookup.clear();
+}
+
+void NovaProtocolCommandReader::initLookupTree(ProtocolNode* root) {
+  traverseModules(root);
 }
 
 void NovaProtocolCommandReader::traverseModules(ProtocolNode* node) {
@@ -152,25 +175,24 @@ void NovaProtocolCommandReader::traverseOperations(ProtocolNode* node, std::vect
 
 void NovaProtocolCommandReader::addToLookup(std::vector<uint8_t>* codes, std::vector<uint8_t>* ids) {
   uint16_t key = createKey(codes->at(0), codes->at(1), codes->at(2));
+  LookupEntry entry(ids->at(0), ids->at(1), ids->at(2));
 
-  _lookup[key] = *ids;
+  _lookup[key] = entry;
 }
 
-NovaProtocolCommand* NovaProtocolCommandReader::readCommand(std::vector<int>* received) {
+void NovaProtocolCommandReader::readCommand(std::vector<int>* received, NovaProtocolCommand *cmd) {
   uint16_t key = createKey(received->at(0), received->at(1), received->at(2));
 
-  auto parts = _lookup[key];
-  NovaProtocolCommand *cmd = new NovaProtocolCommand;
-  cmd->module = parts[0];
-  cmd->asset = parts[1];
-  cmd->operation = parts[2];
+  auto entry = _lookup[key];
+
+  cmd->module = entry.module;
+  cmd->asset = entry.asset;
+  cmd->operation = entry.operation;
 
   int8_t argcount = received->at(3);
   for(int i = 0; i < argcount; i++) {
     cmd->args.push_back(received->at(i+4));
   }
-
-  return cmd;
 }
 
 uint16_t NovaProtocolCommandReader::createKey(uint8_t module, uint8_t asset, uint8_t operation) {

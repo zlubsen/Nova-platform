@@ -3,8 +3,8 @@
 
 #include <map>
 #include <vector>
-#include <string>
 
+// modules
 #define cmd_module 0
 #define cmd_nova 1
 #define cmd_joystick_absolute 2
@@ -13,41 +13,51 @@
 #define cmd_keep_distance 5
 #define cmd_track_object 6
 
-#define cmd_servo1 7
-#define cmd_servo2 8
-#define cmd_servo3 9
-#define cmd_servo4 10
-#define cmd_servo5 11
-#define cmd_ultrasound 12
-#define cmd_set_mode 13
+// generic assets
+#define cmd_servo1 11
+#define cmd_servo2 12
+#define cmd_servo3 13
+#define cmd_servo4 14
+#define cmd_servo5 15
+#define cmd_ultrasound 16
 
-#define cmd_get_degree 14
-#define cmd_set_degree 15
-#define cmd_set_degree_steps 16
+// nova operations
+#define cmd_set_mode 101
+#define cmd_get_freememory 102
 
-#define cmd_get_distance 17
+// keep_distance operations
+#define cmd_set_min_distance 51
+#define cmd_set_max_distance 52
 
-#define cmd_toggle_auto 18
-#define cmd_set_setpoint 19
-#define cmd_set_tuning 20
-#define cmd_get_tuning 21
+// track_object operations
+#define cmd_set_coordinates 61
+#define cmd_ack_coordinates 62
 
-#define cmd_set_min_distance 22
-#define cmd_set_max_distance 23
+// servo operations
+#define cmd_get_degree 111
+#define cmd_set_degree 112
+#define cmd_set_degree_steps 113
 
-#define cmd_set_coordinates 24
-#define cmd_ack_coordinates 25
+// ultrasoundsensor operations
+#define cmd_get_distance 121
 
-#define cmd_pid 26
-#define cmd_pid_x 27
-#define cmd_pid_y 28
+// PID operations
+#define cmd_toggle_auto 131
+#define cmd_set_setpoint 132
+#define cmd_set_tuning 133
+#define cmd_get_tuning 134
+
+// PID assets
+#define cmd_pid 201
+#define cmd_pid_x 202
+#define cmd_pid_y 203
 
 class NovaProtocolCommand {
   public:
     NovaProtocolCommand() {}
-    uint8_t module;
-    uint8_t asset;
-    uint8_t operation;
+    int module;
+    int asset;
+    int operation;
     std::vector<int> args;
 };
 

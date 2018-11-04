@@ -6,6 +6,15 @@
 #include <vector>
 #include <string>
 
+class LookupEntry {
+  public:
+    uint8_t module;
+    uint8_t asset;
+    uint8_t operation;
+    LookupEntry() {}
+    LookupEntry(uint8_t m, uint8_t a, uint8_t o) {module = m; asset = a; operation = o;}
+};
+
 class NovaProtocolCommandBuilder {
   public:
     NovaProtocolCommandBuilder();
@@ -17,25 +26,27 @@ class NovaProtocolCommandBuilder {
     NovaProtocolCommandBuilder* setArgs(std::vector<int> args);
     NovaProtocolCommandBuilder* setModeArg(uint8_t module_name);
     std::vector<int>* build();
-    static NovaProtocolCommandBuilder* createCommand();
-  //private:
+    void reset();
+    static NovaProtocolCommandBuilder* createBuilder();
+  private:
     ProtocolNode* _module = nullptr;
     ProtocolNode* _asset = nullptr;
     ProtocolNode* _operation = nullptr;
     std::vector<int> _args;
     ProtocolNode* _root;
     ProtocolNode* _dummy;
-  private:
     bool _root_injected = false;
 };
 
 class NovaProtocolCommandReader {
   public:
     NovaProtocolCommandReader();
-    NovaProtocolCommand* readCommand(std::vector<int>* received);
+    NovaProtocolCommandReader(ProtocolNode* root);
+    ~NovaProtocolCommandReader();
+    void readCommand(std::vector<int>* received, NovaProtocolCommand* cmd);
+    std::map<uint16_t, LookupEntry> _lookup;
   private:
-    std::map<uint16_t, std::vector<uint8_t>> _lookup;
-    void initLookupTree();
+    void initLookupTree(ProtocolNode* root);
     void traverseModules(ProtocolNode* node);
     void traverseAssets(ProtocolNode* node, std::vector<uint8_t>* code_parts, std::vector<uint8_t>* id_parts);
     void traverseOperations(ProtocolNode* node, std::vector<uint8_t>* code_parts, std::vector<uint8_t>* id_parts);
