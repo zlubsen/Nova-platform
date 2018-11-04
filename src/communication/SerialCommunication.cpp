@@ -8,8 +8,8 @@
 SerialCommunication::SerialCommunication(int baud_rate) {
   Serial.begin(baud_rate);
 
-  builder = new NovaProtocolCommandBuilder(&root_node);
-  reader = new NovaProtocolCommandReader(&root_node);
+  //builder = new NovaProtocolCommandBuilder(&root_node);
+  //reader = new NovaProtocolCommandReader(&root_node);
 }
 
 NovaProtocolCommandBuilder* SerialCommunication::getBuilder() {
