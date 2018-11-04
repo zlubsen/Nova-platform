@@ -26,6 +26,10 @@ JoystickAbsoluteControlLoop::JoystickAbsoluteControlLoop(HardwareConfig *hardwar
   _joy_right_output.y = _servo3->getMiddle();
 }
 
+JoystickAbsoluteControlLoop::~JoystickAbsoluteControlLoop() {
+  delete _timer;
+}
+
 void JoystickAbsoluteControlLoop::observe() {
   _joy_left->getStatus(&_joy_left_input);
   _joy_right->getStatus(&_joy_right_input);

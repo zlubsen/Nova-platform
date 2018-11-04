@@ -1,5 +1,6 @@
 #include <Arduino.h>
 #include "ExternalInputControlLoop.h"
+#include <MemoryFree.hpp>
 
 ExternalInputControlLoop::ExternalInputControlLoop(HardwareConfig *hardwareConfig, NovaConfig *novaConfig) {
   _servo1 = hardwareConfig->servo1;
@@ -55,6 +56,17 @@ void ExternalInputControlLoop::run(NovaProtocolCommand* cmd) {
 }
 
 std::string ExternalInputControlLoop::getLCDStatusString() {
-  std::string status(16, ' ');
-  return status;
+  std::string str_start = "Free mem:";
+
+  char buffer[4];
+  sprintf(buffer, "%d", freeMemory());
+  std::string str_value(buffer);
+
+  int text_length = str_start.size() + str_value.size();
+  std::string mid_padding(16-text_length, ' ');
+
+  std::stringstream s;
+  s << str_start << mid_padding << str_value;
+
+  return s.str();
 }

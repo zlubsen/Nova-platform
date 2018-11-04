@@ -1,5 +1,6 @@
 #include <Arduino.h>
 #include "FaceDetectionControlLoop.h"
+#include <MemoryFree.hpp>
 
 FaceDetectionControlLoop::FaceDetectionControlLoop(HardwareConfig *hardwareConfig, NovaConfig *novaConfig) {
   _comm = hardwareConfig->comm;
@@ -42,6 +43,11 @@ FaceDetectionControlLoop::FaceDetectionControlLoop(HardwareConfig *hardwareConfi
   statusPublishPIDValues();
 }
 
+FaceDetectionControlLoop::~FaceDetectionControlLoop() {
+    delete _pid_x;
+    delete _pid_y;
+}
+
 // TODO: this one does not work well, pointers given to the PID are not passed correctly...
 void FaceDetectionControlLoop::setupPIDcontroller(PID* pid, pid_config* config, pid_dynamic_values* values) {
   pid = new PID(&(values->input),
@@ -79,18 +85,36 @@ void FaceDetectionControlLoop::setPIDTuning(uint8_t asset, int p_value, int i_va
   statusPublishPIDValues();
 }
 
+// TODO refactor pid_x and pid_y into reusable method
 void FaceDetectionControlLoop::statusPublishPIDValues() {
   int Kp_x = (int)(_pid_x->GetKp()*1000);
   int Ki_x = (int)(_pid_x->GetKi()*1000);
   int Kd_x = (int)(_pid_x->GetKd()*1000);
   std::vector<int> x_args {Kp_x, Ki_x, Kd_x};
-  _comm->writeCommand(cmd_track_object, cmd_pid_x, cmd_get_tuning, &x_args);
+
+  NovaProtocolCommandBuilder* builder_x = _comm->getBuilder();
+
+  /*_comm->writeCommand(builder_x
+    ->setModule(cmd_track_object)
+    ->setAsset(cmd_pid_x)
+    ->setOperation(cmd_get_tuning)
+    ->setArgs(x_args)
+    ->build());*/
 
   int Kp_y = (int)(_pid_y->GetKp()*1000);
   int Ki_y = (int)(_pid_y->GetKi()*1000);
   int Kd_y = (int)(_pid_y->GetKd()*1000);
   std::vector<int> y_args {Kp_y, Ki_y, Kd_y};
-  _comm->writeCommand(cmd_track_object, cmd_pid_y, cmd_get_tuning, &y_args);
+
+  NovaProtocolCommandBuilder* builder_y = _comm->getBuilder();
+
+  /*_comm->writeCommand(builder_y
+    ->setModule(cmd_track_object)
+    ->setAsset(cmd_pid_y)
+    ->setOperation(cmd_get_tuning)
+    ->setArgs(y_args)
+    ->build());
+  delete builder_y;*/
 }
 
 void FaceDetectionControlLoop::observe(NovaProtocolCommand *cmd) {
@@ -129,15 +153,28 @@ void FaceDetectionControlLoop::run(NovaProtocolCommand* cmd) {
       computeControl();
       actuate();
 
-      _comm->writeCommand(
-        cmd_track_object,
-        cmd_module,
-        cmd_ack_coordinates);
+      NovaProtocolCommandBuilder* builder = _comm->getBuilder();
+      _comm->writeCommand(builder
+        ->setModule(cmd_track_object)
+        ->setAsset(cmd_module)
+        ->setOperation(cmd_ack_coordinates)
+        ->build());
     }
   }
 }
 
 std::string FaceDetectionControlLoop::getLCDStatusString() {
-  std::string status(16, ' ');
-  return status;
+  std::string str_start = "Free mem:";
+
+  char buffer[4];
+  sprintf(buffer, "%d", freeMemory());
+  std::string str_value(buffer);
+
+  int text_length = str_start.size() + str_value.size();
+  std::string mid_padding(16-text_length, ' ');
+
+  std::stringstream s;
+  s << str_start << mid_padding << str_value;
+
+  return s.str();
 }

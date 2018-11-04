@@ -9,6 +9,7 @@
 class ExternalInputControlLoop : public AbstractControlLoop {
   public:
     ExternalInputControlLoop(HardwareConfig *hardwareConfig, NovaConfig *novaConfig);
+    ~ExternalInputControlLoop() {}
     void run(NovaProtocolCommand* cmd);
     std::string getLCDStatusString();
 

@@ -16,6 +16,10 @@ DistanceAvoidControlLoop::DistanceAvoidControlLoop(HardwareConfig *hardwareConfi
   statusPublishPIDValues();
 }
 
+DistanceAvoidControlLoop::~DistanceAvoidControlLoop() {
+  delete _pid;
+}
+
 void DistanceAvoidControlLoop::setupPIDcontroller() {
   _pid = new PID(&_pid_values.input,
     &_pid_values.output,
@@ -77,11 +81,16 @@ void DistanceAvoidControlLoop::statusPublishPIDValues() {
   int Kp = (int)(_pid->GetKp()*1000);
   int Ki = (int)(_pid->GetKi()*1000);
   int Kd = (int)(_pid->GetKd()*1000);
-  std::vector<int> args;
-  args.push_back(Kp);
-  args.push_back(Ki);
-  args.push_back(Kd);
-  _comm->writeCommand(cmd_keep_distance, cmd_pid, cmd_get_tuning, &args);
+  std::vector<int> args {Kp, Ki, Kd};
+
+  NovaProtocolCommandBuilder* builder = _comm->getBuilder();
+
+  /*_comm->writeCommand(builder
+    ->setModule(cmd_keep_distance)
+    ->setAsset(cmd_pid)
+    ->setOperation(cmd_get_tuning)
+    ->setArgs(args)
+    ->build());*/
 }
 
 void DistanceAvoidControlLoop::observe() {
@@ -109,6 +118,7 @@ void DistanceAvoidControlLoop::run(NovaProtocolCommand* cmd) {
   actuate();
 }
 
+// TODO: write the static text once (str_start, str_end), and update only the changing number/distance
 std::string DistanceAvoidControlLoop::getLCDStatusString() {
   std::string str_start = "Dist:";
   std::string str_end = " cm";

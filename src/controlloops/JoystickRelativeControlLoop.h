@@ -12,7 +12,7 @@ class JoystickRelativeControlLoop : public JoystickAbsoluteControlLoop {
   public:
     JoystickRelativeControlLoop(HardwareConfig *hardwareConfig, NovaConfig *novaConfig);
     void run(NovaProtocolCommand* cmd);
-    std::string getLCDStatusString();
+    //std::string getLCDStatusString();
 
   protected:
     void mapInputToRange();
