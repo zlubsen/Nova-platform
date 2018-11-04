@@ -7,6 +7,13 @@
 
 SerialCommunication::SerialCommunication(int baud_rate) {
   Serial.begin(baud_rate);
+
+  builder = new NovaProtocolCommandBuilder(&root_node);
+  reader = new NovaProtocolCommandReader(&root_node);
+}
+
+NovaProtocolCommandBuilder* SerialCommunication::getBuilder() {
+  return builder;
 }
 
 bool SerialCommunication::commandAvailable() {
@@ -46,17 +53,17 @@ void SerialCommunication::recvBytesWithStartEndMarkers() {
 void SerialCommunication::parseInput() {
   if(_newData) {
     strcpy(_tempBytes, _receivedBytes);
+    char *val;
+
+    std::vector<int> received;
+
+    received.push_back(atoi(strtok(_tempBytes, ":")));
+    while((val = strtok(NULL, ":")) != NULL) {
+      received.push_back(atoi(val));
+    }
 
     NovaProtocolCommand cmd;
-    cmd.module = atoi(strtok(_tempBytes, ":"));
-    cmd.asset = atoi(strtok(NULL, ":"));
-    cmd.operation = atoi(strtok(NULL, ":"));
-
-    uint8_t arg_count = atoi(strtok(NULL, ":"));
-    while(arg_count > 0) {
-      cmd.args.push_back(atoi(strtok(NULL, ":")));
-      arg_count--;
-    }
+    reader->readCommand(&received, &cmd);
 
     _commands_in.push(cmd);
     _newData = false;
@@ -79,33 +86,36 @@ NovaProtocolCommand* SerialCommunication::readCommand() {
     return nullptr;
 }
 
+// TODO remove
 void SerialCommunication::writeCommand(uint8_t module, uint8_t asset, uint8_t operation) {
   NovaProtocolCommand cmd;
 
-  cmd.module = module;
-  cmd.asset = asset;
-  cmd.operation = operation;
+  cmd.module = (int)module;
+  cmd.asset = (int)asset;
+  cmd.operation = (int8_t)operation;
 
   _commands_out.push(cmd);
 }
 
+// TODO remove
 void SerialCommunication::writeCommand(uint8_t module, uint8_t asset, uint8_t operation, int single_argument) {
   NovaProtocolCommand cmd;
 
-  cmd.module = module;
-  cmd.asset = asset;
-  cmd.operation = operation;
+  cmd.module = (int)module;
+  cmd.asset = (int)asset;
+  cmd.operation = (int)operation;
   cmd.args.push_back(single_argument);
 
   _commands_out.push(cmd);
 }
 
+// TODO remove
 void SerialCommunication::writeCommand(uint8_t module, uint8_t asset, uint8_t operation, std::vector<int>* args) {
   NovaProtocolCommand cmd;
 
-  cmd.module = module;
-  cmd.asset = asset;
-  cmd.operation = operation;
+  cmd.module = (int)module;
+  cmd.asset = (int)asset;
+  cmd.operation = (int)operation;
   cmd.args = *args;
 
   _commands_out.push(cmd);
@@ -113,6 +123,18 @@ void SerialCommunication::writeCommand(uint8_t module, uint8_t asset, uint8_t op
 
 void SerialCommunication::writeCommand(NovaProtocolCommand cmd) {
   _commands_out.push(cmd);
+}
+
+void SerialCommunication::writeCommand(std::vector<int>* cmd_vector) {
+  NovaProtocolCommand cmd;
+  cmd.module = cmd_vector->at(0);
+  cmd.asset = cmd_vector->at(1);
+  cmd.operation = cmd_vector->at(2);
+  int argcount = cmd_vector->at(3);
+  for(int i = 4; i < (argcount+4); i++) {
+    cmd.args.push_back(cmd_vector->at(i));
+  }
+  writeCommand(cmd);
 }
 
 void SerialCommunication::sendOutgoingCommands() {
