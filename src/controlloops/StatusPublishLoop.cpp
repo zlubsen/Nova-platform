@@ -1,4 +1,6 @@
 #include "StatusPublishLoop.h"
+#include <vector>
+#include <MemoryFree.hpp>
 
 StatusPublishLoop::StatusPublishLoop(HardwareConfig* hardwareConfig, int frequency_ms) {
   _comm = hardwareConfig->comm;
@@ -15,13 +17,27 @@ StatusPublishLoop::StatusPublishLoop(HardwareConfig* hardwareConfig, int frequen
 
 void StatusPublishLoop::run(NovaProtocolCommand* cmd) {
   if(_timer->elapsed()) {
-    _comm->writeCommand(cmd_nova, cmd_module, cmd_get_degree, servo1->getDegree());
-    _comm->writeCommand(cmd_nova, cmd_module, cmd_get_degree, servo2->getDegree());
-    _comm->writeCommand(cmd_nova, cmd_module, cmd_get_degree, servo3->getDegree());
-    _comm->writeCommand(cmd_nova, cmd_module, cmd_get_degree, servo4->getDegree());
-    _comm->writeCommand(cmd_nova, cmd_module, cmd_get_degree, servo5->getDegree());
-    _comm->writeCommand(cmd_nova, cmd_module, cmd_get_distance, ultraSoundSensor->measureDistance());
+    //writeStatusCommand(cmd_get_degree, servo1->getDegree());
+    //writeStatusCommand(cmd_get_degree, servo2->getDegree());
+    //writeStatusCommand(cmd_get_degree, servo3->getDegree());
+    //writeStatusCommand(cmd_get_degree, servo4->getDegree());
+    //writeStatusCommand(cmd_get_degree, servo5->getDegree());
+    //writeStatusCommand(cmd_get_distance, ultraSoundSensor->measureDistance());
+    //writeStatusCommand(cmd_get_freememory, freeMemory());
   }
+}
+
+void StatusPublishLoop::writeStatusCommand(uint8_t operation, int arg) {
+  NovaProtocolCommandBuilder* builder = _comm->getBuilder();
+
+  std::vector<int> args {arg};
+
+  _comm->writeCommand(builder
+    ->setModule(cmd_nova)
+    ->setAsset(cmd_module)
+    ->setOperation(operation)
+    ->setArgs(args)
+    ->build());
 }
 
 std::string StatusPublishLoop::getLCDStatusString() {

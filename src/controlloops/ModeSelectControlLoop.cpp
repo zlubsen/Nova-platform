@@ -3,30 +3,20 @@
 
 ModeSelectControlLoop::ModeSelectControlLoop(HardwareConfig* hardwareConfig, NovaConfig* novaConfig) {
   _hardwareConfig = hardwareConfig; // TODO would rather not have a local pointer to the whole hardwareconfig thing
+  _novaConfig = novaConfig;
   _lcd = hardwareConfig->lcdScreen;
   _buttons = hardwareConfig->selectButtons;
-  setupControlLoops(hardwareConfig, novaConfig);
+  setupControlLoops();
   setupLCDScreen(novaConfig);
 }
 
-void ModeSelectControlLoop::setupControlLoops(HardwareConfig* hardwareConfig, NovaConfig* novaConfig) {
-  statusPublishLoop = new StatusPublishLoop(hardwareConfig, novaConfig->_status_publish_frequency_ms);
+void ModeSelectControlLoop::setupControlLoops() {
+  statusPublishLoop = new StatusPublishLoop(_hardwareConfig, _novaConfig->_status_publish_frequency_ms);
   modeSelectControlLoop = this;
-  joyAbsoluteControlLoop = new JoystickAbsoluteControlLoop(hardwareConfig, novaConfig);
-  joyRelativeControlLoop = new JoystickRelativeControlLoop(hardwareConfig, novaConfig);
-  externalInputControlLoop = new ExternalInputControlLoop(hardwareConfig, novaConfig);
-  distanceAvoidControlLoop = new DistanceAvoidControlLoop(hardwareConfig, novaConfig);
-  faceDetectionControlLoop = new FaceDetectionControlLoop(hardwareConfig, novaConfig);
-
-  _availableControlLoops.push_back(joyAbsoluteControlLoop);
-  _availableControlLoops.push_back(joyRelativeControlLoop);
-  _availableControlLoops.push_back(externalInputControlLoop);
-  _availableControlLoops.push_back(distanceAvoidControlLoop);
-  _availableControlLoops.push_back(faceDetectionControlLoop);
 
   _activeControlLoops.push_back(statusPublishLoop);
   _activeControlLoops.push_back(modeSelectControlLoop);
-  _activeControlLoops.push_back(joyAbsoluteControlLoop);
+  _activeControlLoops.push_back(new JoystickAbsoluteControlLoop(_hardwareConfig, _novaConfig));
 }
 
 void ModeSelectControlLoop::setupLCDScreen(NovaConfig* novaConfig) {
@@ -44,7 +34,7 @@ void ModeSelectControlLoop::handleCommands(NovaProtocolCommand* cmd) {
   if(cmd->asset == cmd_module &&
       cmd->operation == cmd_set_mode &&
         cmd->args.size() == 1) {
-    int mode = cmd->args.at(0) - 1; // TODO this is a nasty way to align the novaconstants with the array index used in this class
+    uint8_t mode = cmd->args.at(0) - 1; // TODO this is a nasty way to align the novaconstants with the array index used in this class
     setMode(mode);
   }
 }
@@ -114,16 +104,51 @@ void ModeSelectControlLoop::updateStatusScreen() {
   _lcd->print(_activeControlLoops.at(2)->getLCDStatusString());
 }
 
-void ModeSelectControlLoop::setMode(int mode) {
+void ModeSelectControlLoop::setMode(uint8_t mode) {
   // disable/reenable input to servos to minimize servo jitter
   _hardwareConfig->suspendServos();
 
-  _activeControlLoops.at(2) = _availableControlLoops[mode];
+  //_activeControlLoops.at(2) = _availableControlLoops[mode];
+  switchControlLoop(mode);
   _currentMode = mode;
 
   showStatusScreen();
 
   _hardwareConfig->activateServos();
+}
+
+void ModeSelectControlLoop::switchControlLoop(uint8_t mode) {
+  AbstractControlLoop* old_active = _activeControlLoops.at(2);
+  _activeControlLoops.pop_back();
+  delete old_active;
+
+  AbstractControlLoop* new_active;
+
+  // TODO make mapping more defined in one place...
+  switch (mode) {
+    //case AvailableControlLoops::JOYSTICK_ABSOLUTE:
+    case 0:
+      new_active = new JoystickAbsoluteControlLoop(_hardwareConfig, _novaConfig);
+      break;
+    //case AvailableControlLoops::JOYSTICK_RELATIVE:
+    case 1:
+      new_active = new JoystickRelativeControlLoop(_hardwareConfig, _novaConfig);
+      break;
+    //case AvailableControlLoops::EXTERNAL_INPUT:
+    case 2:
+      new_active = new ExternalInputControlLoop(_hardwareConfig, _novaConfig);
+      break;
+    //case AvailableControlLoops::KEEP_DISTANCE:
+    case 3:
+      new_active = new DistanceAvoidControlLoop(_hardwareConfig, _novaConfig);
+      break;
+    //case AvailableControlLoops::TRACK_OBJECT:
+    case 4:
+      new_active = new FaceDetectionControlLoop(_hardwareConfig, _novaConfig);
+      break;
+  }
+
+  _activeControlLoops.push_back(new_active);
 }
 
 void ModeSelectControlLoop::run(NovaProtocolCommand* cmd) {

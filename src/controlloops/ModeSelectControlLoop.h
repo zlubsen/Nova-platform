@@ -3,6 +3,7 @@
 
 #include "config/HardwareConfig.h"
 #include "config/NovaConfig.h"
+#include "config/AvailableControlLoop.hpp"
 #include <sensors/LCDShieldButtons.h>
 #include <actuators/LCDShieldScreen.h>
 #include <controlloops/AbstractControlLoop.h>
@@ -26,34 +27,29 @@ class ModeSelectControlLoop : public AbstractControlLoop {
     ModeSelectControlLoop* modeSelectControlLoop;
 
   private:
-    void setupControlLoops(HardwareConfig* hardwareConfig, NovaConfig* novaConfig);
+    void setupControlLoops();
     void setupLCDScreen(NovaConfig* novaConfig);
     void handleCommands(NovaProtocolCommand* cmd);
     void handleButtons();
     void navigateModeSelectMenuUp();
     void navigateModeSelectMenuDown();
-    void setMode(int mode);
+    void setMode(uint8_t mode);
+    void switchControlLoop(uint8_t mode);
     void showSelectScreen();
     void showStatusScreen();
     void updateStatusScreen();
     void handleUpdateLCD();
     HardwareConfig* _hardwareConfig;
+    NovaConfig* _novaConfig;
     LCDShieldButtons* _buttons;
     LCDShieldScreen* _lcd;
     uint8_t _selectedEntry = 0;
-    int _currentMode = 0;
+    uint8_t _currentMode = 0;
     bool _lcd_status_mode = true;
     FrequencyTimer* _lcd_menu_timeout_timer;
     FrequencyTimer* _lcd_status_update_timer;
 
-    JoystickAbsoluteControlLoop* joyAbsoluteControlLoop;
-    JoystickRelativeControlLoop* joyRelativeControlLoop;
-    ExternalInputControlLoop* externalInputControlLoop;
-    DistanceAvoidControlLoop* distanceAvoidControlLoop;
-    FaceDetectionControlLoop* faceDetectionControlLoop;
-
     std::vector<AbstractControlLoop*> _activeControlLoops;
-    std::vector<AbstractControlLoop*> _availableControlLoops;
 
     // TODO make these texts a configuration item - possibly tied to the comm protocol in NovaConstants, or merge into _availableControlLoops
     std::vector<std::string> _controlLoopDescriptions{

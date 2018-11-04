@@ -5,6 +5,7 @@
 #include <config/NovaConstants.h>
 #include <controlloops/AbstractControlLoop.h>
 #include <FrequencyTimer.h>
+#include <ProtocolLogic.hpp>
 
 class StatusPublishLoop : public AbstractControlLoop {
   public:
@@ -13,6 +14,7 @@ class StatusPublishLoop : public AbstractControlLoop {
     std::string getLCDStatusString();
 
   private:
+    void writeStatusCommand(uint8_t operation, int arg);
     SerialCommunication* _comm;
     NovaServo* servo1;
     NovaServo* servo2;
