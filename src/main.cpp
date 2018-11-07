@@ -14,8 +14,6 @@
 
 #include <vector>
 
-void updateControlLoops();
-
 HardwareConfig* hardwareConfig;
 NovaConfig* novaConfig;
 
