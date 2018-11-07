@@ -13,10 +13,11 @@ ModeSelectControlLoop::ModeSelectControlLoop(HardwareConfig* hardwareConfig, Nov
 void ModeSelectControlLoop::setupControlLoops() {
   statusPublishLoop = new StatusPublishLoop(_hardwareConfig, _novaConfig->_status_publish_frequency_ms);
   modeSelectControlLoop = this;
+  AbstractControlLoop* default_active = new JoystickAbsoluteControlLoop(_hardwareConfig, _novaConfig);
 
   _activeControlLoops.push_back(statusPublishLoop);
   _activeControlLoops.push_back(modeSelectControlLoop);
-  _activeControlLoops.push_back(new JoystickAbsoluteControlLoop(_hardwareConfig, _novaConfig));
+  _activeControlLoops.push_back(default_active);
 }
 
 void ModeSelectControlLoop::setupLCDScreen(NovaConfig* novaConfig) {
@@ -95,7 +96,7 @@ void ModeSelectControlLoop::showStatusScreen() {
   _lcd_status_mode = true;
 
   _lcd->setCursor(0,0);
-  _lcd->print(_controlLoopDescriptions.at(_selectedEntry));
+  _lcd->print(_controlLoopDescriptions.at(_currentMode));
   updateStatusScreen();
 }
 
@@ -149,6 +150,8 @@ void ModeSelectControlLoop::switchControlLoop(uint8_t mode) {
   }
 
   _activeControlLoops.push_back(new_active);
+
+  _currentMode = mode;
 }
 
 void ModeSelectControlLoop::run(NovaProtocolCommand* cmd) {
