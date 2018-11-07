@@ -94,12 +94,12 @@ void FaceDetectionControlLoop::statusPublishPIDValues() {
 
   NovaProtocolCommandBuilder* builder_x = _comm->getBuilder();
 
-  /*_comm->writeCommand(builder_x
+  _comm->writeCommand(builder_x
     ->setModule(cmd_track_object)
     ->setAsset(cmd_pid_x)
     ->setOperation(cmd_get_tuning)
     ->setArgs(x_args)
-    ->build());*/
+    ->build());
 
   int Kp_y = (int)(_pid_y->GetKp()*1000);
   int Ki_y = (int)(_pid_y->GetKi()*1000);
@@ -108,13 +108,12 @@ void FaceDetectionControlLoop::statusPublishPIDValues() {
 
   NovaProtocolCommandBuilder* builder_y = _comm->getBuilder();
 
-  /*_comm->writeCommand(builder_y
+  _comm->writeCommand(builder_y
     ->setModule(cmd_track_object)
     ->setAsset(cmd_pid_y)
     ->setOperation(cmd_get_tuning)
     ->setArgs(y_args)
     ->build());
-  delete builder_y;*/
 }
 
 void FaceDetectionControlLoop::observe(NovaProtocolCommand *cmd) {

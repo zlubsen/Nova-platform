@@ -85,12 +85,12 @@ void DistanceAvoidControlLoop::statusPublishPIDValues() {
 
   NovaProtocolCommandBuilder* builder = _comm->getBuilder();
 
-  /*_comm->writeCommand(builder
+  _comm->writeCommand(builder
     ->setModule(cmd_keep_distance)
     ->setAsset(cmd_pid)
     ->setOperation(cmd_get_tuning)
     ->setArgs(args)
-    ->build());*/
+    ->build());
 }
 
 void DistanceAvoidControlLoop::observe() {
