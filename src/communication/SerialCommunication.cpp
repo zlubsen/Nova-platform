@@ -1,4 +1,4 @@
-#include "SerialCommunication.h"
+#include "SerialCommunication.hpp"
 
 // we expect a command following this template:
 // >module_code:asset_code:operation_code:arg_count:[args_list]<

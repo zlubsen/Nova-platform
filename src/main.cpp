@@ -1,5 +1,5 @@
 #include <Arduino.h>
-#include <communication/SerialCommunication.h>
+#include <communication/SerialCommunication.hpp>
 #include <config/HardwareConfig.h>
 #include <config/NovaConfig.h>
 #include <config/NovaConstants.h>

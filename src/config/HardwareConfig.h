@@ -7,7 +7,7 @@
 #include <sensors/Joystick.h>
 #include <sensors/UltraSoundSensor.h>
 #include <sensors/LCDShieldButtons.h>
-#include <communication/SerialCommunication.h>
+#include <communication/SerialCommunication.hpp>
 
 typedef struct {
   int pin;

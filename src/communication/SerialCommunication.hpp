@@ -1,5 +1,5 @@
-#ifndef Nova_Util_Serial_Communication_h
-#define Nova_Util_Serial_Communication_h
+#ifndef Nova_Util_Serial_Communication_hpp
+#define Nova_Util_Serial_Communication_hpp
 
 #include <Arduino.h>
 #include <config/NovaConstants.h>
