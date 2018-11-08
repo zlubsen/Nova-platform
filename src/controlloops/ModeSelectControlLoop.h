@@ -3,7 +3,6 @@
 
 #include "config/HardwareConfig.h"
 #include "config/NovaConfig.h"
-#include "config/AvailableControlLoop.hpp"
 #include <sensors/LCDShieldButtons.h>
 #include <actuators/LCDShieldScreen.h>
 #include <controlloops/AbstractControlLoop.h>
@@ -11,8 +10,8 @@
 #include <controlloops/JoystickAbsoluteControlLoop.h>
 #include <controlloops/JoystickRelativeControlLoop.h>
 #include <controlloops/ExternalInputControlLoop.h>
-#include <controlloops/DistanceAvoidControlLoop.h>
-#include <controlloops/FaceDetectionControlLoop.h>
+#include <controlloops/KeepDistanceControlLoop.hpp>
+#include <controlloops/TrackObjectControlLoop.hpp>
 #include <FrequencyTimer.h>
 
 #include <vector>
@@ -56,8 +55,8 @@ class ModeSelectControlLoop : public AbstractControlLoop {
       "1 Joystick - abs",
       "2 Joystick - rel",
       "3 External input",
-      "4 Distance avoid",
-      "5 Face detection",
+      "4 Keep distance ",
+      "5 Track object  ",
     };
 };
 

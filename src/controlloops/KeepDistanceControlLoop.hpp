@@ -1,5 +1,5 @@
-#ifndef ControlLoop_Distance_Avoid_h
-#define ControlLoop_Distance_Avoid_h
+#ifndef ControlLoop_Keep_Distance_h
+#define ControlLoop_Keep_Distance_h
 
 #include "sensors/UltraSoundSensor.h"
 #include "config/HardwareConfig.h"
@@ -9,10 +9,10 @@
 #include <ProtocolLogic.hpp>
 #include <string>
 
-class DistanceAvoidControlLoop : public AbstractControlLoop {
+class KeepDistanceControlLoop : public AbstractControlLoop {
   public:
-    DistanceAvoidControlLoop(HardwareConfig *hardwareConfig, NovaConfig *novaConfig);
-    ~DistanceAvoidControlLoop();
+    KeepDistanceControlLoop(HardwareConfig *hardwareConfig, NovaConfig *novaConfig);
+    ~KeepDistanceControlLoop();
     void run(NovaProtocolCommand* cmd);
     std::string getLCDStatusString();
 

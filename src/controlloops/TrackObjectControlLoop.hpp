@@ -1,5 +1,5 @@
-#ifndef ControlLoop_Face_Detection_h
-#define ControlLoop_Face_Detection_h
+#ifndef ControlLoop_Track_Object_h
+#define ControlLoop_Track_Object_h
 
 #include <config/HardwareConfig.h>
 #include <config/NovaConfig.h>
@@ -8,10 +8,10 @@
 #include <controlloops/AbstractControlLoop.h>
 #include <ProtocolLogic.hpp>
 
-class FaceDetectionControlLoop : public AbstractControlLoop {
+class TrackObjectControlLoop : public AbstractControlLoop {
   public:
-    FaceDetectionControlLoop(HardwareConfig *hardwareConfig, NovaConfig *novaConfig);
-    ~FaceDetectionControlLoop();
+    TrackObjectControlLoop(HardwareConfig *hardwareConfig, NovaConfig *novaConfig);
+    ~TrackObjectControlLoop();
     void run(NovaProtocolCommand* cmd);
     std::string getLCDStatusString();
 

@@ -1,8 +1,8 @@
 #include <Arduino.h>
-#include "FaceDetectionControlLoop.h"
+#include "TrackObjectControlLoop.hpp"
 #include <MemoryFree.hpp>
 
-FaceDetectionControlLoop::FaceDetectionControlLoop(HardwareConfig *hardwareConfig, NovaConfig *novaConfig) {
+TrackObjectControlLoop::TrackObjectControlLoop(HardwareConfig *hardwareConfig, NovaConfig *novaConfig) {
   _comm = hardwareConfig->comm;
 
   _servo_x = hardwareConfig->servo4;
@@ -43,13 +43,13 @@ FaceDetectionControlLoop::FaceDetectionControlLoop(HardwareConfig *hardwareConfi
   statusPublishPIDValues();
 }
 
-FaceDetectionControlLoop::~FaceDetectionControlLoop() {
+TrackObjectControlLoop::~TrackObjectControlLoop() {
     delete _pid_x;
     delete _pid_y;
 }
 
 // TODO: this one does not work well, pointers given to the PID are not passed correctly...
-void FaceDetectionControlLoop::setupPIDcontroller(PID* pid, pid_config* config, pid_dynamic_values* values) {
+void TrackObjectControlLoop::setupPIDcontroller(PID* pid, pid_config* config, pid_dynamic_values* values) {
   pid = new PID(&(values->input),
     &(values->output),
     &(values->setpoint),
@@ -63,7 +63,7 @@ void FaceDetectionControlLoop::setupPIDcontroller(PID* pid, pid_config* config, 
     pid->SetMode(config->mode);
 }
 
-void FaceDetectionControlLoop::setSetpoint(uint8_t asset, int new_setpoint) {
+void TrackObjectControlLoop::setSetpoint(uint8_t asset, int new_setpoint) {
   // TODO validate that the setpoint is in a valid range.
   if(asset == cmd_pid_x)
     _pid_values_x.setpoint = new_setpoint;
@@ -72,7 +72,7 @@ void FaceDetectionControlLoop::setSetpoint(uint8_t asset, int new_setpoint) {
   }
 }
 
-void FaceDetectionControlLoop::setPIDTuning(uint8_t asset, int p_value, int i_value, int d_value) {
+void TrackObjectControlLoop::setPIDTuning(uint8_t asset, int p_value, int i_value, int d_value) {
   double new_p = ((double) p_value)/1000;
   double new_i = ((double) i_value)/1000;
   double new_d = ((double) d_value)/1000;
@@ -86,7 +86,7 @@ void FaceDetectionControlLoop::setPIDTuning(uint8_t asset, int p_value, int i_va
 }
 
 // TODO refactor pid_x and pid_y into reusable method
-void FaceDetectionControlLoop::statusPublishPIDValues() {
+void TrackObjectControlLoop::statusPublishPIDValues() {
   int Kp_x = (int)(_pid_x->GetKp()*1000);
   int Ki_x = (int)(_pid_x->GetKi()*1000);
   int Kd_x = (int)(_pid_x->GetKd()*1000);
@@ -116,19 +116,19 @@ void FaceDetectionControlLoop::statusPublishPIDValues() {
     ->build());
 }
 
-void FaceDetectionControlLoop::observe(NovaProtocolCommand *cmd) {
+void TrackObjectControlLoop::observe(NovaProtocolCommand *cmd) {
   if(cmd->args.size() == 2) {
     _pid_values_x.input = cmd->args.at(0);
     _pid_values_y.input = cmd->args.at(1);
   }
 }
 
-void FaceDetectionControlLoop::computeControl() {
+void TrackObjectControlLoop::computeControl() {
   _pid_x->Compute();
   _pid_y->Compute();
 }
 
-void FaceDetectionControlLoop::actuate() {
+void TrackObjectControlLoop::actuate() {
   int angle_x = _servo_x->getDegree() + _pid_values_x.output;
   int angle_y = _servo_y->getDegree() + _pid_values_y.output;
 
@@ -136,14 +136,14 @@ void FaceDetectionControlLoop::actuate() {
   _servo_y->setDegree(angle_y);
 }
 
-void FaceDetectionControlLoop::handleCommands(NovaProtocolCommand* cmd) {
+void TrackObjectControlLoop::handleCommands(NovaProtocolCommand* cmd) {
   if(cmd->operation == cmd_set_tuning && cmd->args.size() == 3)
     setPIDTuning(cmd->asset, cmd->args.at(0), cmd->args.at(1), cmd->args.at(2));
   else if(cmd->operation == cmd_set_setpoint && cmd->args.size() == 1)
     setSetpoint(cmd->asset, cmd->args.at(0));
 }
 
-void FaceDetectionControlLoop::run(NovaProtocolCommand* cmd) {
+void TrackObjectControlLoop::run(NovaProtocolCommand* cmd) {
   if(cmd != nullptr && cmd->module == cmd_track_object) {
     handleCommands(cmd);
 
@@ -162,7 +162,7 @@ void FaceDetectionControlLoop::run(NovaProtocolCommand* cmd) {
   }
 }
 
-std::string FaceDetectionControlLoop::getLCDStatusString() {
+std::string TrackObjectControlLoop::getLCDStatusString() {
   std::string str_start = "Free mem:";
 
   char buffer[4];

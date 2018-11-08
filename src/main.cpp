@@ -9,8 +9,8 @@
 #include <controlloops/JoystickAbsoluteControlLoop.h>
 #include <controlloops/JoystickRelativeControlLoop.h>
 #include <controlloops/ExternalInputControlLoop.h>
-#include <controlloops/DistanceAvoidControlLoop.h>
-#include <controlloops/FaceDetectionControlLoop.h>
+#include <controlloops/KeepDistanceControlLoop.hpp>
+#include <controlloops/TrackObjectControlLoop.hpp>
 
 #include <vector>
 

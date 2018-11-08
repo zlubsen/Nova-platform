@@ -141,11 +141,11 @@ void ModeSelectControlLoop::switchControlLoop(uint8_t mode) {
       break;
     //case AvailableControlLoops::KEEP_DISTANCE:
     case 3:
-      new_active = new DistanceAvoidControlLoop(_hardwareConfig, _novaConfig);
+      new_active = new KeepDistanceControlLoop(_hardwareConfig, _novaConfig);
       break;
     //case AvailableControlLoops::TRACK_OBJECT:
     case 4:
-      new_active = new FaceDetectionControlLoop(_hardwareConfig, _novaConfig);
+      new_active = new TrackObjectControlLoop(_hardwareConfig, _novaConfig);
       break;
   }
 

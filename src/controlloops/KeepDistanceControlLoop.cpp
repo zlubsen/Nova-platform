@@ -1,7 +1,7 @@
 #include <Arduino.h>
-#include "DistanceAvoidControlLoop.h"
+#include "KeepDistanceControlLoop.hpp"
 
-DistanceAvoidControlLoop::DistanceAvoidControlLoop(HardwareConfig *hardwareConfig, NovaConfig *novaConfig) {
+KeepDistanceControlLoop::KeepDistanceControlLoop(HardwareConfig *hardwareConfig, NovaConfig *novaConfig) {
   _comm = hardwareConfig->comm;
   _ultraSoundSensor = hardwareConfig->ultraSoundSensor;
   _servo = hardwareConfig->servo1;
@@ -16,11 +16,11 @@ DistanceAvoidControlLoop::DistanceAvoidControlLoop(HardwareConfig *hardwareConfi
   statusPublishPIDValues();
 }
 
-DistanceAvoidControlLoop::~DistanceAvoidControlLoop() {
+KeepDistanceControlLoop::~KeepDistanceControlLoop() {
   delete _pid;
 }
 
-void DistanceAvoidControlLoop::setupPIDcontroller() {
+void KeepDistanceControlLoop::setupPIDcontroller() {
   _pid = new PID(&_pid_values.input,
     &_pid_values.output,
     &_pid_values.setpoint,
@@ -34,7 +34,7 @@ void DistanceAvoidControlLoop::setupPIDcontroller() {
     _pid->SetOutputLimits(_pid_config.outputLimitMin, _pid_config.outputLimitMax);
 }
 
-void DistanceAvoidControlLoop::handleCommands(NovaProtocolCommand* cmd) {
+void KeepDistanceControlLoop::handleCommands(NovaProtocolCommand* cmd) {
   switch (cmd->operation) {
     case cmd_set_min_distance:
       setMinimumDistanceLimit(cmd->args.at(0));
@@ -52,22 +52,22 @@ void DistanceAvoidControlLoop::handleCommands(NovaProtocolCommand* cmd) {
   }
 }
 
-void DistanceAvoidControlLoop::setMinimumDistanceLimit(int new_distance) {
+void KeepDistanceControlLoop::setMinimumDistanceLimit(int new_distance) {
   if(new_distance < _max_distance)
     _min_distance = new_distance;
 }
 
-void DistanceAvoidControlLoop::setMaximumDistanceLimit(int new_distance) {
+void KeepDistanceControlLoop::setMaximumDistanceLimit(int new_distance) {
   if(new_distance > _min_distance)
     _max_distance = new_distance;
 }
 
-void DistanceAvoidControlLoop::setSetpoint(int new_distance) {
+void KeepDistanceControlLoop::setSetpoint(int new_distance) {
   if(new_distance >= _min_distance && new_distance <= _max_distance)
     _pid_values.setpoint = new_distance;
 }
 
-void DistanceAvoidControlLoop::setPIDTuning(int p_value, int i_value, int d_value) {
+void KeepDistanceControlLoop::setPIDTuning(int p_value, int i_value, int d_value) {
   double new_p = ((double) p_value)/1000;
   double new_i = ((double) i_value)/1000;
   double new_d = ((double) d_value)/1000;
@@ -77,7 +77,7 @@ void DistanceAvoidControlLoop::setPIDTuning(int p_value, int i_value, int d_valu
   statusPublishPIDValues();
 }
 
-void DistanceAvoidControlLoop::statusPublishPIDValues() {
+void KeepDistanceControlLoop::statusPublishPIDValues() {
   int Kp = (int)(_pid->GetKp()*1000);
   int Ki = (int)(_pid->GetKi()*1000);
   int Kd = (int)(_pid->GetKd()*1000);
@@ -93,11 +93,11 @@ void DistanceAvoidControlLoop::statusPublishPIDValues() {
     ->build());
 }
 
-void DistanceAvoidControlLoop::observe() {
+void KeepDistanceControlLoop::observe() {
   _pid_values.input = _ultraSoundSensor->measureDistance();
 }
 
-void DistanceAvoidControlLoop::actuate() {
+void KeepDistanceControlLoop::actuate() {
   if(_pid_values.input < _max_distance && _pid_values.input > _min_distance) {
        _servo_angle = _servo->getDegree() - _pid_values.output;
 
@@ -105,11 +105,11 @@ void DistanceAvoidControlLoop::actuate() {
   }
 }
 
-void DistanceAvoidControlLoop::computeControl() {
+void KeepDistanceControlLoop::computeControl() {
   _pid->Compute();
 }
 
-void DistanceAvoidControlLoop::run(NovaProtocolCommand* cmd) {
+void KeepDistanceControlLoop::run(NovaProtocolCommand* cmd) {
   if(cmd != nullptr && cmd->module == cmd_keep_distance) {
     handleCommands(cmd);
   }
@@ -119,7 +119,7 @@ void DistanceAvoidControlLoop::run(NovaProtocolCommand* cmd) {
 }
 
 // TODO: write the static text once (str_start, str_end), and update only the changing number/distance
-std::string DistanceAvoidControlLoop::getLCDStatusString() {
+std::string KeepDistanceControlLoop::getLCDStatusString() {
   std::string str_start = "Dist:";
   std::string str_end = " cm";
 
