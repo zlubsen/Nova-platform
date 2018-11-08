@@ -21,7 +21,8 @@ typedef struct {
 class JoystickAbsoluteControlLoop : public AbstractControlLoop {
   public:
     JoystickAbsoluteControlLoop(HardwareConfig *hardwareConfig, NovaConfig *novaConfig);
-    virtual void run(NovaCommand* cmd);
+    ~JoystickAbsoluteControlLoop();
+    virtual void run(NovaProtocolCommand* cmd);
     std::string getLCDStatusString();
 
   protected:

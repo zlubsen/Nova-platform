@@ -1,4 +1,6 @@
 #include "StatusPublishLoop.h"
+#include <vector>
+#include <MemoryFree.hpp>
 
 StatusPublishLoop::StatusPublishLoop(HardwareConfig* hardwareConfig, int frequency_ms) {
   _comm = hardwareConfig->comm;
@@ -13,15 +15,29 @@ StatusPublishLoop::StatusPublishLoop(HardwareConfig* hardwareConfig, int frequen
 
 }
 
-void StatusPublishLoop::run(NovaCommand* cmd) {
+void StatusPublishLoop::run(NovaProtocolCommand* cmd) {
   if(_timer->elapsed()) {
-    _comm->writeCommand(NovaConstants::MOD_STATUS_NOVA, NovaConstants::OP_STATUS_RECEIVE_SERVO_1, servo1->getDegree(),0,0);
-    _comm->writeCommand(NovaConstants::MOD_STATUS_NOVA, NovaConstants::OP_STATUS_RECEIVE_SERVO_2, servo2->getDegree(),0,0);
-    _comm->writeCommand(NovaConstants::MOD_STATUS_NOVA, NovaConstants::OP_STATUS_RECEIVE_SERVO_3, servo3->getDegree(),0,0);
-    _comm->writeCommand(NovaConstants::MOD_STATUS_NOVA, NovaConstants::OP_STATUS_RECEIVE_SERVO_4, servo4->getDegree(),0,0);
-    _comm->writeCommand(NovaConstants::MOD_STATUS_NOVA, NovaConstants::OP_STATUS_RECEIVE_SERVO_5, servo5->getDegree(),0,0);
-    _comm->writeCommand(NovaConstants::MOD_STATUS_NOVA, NovaConstants::OP_STATUS_RECEIVE_USS, ultraSoundSensor->measureDistance(),0,0);
+    //writeStatusCommand(cmd_get_degree, servo1->getDegree());
+    //writeStatusCommand(cmd_get_degree, servo2->getDegree());
+    //writeStatusCommand(cmd_get_degree, servo3->getDegree());
+    //writeStatusCommand(cmd_get_degree, servo4->getDegree());
+    //writeStatusCommand(cmd_get_degree, servo5->getDegree());
+    //writeStatusCommand(cmd_get_distance, ultraSoundSensor->measureDistance());
+    //writeStatusCommand(cmd_get_freememory, freeMemory());
   }
+}
+
+void StatusPublishLoop::writeStatusCommand(uint8_t operation, int arg) {
+  NovaProtocolCommandBuilder* builder = _comm->getBuilder();
+
+  std::vector<int> args {arg};
+
+  _comm->writeCommand(builder
+    ->setModule(cmd_nova)
+    ->setAsset(cmd_module)
+    ->setOperation(operation)
+    ->setArgs(args)
+    ->build());
 }
 
 std::string StatusPublishLoop::getLCDStatusString() {

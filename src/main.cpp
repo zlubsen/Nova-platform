@@ -14,8 +14,6 @@
 
 #include <vector>
 
-void updateControlLoops();
-
 HardwareConfig* hardwareConfig;
 NovaConfig* novaConfig;
 
@@ -38,7 +36,7 @@ void setup() {
 void loop() {
   comm->run();
 
-  NovaCommand *cmd = comm->readCommand();
+  NovaProtocolCommand *cmd = comm->readCommand();
 
   for(AbstractControlLoop* loop : *controlLoops) {
     loop->run(cmd);

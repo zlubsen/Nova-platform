@@ -6,14 +6,17 @@
 #include <config/NovaConstants.h>
 #include <PID_v1.h>
 #include <controlloops/AbstractControlLoop.h>
+#include <ProtocolLogic.hpp>
 
 class FaceDetectionControlLoop : public AbstractControlLoop {
   public:
     FaceDetectionControlLoop(HardwareConfig *hardwareConfig, NovaConfig *novaConfig);
-    void run(NovaCommand* cmd);
+    ~FaceDetectionControlLoop();
+    void run(NovaProtocolCommand* cmd);
     std::string getLCDStatusString();
 
   private:
+    SerialCommunication *_comm;
     NovaServo* _servo_x;
     NovaServo* _servo_y;
     PID *_pid_x;
@@ -22,15 +25,14 @@ class FaceDetectionControlLoop : public AbstractControlLoop {
     pid_config _pid_config_y;
     pid_dynamic_values _pid_values_x;
     pid_dynamic_values _pid_values_y;
-    SerialCommunication *_comm;
-    void handleCommands(NovaCommand* cmd);
-    void setSetpoint(int opcode, int new_setpoint);
+    void handleCommands(NovaProtocolCommand* cmd);
+    void setSetpoint(uint8_t asset, int new_setpoint);
     void setupPIDcontroller(PID* pid, pid_config* config, pid_dynamic_values* values);
     void statusPublishPIDValues();
-    void observe(NovaCommand* cmd);
+    void observe(NovaProtocolCommand* cmd);
     void actuate();
     void computeControl();
-    void setPIDTuning(int opcode, int p_value, int i_value, int d_value);
+    void setPIDTuning(uint8_t asset, int p_value, int i_value, int d_value);
 };
 
 #endif
