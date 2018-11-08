@@ -1,12 +1,12 @@
-#ifndef ControlLoop_Joystick_Relative_h
-#define ControlLoop_Joystick_Relative_h
+#ifndef ControlLoop_Joystick_Relative_hpp
+#define ControlLoop_Joystick_Relative_hpp
 
 #include <actuators/NovaServo.h>
 #include <sensors/Joystick.h>
 #include <config/HardwareConfig.h>
 #include <config/NovaConfig.h>
-#include <controlloops/AbstractControlLoop.h>
-#include <controlloops/JoystickAbsoluteControlLoop.h>
+#include <controlloops/AbstractControlLoop.hpp>
+#include <controlloops/JoystickAbsoluteControlLoop.hpp>
 
 class JoystickRelativeControlLoop : public JoystickAbsoluteControlLoop {
   public:

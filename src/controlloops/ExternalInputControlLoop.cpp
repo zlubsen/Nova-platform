@@ -1,5 +1,5 @@
 #include <Arduino.h>
-#include "ExternalInputControlLoop.h"
+#include "ExternalInputControlLoop.hpp"
 #include <MemoryFree.hpp>
 
 ExternalInputControlLoop::ExternalInputControlLoop(HardwareConfig *hardwareConfig, NovaConfig *novaConfig) {

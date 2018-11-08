@@ -1,9 +1,9 @@
-#ifndef ControlLoop_StatusPublish_h
-#define ControlLoop_StatusPublish_h
+#ifndef ControlLoop_StatusPublish_hpp
+#define ControlLoop_StatusPublish_hpp
 
 #include <config/HardwareConfig.h>
 #include <config/NovaConstants.h>
-#include <controlloops/AbstractControlLoop.h>
+#include <controlloops/AbstractControlLoop.hpp>
 #include <FrequencyTimer.h>
 #include <ProtocolLogic.hpp>
 

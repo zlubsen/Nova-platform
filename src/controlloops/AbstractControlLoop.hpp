@@ -1,5 +1,5 @@
-#ifndef ControlLoop_Abstract_h
-#define ControlLoop_Abstract_h
+#ifndef ControlLoop_Abstract_hpp
+#define ControlLoop_Abstract_hpp
 
 #include <string>
 

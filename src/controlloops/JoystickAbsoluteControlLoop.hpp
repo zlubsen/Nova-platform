@@ -1,11 +1,11 @@
-#ifndef ControlLoop_Joystick_h
-#define ControlLoop_Joystick_h
+#ifndef ControlLoop_Joystick_hpp
+#define ControlLoop_Joystick_hpp
 
 #include <actuators/NovaServo.h>
 #include <sensors/Joystick.h>
 #include <config/HardwareConfig.h>
 #include <config/NovaConfig.h>
-#include <controlloops/AbstractControlLoop.h>
+#include <controlloops/AbstractControlLoop.hpp>
 #include <FrequencyTimer.h>
 
 typedef struct {

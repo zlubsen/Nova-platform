@@ -1,5 +1,5 @@
 #include <Arduino.h>
-#include "JoystickAbsoluteControlLoop.h"
+#include "JoystickAbsoluteControlLoop.hpp"
 #include <MemoryFree.hpp>
 
 JoystickAbsoluteControlLoop::JoystickAbsoluteControlLoop(HardwareConfig *hardwareConfig, NovaConfig *novaConfig) {

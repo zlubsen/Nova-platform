@@ -5,7 +5,7 @@
 #include <config/NovaConfig.h>
 #include <config/NovaConstants.h>
 #include <PID_v1.h>
-#include <controlloops/AbstractControlLoop.h>
+#include <controlloops/AbstractControlLoop.hpp>
 #include <ProtocolLogic.hpp>
 
 class TrackObjectControlLoop : public AbstractControlLoop {

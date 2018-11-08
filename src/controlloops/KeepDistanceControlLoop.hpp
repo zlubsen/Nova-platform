@@ -1,11 +1,11 @@
-#ifndef ControlLoop_Keep_Distance_h
-#define ControlLoop_Keep_Distance_h
+#ifndef ControlLoop_Keep_Distance_hpp
+#define ControlLoop_Keep_Distance_hpp
 
 #include "sensors/UltraSoundSensor.h"
 #include "config/HardwareConfig.h"
 #include "config/NovaConfig.h"
 #include <PID_v1.h>
-#include <controlloops/AbstractControlLoop.h>
+#include <controlloops/AbstractControlLoop.hpp>
 #include <ProtocolLogic.hpp>
 #include <string>
 

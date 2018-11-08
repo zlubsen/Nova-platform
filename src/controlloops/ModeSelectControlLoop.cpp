@@ -1,5 +1,5 @@
 #include <Arduino.h>
-#include "ModeSelectControlLoop.h"
+#include "ModeSelectControlLoop.hpp"
 
 ModeSelectControlLoop::ModeSelectControlLoop(HardwareConfig* hardwareConfig, NovaConfig* novaConfig) {
   _hardwareConfig = hardwareConfig; // TODO would rather not have a local pointer to the whole hardwareconfig thing

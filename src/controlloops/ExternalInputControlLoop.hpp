@@ -1,10 +1,10 @@
-#ifndef ControlLoop_ExternalInput_h
-#define ControlLoop_ExternalInput_h
+#ifndef ControlLoop_ExternalInput_hpp
+#define ControlLoop_ExternalInput_hpp
 
 #include <actuators/NovaServo.h>
 #include <config/HardwareConfig.h>
 #include <config/NovaConfig.h>
-#include <controlloops/AbstractControlLoop.h>
+#include <controlloops/AbstractControlLoop.hpp>
 
 class ExternalInputControlLoop : public AbstractControlLoop {
   public:

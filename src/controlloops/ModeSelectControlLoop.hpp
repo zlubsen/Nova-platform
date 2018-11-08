@@ -1,15 +1,15 @@
-#ifndef ControlLoop_Mode_Select_h
-#define ControlLoop_Mode_Select_h
+#ifndef ControlLoop_Mode_Select_hpp
+#define ControlLoop_Mode_Select_hpp
 
 #include "config/HardwareConfig.h"
 #include "config/NovaConfig.h"
 #include <sensors/LCDShieldButtons.h>
 #include <actuators/LCDShieldScreen.h>
-#include <controlloops/AbstractControlLoop.h>
-#include <controlloops/StatusPublishLoop.h>
-#include <controlloops/JoystickAbsoluteControlLoop.h>
-#include <controlloops/JoystickRelativeControlLoop.h>
-#include <controlloops/ExternalInputControlLoop.h>
+#include <controlloops/AbstractControlLoop.hpp>
+#include <controlloops/StatusPublishLoop.hpp>
+#include <controlloops/JoystickAbsoluteControlLoop.hpp>
+#include <controlloops/JoystickRelativeControlLoop.hpp>
+#include <controlloops/ExternalInputControlLoop.hpp>
 #include <controlloops/KeepDistanceControlLoop.hpp>
 #include <controlloops/TrackObjectControlLoop.hpp>
 #include <FrequencyTimer.h>
