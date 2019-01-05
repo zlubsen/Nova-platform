@@ -119,7 +119,7 @@ void KeepDistanceControlLoop::run(NovaProtocolCommand* cmd) {
 }
 
 // TODO: write the static text once (str_start, str_end), and update only the changing number/distance
-std::string KeepDistanceControlLoop::getLCDStatusString() {
+std::string KeepDistanceControlLoop::getDistanceMessage() {
   std::string str_start = "Dist:";
   std::string str_end = " cm";
 
@@ -134,4 +134,14 @@ std::string KeepDistanceControlLoop::getLCDStatusString() {
   s << str_start << mid_padding << str_value << str_end;
 
   return s.str();
+}
+
+std::vector<std::string> KeepDistanceControlLoop::getLCDStatusList() {
+  std::vector<std::string> messages;
+  messages.push_back(getDistanceMessage());
+  messages.push_back(valueToLCDString("Kp", _pid->GetKp()));
+  messages.push_back(valueToLCDString("Ki", _pid->GetKi()));
+  messages.push_back(valueToLCDString("Kd", _pid->GetKd()));
+  messages.push_back(getFreeMemoryString());
+  return messages;
 }

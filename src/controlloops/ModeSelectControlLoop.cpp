@@ -50,8 +50,10 @@ void ModeSelectControlLoop::handleButtons() {
       navigateModeSelectMenuDown();
       break;
     case Buttons::LEFT:
+      navigateMessageMenuLeft();
       break;
     case Buttons::RIGHT:
+      navigateMessageMenuRight();
       break;
     case Buttons::SELECT:
       setMode(_selectedEntry);
@@ -65,7 +67,7 @@ void ModeSelectControlLoop::handleButtons() {
 
 void ModeSelectControlLoop::navigateModeSelectMenuUp() {
   if(_selectedEntry == 0)
-    _selectedEntry = _controlLoopDescriptions.size()-1;
+    _selectedEntry = _controlLoopDescriptions.size() - 1;
   else
     _selectedEntry--;
 
@@ -73,12 +75,20 @@ void ModeSelectControlLoop::navigateModeSelectMenuUp() {
 }
 
 void ModeSelectControlLoop::navigateModeSelectMenuDown() {
-  if(_selectedEntry == _controlLoopDescriptions.size()-1)
+  if(_selectedEntry == _controlLoopDescriptions.size() - 1)
     _selectedEntry = 0;
   else
     _selectedEntry++;
 
   showSelectScreen();
+}
+
+void ModeSelectControlLoop::navigateMessageMenuLeft() {
+  _activeControlLoops.at(2)->cycleStatusMessagePrevious();
+}
+
+void ModeSelectControlLoop::navigateMessageMenuRight() {
+  _activeControlLoops.at(2)->cycleStatusMessageNext();
 }
 
 void ModeSelectControlLoop::showSelectScreen() {
@@ -102,16 +112,14 @@ void ModeSelectControlLoop::showStatusScreen() {
 
 void ModeSelectControlLoop::updateStatusScreen() {
   _lcd->setCursor(0,1);
-  _lcd->print(_activeControlLoops.at(2)->getLCDStatusString());
+  _lcd->print(_activeControlLoops.at(2)->getLCDStatusMessage());
 }
 
 void ModeSelectControlLoop::setMode(uint8_t mode) {
   // disable/reenable input to servos to minimize servo jitter
   _hardwareConfig->suspendServos();
 
-  //_activeControlLoops.at(2) = _availableControlLoops[mode];
   switchControlLoop(mode);
-  _currentMode = mode;
 
   showStatusScreen();
 
@@ -172,9 +180,4 @@ void ModeSelectControlLoop::handleUpdateLCD() {
     showStatusScreen();
     _selectedEntry = _currentMode;
   }
-}
-
-std::string ModeSelectControlLoop::getLCDStatusString() {
-  std::string status(16, ' ');
-  return status;
 }

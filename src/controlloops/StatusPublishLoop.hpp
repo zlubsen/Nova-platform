@@ -11,7 +11,6 @@ class StatusPublishLoop : public AbstractControlLoop {
   public:
     StatusPublishLoop(HardwareConfig* hardwareConfig, int frequency_ms);
     void run(NovaProtocolCommand* cmd);
-    std::string getLCDStatusString();
 
   private:
     void writeStatusCommand(uint8_t operation, int arg);

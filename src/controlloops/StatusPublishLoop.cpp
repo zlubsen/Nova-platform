@@ -39,8 +39,3 @@ void StatusPublishLoop::writeStatusCommand(uint8_t operation, int arg) {
     ->setArgs(args)
     ->build());
 }
-
-std::string StatusPublishLoop::getLCDStatusString() {
-  std::string status(16, ' ');
-  return status;
-}

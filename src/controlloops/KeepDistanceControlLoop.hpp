@@ -14,7 +14,7 @@ class KeepDistanceControlLoop : public AbstractControlLoop {
     KeepDistanceControlLoop(HardwareConfig *hardwareConfig, NovaConfig *novaConfig);
     ~KeepDistanceControlLoop();
     void run(NovaProtocolCommand* cmd);
-    std::string getLCDStatusString();
+    std::vector<std::string> getLCDStatusList();
 
   private:
     SerialCommunication* _comm;
@@ -39,6 +39,7 @@ class KeepDistanceControlLoop : public AbstractControlLoop {
     void observe();
     void actuate();
     void statusPublishPIDValues();
+    std::string getDistanceMessage();
 };
 
 #endif

@@ -13,7 +13,7 @@ class TrackObjectControlLoop : public AbstractControlLoop {
     TrackObjectControlLoop(HardwareConfig *hardwareConfig, NovaConfig *novaConfig);
     ~TrackObjectControlLoop();
     void run(NovaProtocolCommand* cmd);
-    std::string getLCDStatusString();
+    std::vector<std::string> getLCDStatusList();
 
   private:
     SerialCommunication *_comm;
