@@ -5,10 +5,10 @@
 #include <sstream>
 
 AbstractControlLoop::AbstractControlLoop() {
-  _status_messages.push_back(getFreeMemoryString());
+  _status_messages.push_back(getFreeMemoryMessage());
 }
 
-std::string AbstractControlLoop::getFreeMemoryString() {
+std::string AbstractControlLoop::getFreeMemoryMessage() {
   std::string str_start = "Free mem:";
 
   char buffer[4];
@@ -26,14 +26,14 @@ std::string AbstractControlLoop::getFreeMemoryString() {
 
 std::string AbstractControlLoop::valueToLCDString(std::string item, double value) {
   char buffer[16];
-  sprintf(buffer, "%s: %f", item.c_str(), value); // TODO what is the right %-thingy for a double?
+  sprintf(buffer, "%s: %f", item.c_str(), value);
   std::string str_value(buffer);
 
   return str_value;
 }
 
 void AbstractControlLoop::cycleStatusMessageNext() {
-  if(_current_status_message_index == _status_messages.size() - 1)
+  if(_current_status_message_index >= _status_messages.size() - 1)
     _current_status_message_index = 0;
   else
     _current_status_message_index++;
@@ -47,9 +47,13 @@ void AbstractControlLoop::cycleStatusMessagePrevious() {
 }
 
 std::string AbstractControlLoop::getLCDStatusMessage() {
-  updateMessages(); // TODO build a mechanism to update the messages in the vector
+  updateStatusMessages();
   if(_current_status_message_index < _status_messages.size())
     return _status_messages.at(_current_status_message_index);
   else
     return std::string(16, ' ');
+}
+
+void AbstractControlLoop::updateStatusMessages() {
+  _status_messages[0] = getFreeMemoryMessage();
 }

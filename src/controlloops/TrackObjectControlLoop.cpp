@@ -41,6 +41,7 @@ TrackObjectControlLoop::TrackObjectControlLoop(HardwareConfig *hardwareConfig, N
   _pid_values_y.output = 0.0; // explicitly set output to zero, otherwise there appears to be garbage in the memory...
 
   statusPublishPIDValues();
+  setupStatusMessages();
 }
 
 TrackObjectControlLoop::~TrackObjectControlLoop() {
@@ -61,6 +62,16 @@ void TrackObjectControlLoop::setupPIDcontroller(PID* pid, pid_config* config, pi
     pid->SetSampleTime(config->sampleTime);
     pid->SetOutputLimits(config->outputLimitMin, config->outputLimitMax);
     pid->SetMode(config->mode);
+}
+
+void TrackObjectControlLoop::setupStatusMessages() {
+  _status_messages.push_back(valueToLCDString("X Kp", _pid_x->GetKp()));
+  _status_messages.push_back(valueToLCDString("X Ki", _pid_x->GetKi()));
+  _status_messages.push_back(valueToLCDString("X Kd", _pid_x->GetKd()));
+  _status_messages.push_back(valueToLCDString("Y Kp", _pid_y->GetKp()));
+  _status_messages.push_back(valueToLCDString("Y Ki", _pid_y->GetKi()));
+  _status_messages.push_back(valueToLCDString("Y Kd", _pid_y->GetKd()));
+  _status_messages.push_back(getFreeMemoryMessage());
 }
 
 void TrackObjectControlLoop::setSetpoint(uint8_t asset, int new_setpoint) {
@@ -162,14 +173,28 @@ void TrackObjectControlLoop::run(NovaProtocolCommand* cmd) {
   }
 }
 
-std::vector<std::string> TrackObjectControlLoop::getLCDStatusList() {
-  std::vector<std::string> messages;
-  messages.push_back(valueToLCDString("X Kp", _pid_x->GetKp()));
-  messages.push_back(valueToLCDString("X Ki", _pid_x->GetKi()));
-  messages.push_back(valueToLCDString("X Kd", _pid_x->GetKd()));
-  messages.push_back(valueToLCDString("Y Kp", _pid_y->GetKp()));
-  messages.push_back(valueToLCDString("Y Ki", _pid_y->GetKi()));
-  messages.push_back(valueToLCDString("Y Kd", _pid_y->GetKd()));
-  messages.push_back(getFreeMemoryString());
-  return messages;
+void TrackObjectControlLoop::updateStatusMessages() {
+  switch (_current_status_message_index) {
+    case 0:
+      _status_messages[0] = valueToLCDString("X Kp", _pid_x->GetKp());
+      break:
+    case 1:
+      _status_messages[1] = valueToLCDString("X Ki", _pid_x->GetKi());
+      break:
+    case 2:
+      _status_messages[2] = valueToLCDString("X Kd", _pid_x->GetKd());
+      break:
+    case 3:
+      _status_messages[3] = valueToLCDString("Y Kp", _pid_y->GetKp());
+      break:
+    case 4:
+      _status_messages[4] = valueToLCDString("Y Ki", _pid_y->GetKi());
+      break:
+    case 5:
+      _status_messages[5] = valueToLCDString("Y Kd", _pid_y->GetKd());
+      break:
+    case 6:
+      _status_messages[6] = getFreeMemoryMessage();
+      break:
+  }
 }

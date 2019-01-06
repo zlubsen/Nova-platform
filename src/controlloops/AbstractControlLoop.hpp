@@ -12,12 +12,13 @@ class AbstractControlLoop {
     virtual void run(NovaProtocolCommand* cmd) = 0;
     void cycleStatusMessageNext();
     void cycleStatusMessagePrevious();
-    virtual std::string getLCDStatusMessage();
+    std::string getLCDStatusMessage();
   protected:
     std::vector<std::string> _status_messages;
     uint8_t _current_status_message_index = 0;
-    std::string getFreeMemoryString();
+    std::string getFreeMemoryMessage();
     std::string valueToLCDString(std::string item, double value);
+    virtual void updateStatusMessages();
 };
 
 #endif

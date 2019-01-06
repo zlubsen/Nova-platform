@@ -8,13 +8,16 @@
 #include <controlloops/AbstractControlLoop.hpp>
 #include <ProtocolLogic.hpp>
 #include <string>
+#include <functional>
 
 class KeepDistanceControlLoop : public AbstractControlLoop {
   public:
     KeepDistanceControlLoop(HardwareConfig *hardwareConfig, NovaConfig *novaConfig);
     ~KeepDistanceControlLoop();
     void run(NovaProtocolCommand* cmd);
-    std::vector<std::string> getLCDStatusList();
+
+  protected:
+    void updateStatusMessages();
 
   private:
     SerialCommunication* _comm;
@@ -39,6 +42,7 @@ class KeepDistanceControlLoop : public AbstractControlLoop {
     void observe();
     void actuate();
     void statusPublishPIDValues();
+    void setupStatusMessages();
     std::string getDistanceMessage();
 };
 

@@ -15,6 +15,9 @@ class TrackObjectControlLoop : public AbstractControlLoop {
     void run(NovaProtocolCommand* cmd);
     std::vector<std::string> getLCDStatusList();
 
+  protected:
+    void updateStatusMessages();
+
   private:
     SerialCommunication *_comm;
     NovaServo* _servo_x;
@@ -33,6 +36,7 @@ class TrackObjectControlLoop : public AbstractControlLoop {
     void actuate();
     void computeControl();
     void setPIDTuning(uint8_t asset, int p_value, int i_value, int d_value);
+    void setupStatusMessages();
 };
 
 #endif

@@ -14,6 +14,7 @@ KeepDistanceControlLoop::KeepDistanceControlLoop(HardwareConfig *hardwareConfig,
 
   setupPIDcontroller();
   statusPublishPIDValues();
+  setupStatusMessages();
 }
 
 KeepDistanceControlLoop::~KeepDistanceControlLoop() {
@@ -32,6 +33,14 @@ void KeepDistanceControlLoop::setupPIDcontroller() {
     _pid->SetMode(_pid_config.mode);
     _pid->SetSampleTime(_pid_config.sampleTime);
     _pid->SetOutputLimits(_pid_config.outputLimitMin, _pid_config.outputLimitMax);
+}
+
+void KeepDistanceControlLoop::setupStatusMessages() {
+  _status_messages.push_back(getDistanceMessage());
+  _status_messages.push_back(valueToLCDString("Kp", _pid->GetKp()));
+  _status_messages.push_back(valueToLCDString("Ki", _pid->GetKi()));
+  _status_messages.push_back(valueToLCDString("Kd", _pid->GetKd()));
+  _status_messages.push_back(getFreeMemoryMessage());
 }
 
 void KeepDistanceControlLoop::handleCommands(NovaProtocolCommand* cmd) {
@@ -136,12 +145,22 @@ std::string KeepDistanceControlLoop::getDistanceMessage() {
   return s.str();
 }
 
-std::vector<std::string> KeepDistanceControlLoop::getLCDStatusList() {
-  std::vector<std::string> messages;
-  messages.push_back(getDistanceMessage());
-  messages.push_back(valueToLCDString("Kp", _pid->GetKp()));
-  messages.push_back(valueToLCDString("Ki", _pid->GetKi()));
-  messages.push_back(valueToLCDString("Kd", _pid->GetKd()));
-  messages.push_back(getFreeMemoryString());
-  return messages;
+void KeepDistanceControlLoop::updateStatusMessages() {
+  switch (_current_status_message_index) {
+    case 0:
+      _status_messages[0] = getDistanceMessage();
+      break;
+    case 1:
+      _status_messages[1] = valueToLCDString("Kp", _pid->GetKp());
+      break;
+    case 2:
+      _status_messages[2] = valueToLCDString("Ki", _pid->GetKi());
+      break;
+    case 3:
+      _status_messages[3] = valueToLCDString("Kd", _pid->GetKd());
+      break;
+    case 4:
+      _status_messages[4] = getFreeMemoryMessage();
+      break;
+  }
 }
