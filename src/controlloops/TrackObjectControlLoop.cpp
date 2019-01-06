@@ -177,24 +177,24 @@ void TrackObjectControlLoop::updateStatusMessages() {
   switch (_current_status_message_index) {
     case 0:
       _status_messages[0] = valueToLCDString("X Kp", _pid_x->GetKp());
-      break:
+      break;
     case 1:
       _status_messages[1] = valueToLCDString("X Ki", _pid_x->GetKi());
-      break:
+      break;
     case 2:
       _status_messages[2] = valueToLCDString("X Kd", _pid_x->GetKd());
-      break:
+      break;
     case 3:
       _status_messages[3] = valueToLCDString("Y Kp", _pid_y->GetKp());
-      break:
+      break;
     case 4:
       _status_messages[4] = valueToLCDString("Y Ki", _pid_y->GetKi());
-      break:
+      break;
     case 5:
       _status_messages[5] = valueToLCDString("Y Kd", _pid_y->GetKd());
-      break:
+      break;
     case 6:
       _status_messages[6] = getFreeMemoryMessage();
-      break:
+      break;
   }
 }
