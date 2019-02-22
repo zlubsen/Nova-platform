@@ -25,12 +25,18 @@ std::string AbstractControlLoop::getFreeMemoryMessage() {
 }
 
 std::string AbstractControlLoop::valueToLCDString(std::string item, double value) {
-  char buffer[LCD_SIZE];
-  int width_length = LCD_SIZE - item.size() - 2;
-  sprintf(buffer, "%s: %*f", item.c_str(), width_length, value);
+  //int value_width = LCD_SIZE - item.size() - 2;
+  char buffer[5];
+  sprintf(buffer, "%f", value);
   std::string str_value(buffer);
 
-  return str_value;
+  int text_length = item.size() + str_value.size() + 1;
+  std::string mid_padding(LCD_SIZE-text_length, ' ');
+
+  std::stringstream s;
+  s << item << ":" << mid_padding << str_value;
+
+  return s.str();
 }
 
 void AbstractControlLoop::cycleStatusMessageNext() {
