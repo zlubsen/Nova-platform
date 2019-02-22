@@ -137,7 +137,7 @@ std::string KeepDistanceControlLoop::getDistanceMessage() {
   std::string str_value(buffer);
 
   int text_length = str_start.size() + str_value.size() + str_end.size();
-  std::string mid_padding(16-text_length, ' ');
+  std::string mid_padding(LCD_SIZE-text_length, ' ');
 
   std::stringstream s;
   s << str_start << mid_padding << str_value << str_end;

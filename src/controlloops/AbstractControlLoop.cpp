@@ -16,7 +16,7 @@ std::string AbstractControlLoop::getFreeMemoryMessage() {
   std::string str_value(buffer);
 
   int text_length = str_start.size() + str_value.size();
-  std::string mid_padding(16-text_length, ' ');
+  std::string mid_padding(LCD_SIZE-text_length, ' ');
 
   std::stringstream s;
   s << str_start << mid_padding << str_value;
@@ -25,15 +25,16 @@ std::string AbstractControlLoop::getFreeMemoryMessage() {
 }
 
 std::string AbstractControlLoop::valueToLCDString(std::string item, double value) {
-  char buffer[16];
-  sprintf(buffer, "%s: %f", item.c_str(), value);
+  char buffer[LCD_SIZE];
+  int width_length = LCD_SIZE - item.size() - 2;
+  sprintf(buffer, "%s: %*f", item.c_str(), width_length, value);
   std::string str_value(buffer);
 
   return str_value;
 }
 
 void AbstractControlLoop::cycleStatusMessageNext() {
-  if(_current_status_message_index >= _status_messages.size() - 1)
+  if(_current_status_message_index == _status_messages.size() - 1)
     _current_status_message_index = 0;
   else
     _current_status_message_index++;
@@ -51,7 +52,7 @@ std::string AbstractControlLoop::getLCDStatusMessage() {
   if(_current_status_message_index < _status_messages.size())
     return _status_messages.at(_current_status_message_index);
   else
-    return std::string(16, ' ');
+    return std::string(LCD_SIZE, ' ');
 }
 
 void AbstractControlLoop::updateStatusMessages() {

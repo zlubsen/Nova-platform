@@ -56,7 +56,8 @@ void ModeSelectControlLoop::handleButtons() {
       navigateMessageMenuRight();
       break;
     case Buttons::SELECT:
-      setMode(_selectedEntry);
+      if(!_lcd_status_mode)
+        setMode(_selectedEntry);
       break;
     case Buttons::NONE_PRESSED:
     default:

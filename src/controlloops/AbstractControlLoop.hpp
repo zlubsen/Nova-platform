@@ -5,6 +5,8 @@
 #include <string>
 #include <vector>
 
+#define LCD_SIZE 16
+
 class AbstractControlLoop {
   public:
     AbstractControlLoop();
