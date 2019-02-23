@@ -9,24 +9,21 @@ AbstractControlLoop::AbstractControlLoop() {
 }
 
 std::string AbstractControlLoop::getFreeMemoryMessage() {
-  std::string str_start = "Free mem:";
+  char buffer[LCD_SIZE];
+  sprintf(buffer, "Free mem:%7d", freeMemory());
+  std::string str_message(buffer);
 
-  char buffer[4];
-  sprintf(buffer, "%d", freeMemory());
-  std::string str_value(buffer);
-
-  int text_length = str_start.size() + str_value.size();
-  std::string mid_padding(LCD_SIZE-text_length, ' ');
-
-  std::stringstream s;
-  s << str_start << mid_padding << str_value;
-
-  return s.str();
+  return str_message;
 }
 
 std::string AbstractControlLoop::valueToLCDString(std::string item, double value) {
-  //int value_width = LCD_SIZE - item.size() - 2;
-  char buffer[5];
+  item = item + ":";
+  int len = LCD_SIZE-item.size();
+  char buffer[len];
+  sprintf(buffer, "%6f", value);
+  std::string str_value(buffer);
+  return item + str_value;
+  /*char buffer[5];
   sprintf(buffer, "%f", value);
   std::string str_value(buffer);
 
@@ -36,7 +33,7 @@ std::string AbstractControlLoop::valueToLCDString(std::string item, double value
   std::stringstream s;
   s << item << ":" << mid_padding << str_value;
 
-  return s.str();
+  return s.str();*/
 }
 
 void AbstractControlLoop::cycleStatusMessageNext() {
